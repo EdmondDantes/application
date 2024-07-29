@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace IfCastle\Application\Environment;
+namespace IfCastle\Application\RequestEnvironment;
 
 interface RequestEnvironmentInterface
 {

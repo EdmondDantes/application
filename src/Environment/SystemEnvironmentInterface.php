@@ -6,6 +6,7 @@ namespace IfCastle\Application\Environment;
 use IfCastle\Application\Async\CoroutineContextInterface;
 use IfCastle\Application\Async\ScheduleTimerInterface;
 use IfCastle\Application\EngineInterface;
+use IfCastle\Application\RequestEnvironment\RequestEnvironmentInterface;
 
 interface SystemEnvironmentInterface
 {
