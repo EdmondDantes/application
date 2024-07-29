@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace IfCastle\Application;
 
 use IfCastle\Application\Bootloader\Builder\BootloaderBuilderInterface;
+use IfCastle\Application\Environment\SystemEnvironmentInterface;
+use IfCastle\DI\DisposableInterface;
 
 abstract class ApplicationAbstract implements ApplicationInterface
 {
@@ -13,12 +15,39 @@ abstract class ApplicationAbstract implements ApplicationInterface
             $bootloaderBuilder->build();
             $bootloader             = $bootloaderBuilder->getBootloader();
             $bootloader->executePlan();
+            
+            $systemEnvironment          = $bootloader->getSystemEnvironment();
+            $requestEnvironmentBuilder  = $bootloader->getRequestEnvironmentBuilder();
+            
+            if($bootloader instanceof DisposableInterface) {
+                $bootloader->dispose();
+            }
+            
+            $app = new static($appDir, $systemEnvironment, $requestEnvironmentBuilder);
+            
+            // free memory
+            unset($bootloader);
+            unset($bootloaderBuilder);
         } catch (\Throwable $throwable) {
             //
+            exit(5);
         }
         
+        try {
+            $app->start();
+        } catch (\Throwable $throwable) {
+            //
+        } finally {
+            $app->end();
+        }
         
+        exit;
     }
+    
+    public function __construct(protected string                             $appDir,
+                                protected SystemEnvironmentInterface         $systemEnvironment,
+                                protected RequestEnvironmentBuilderInterface $requestEnvironmentBuilder
+    ) {}
     
     #[\Override]
     public function start(): void
