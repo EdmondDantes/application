@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace IfCastle\Application\Coroutine;
+namespace IfCastle\Application\Async;
 
 interface CoroutineContextInterface
 {

@@ -3,24 +3,19 @@ declare(strict_types=1);
 
 namespace IfCastle\Application\Environment;
 
-use IfCastle\Application\Coroutine\CoroutineContextInterface;
+use IfCastle\Application\Async\CoroutineContextInterface;
+use IfCastle\Application\Async\ScheduleTimerInterface;
 use IfCastle\Application\EngineInterface;
 
 interface SystemEnvironmentInterface
 {
-    /**
-     * @var string
-     */
-    final public const string SYSTEM_ENVIRONMENT = 'systemEnvironment';
-    
-    /**
-     * Role
-     */
-    public const string EXECUTION_ROLES           = 'execution_roles';
+    public const string EXECUTION_ROLES = 'execution_roles';
     
     public function getEngine(): EngineInterface;
     
-    public function getCoroutineContext(): ?CoroutineContextInterface;
+    public function getCoroutineContext(): CoroutineContextInterface|null;
+    
+    public function getScheduleTimer(): ScheduleTimerInterface|null;
     
     /**
      * Return current request env if exists
