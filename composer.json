@@ -1,0 +1,25 @@
+{
+    "name": "ifcastle/application",
+    "description": "A set of interfaces for the \"Application\" pattern.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["application", "interfaces", "patterns"],
+    "autoload": {
+        "psr-4": {
+            "IfCastle\\Application\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "IfCastle\\Application\\": "./tests",
+            "Examples\\": "./examples"
+        }
+    },
+    "require": {
+        "ifcastle/di": "^0.5.2"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.60",
+        "amphp/php-cs-fixer-config": "^2.1"
+    }
+}
