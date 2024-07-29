@@ -4,8 +4,53 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f6769e11d838708cb2c812a62daf4178",
+    "content-hash": "d6b7528e052422521eb8fc8fa5c5c507",
     "packages": [
+        {
+            "name": "ifcastle/design-patterns",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/EdmondDantes/design-patterns.git",
+                "reference": "560979e7a392257e90d3516bfc6e853f436ad1fc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/EdmondDantes/design-patterns/zipball/560979e7a392257e90d3516bfc6e853f436ad1fc",
+                "reference": "560979e7a392257e90d3516bfc6e853f436ad1fc",
+                "shasum": ""
+            },
+            "require": {
+                "ifcastle/di": "^0.5.2",
+                "ifcastle/exceptions": "^5.0"
+            },
+            "require-dev": {
+                "amphp/php-cs-fixer-config": "^2.1",
+                "friendsofphp/php-cs-fixer": "^3.60",
+                "phpunit/phpunit": "^11.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "IfCastle\\DesignPatterns\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A library of common design patterns for building stateful server applications.",
+            "keywords": [
+                "design-patterns",
+                "server",
+                "stateful"
+            ],
+            "support": {
+                "issues": "https://github.com/EdmondDantes/design-patterns/issues",
+                "source": "https://github.com/EdmondDantes/design-patterns/tree/v0.1.0"
+            },
+            "time": "2024-07-29T15:04:45+00:00"
+        },
         {
             "name": "ifcastle/di",
             "version": "v0.5.2",
@@ -57,6 +102,53 @@
                 "source": "https://github.com/EdmondDantes/di/tree/v0.5.2"
             },
             "time": "2024-07-28T14:20:37+00:00"
+        },
+        {
+            "name": "ifcastle/exceptions",
+            "version": "v5.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/EdmondDantes/BaseException.git",
+                "reference": "1d2a7c6db219c3d9d2e6cf5aa437f4691f711857"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/EdmondDantes/BaseException/zipball/1d2a7c6db219c3d9d2e6cf5aa437f4691f711857",
+                "reference": "1d2a7c6db219c3d9d2e6cf5aa437f4691f711857",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^11.2",
+                "rector/rector": "^1.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "IfCastle\\Exceptions\\": [
+                        "src/",
+                        "tests/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Edmond Dantes",
+                    "email": "edmondifthen@proton.me"
+                }
+            ],
+            "description": "A basic library for exceptions with templates, oriented towards usage in web services",
+            "support": {
+                "issues": "https://github.com/EdmondDantes/BaseException/issues",
+                "source": "https://github.com/EdmondDantes/BaseException/tree/v5.0.0"
+            },
+            "time": "2024-07-16T10:09:25+00:00"
         }
     ],
     "packages-dev": [
