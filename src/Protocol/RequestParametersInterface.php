@@ -45,12 +45,12 @@ interface RequestParametersInterface
     /**
      * Returns list of uploaded files
      *
-     * @return FileContainerI[]
+     * @return FileContainerInterface[]
      */
     public function getUploadedFiles(): array;
     
     
-    public function getUploadedFile(string $name): ?FileContainerI;
+    public function getUploadedFile(string $name): ?FileContainerInterface;
     
     
     public function hasUploadedFile(string $name): bool;
