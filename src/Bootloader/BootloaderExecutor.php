@@ -3,21 +3,20 @@ declare(strict_types=1);
 
 namespace IfCastle\Application\Bootloader;
 
-use IfCastle\Application\Environment\SystemEnvironmentInterface;
+use IfCastle\Application\RequestEnvironment\Builder\RequestEnvironmentBuilder;
 use IfCastle\DesignPatterns\ExecutionPlan\BeforeAfterExecutor;
 use IfCastle\DI\BuilderInterface;
 use IfCastle\DI\ContainerBuilder;
 use IfCastle\DI\DisposableInterface;
-use IfCastle\Application\RequestEnvironment\Builder\BuilderInterface as RequestEnvironmentBuilderInterface;
+use IfCastle\Application\RequestEnvironment\Builder\RequestEnvironmentBuilderInterface;
+use IfCastle\DI\Resolver;
+use IfCastle\DI\ResolverInterface;
 
 class BootloaderExecutor            extends BeforeAfterExecutor
                                     implements BootloaderExecutorInterface, DisposableInterface
 {
-    protected BuilderInterface $systemEnvironmentBootBuilder;
-    protected BuilderInterface $requestEnvironmentBootBuilder;
-    
-    protected SystemEnvironmentInterface|null $systemEnvironment = null;
-    protected RequestEnvironmentBuilderInterface|null $requestEnvironmentBuilder = null;
+    protected BuilderInterface                   $systemEnvironmentBootBuilder;
+    protected RequestEnvironmentBuilderInterface $requestEnvironmentBuilder;
     
     protected mixed $startApplicationHandler = null;
     
@@ -43,9 +42,9 @@ class BootloaderExecutor            extends BeforeAfterExecutor
     }
     
     #[\Override]
-    public function getRequestEnvironmentBootBuilder(): BuilderInterface
+    public function getRequestEnvironmentBuilder(): RequestEnvironmentBuilderInterface
     {
-        return $this->requestEnvironmentBootBuilder;
+        return $this->requestEnvironmentBuilder;
     }
     
     #[\Override]
@@ -57,8 +56,8 @@ class BootloaderExecutor            extends BeforeAfterExecutor
     
     protected function initBuilders(): void
     {
-        $this->systemEnvironmentBootBuilder     = new ContainerBuilder();
-        $this->requestEnvironmentBootBuilder    = new ContainerBuilder();
+        $this->systemEnvironmentBootBuilder = new ContainerBuilder();
+        $this->requestEnvironmentBuilder    = new RequestEnvironmentBuilder();
     }
     
     protected function startApplication(): void
@@ -68,11 +67,18 @@ class BootloaderExecutor            extends BeforeAfterExecutor
         }
         
         // Build system environment
+        $this->systemEnvironmentBootBuilder->bindObject(RequestEnvironmentBuilderInterface::class, $this->requestEnvironmentBuilder);
+        $systemEnvironment          = $this->systemEnvironmentBootBuilder->buildContainer($this->getDependencyResolver());
         
         // Start application
         $startApplicationHandler    = $this->startApplicationHandler;
         $this->startApplicationHandler = null;
         
         $startApplicationHandler($systemEnvironment);
+    }
+    
+    protected function getDependencyResolver(): ResolverInterface
+    {
+        return new Resolver;
     }
 }
