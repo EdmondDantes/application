@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace IfCastle\Application\Environment;
 
-use IfCastle\Application\Async\CoroutineContextInterface;
-use IfCastle\Application\Async\ScheduleTimerInterface;
+use IfCastle\Application\CoroutineContextInterface;
 use IfCastle\Application\EngineInterface;
 use IfCastle\Application\RequestEnvironment\RequestEnvironmentInterface;
+use IfCastle\Application\ScheduleTimerInterface;
 use IfCastle\DI\ContainerInterface;
 use IfCastle\DI\DisposableInterface;
 

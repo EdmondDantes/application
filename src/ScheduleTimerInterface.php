@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace IfCastle\Application\Async;
+namespace IfCastle\Application;
 
 /**
  * Asynchronous timer scheduling interface.
  *
- * @package IfCastle\Application\Async
+ * @package IfCastle\Application
  */
 interface ScheduleTimerInterface
 {
