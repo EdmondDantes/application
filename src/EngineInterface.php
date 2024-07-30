@@ -5,8 +5,6 @@ namespace IfCastle\Application;
 
 interface EngineInterface
 {
-    public static function getStartOptions(array $startOptions = []): array;
-    
     /**
      * Start of Engine
      */
