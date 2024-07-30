@@ -25,31 +25,36 @@ abstract class ApplicationAbstract implements ApplicationInterface
             
             $bootloaderBuilder->build();
             $bootloader             = $bootloaderBuilder->getBootloader();
-            $bootloader->executePlan();
             
-            $systemEnvironment          = $bootloader->getSystemEnvironment();
-            $requestEnvironmentBuilder  = $bootloader->getRequestEnvironmentBuilder();
-            
-            if($bootloader instanceof DisposableInterface) {
-                $bootloader->dispose();
-            }
-            
-            $app                    = new static($appDir, $systemEnvironment, $requestEnvironmentBuilder);
-            
-            // free memory
-            unset($bootloader);
             unset($bootloaderBuilder);
         } catch (\Throwable $throwable) {
-            echo 'Bootloader error: '.$throwable->getMessage().' in '.$throwable->getFile().':'.$throwable->getLine();
-            exit(5);
+            echo $throwable->getMessage().' in '.$throwable->getFile().':'.$throwable->getLine();
+            exit(4);
         }
         
         try {
-            $app->start();
+            
+            $app                    = null;
+            
+            $bootloader->defineStartApplicationHandler(function (SystemEnvironmentInterface $systemEnvironment) use($appDir, &$app) {
+                $app                = new static($appDir, $systemEnvironment);
+                $app->start();
+            });
+            
+            try {
+                $bootloader->executePlan();
+            } finally {
+                $bootloader->dispose();
+                unset($bootloader);
+            }
+            
+            // Start the engine
+            $app->engineStart();
+            
         } catch (\Throwable $throwable) {
-            $app->criticalLog($throwable);
+            $app?->criticalLog($throwable);
         } finally {
-            $app->end();
+            $app?->end();
         }
         
         exit;
@@ -70,8 +75,7 @@ abstract class ApplicationAbstract implements ApplicationInterface
     private static string $reservedMemory = '';
     
     public function __construct(protected readonly string                    $appDir,
-                                protected readonly SystemEnvironmentInterface $systemEnvironment,
-                                protected readonly RequestEnvironmentBuilderInterface $requestEnvironmentBuilder
+                                protected readonly SystemEnvironmentInterface $systemEnvironment
     ) {}
     
     #[\Override]
@@ -117,8 +121,18 @@ abstract class ApplicationAbstract implements ApplicationInterface
         });
         
         try {
-            
             $this->logger           = $this->systemEnvironment->findDependency(LoggerInterface::class);
+        } catch (\Throwable $throwable) {
+            $this->logger?->critical(new FatalException('Application init error', 0, $throwable));
+            $this->criticalLog($throwable);
+        }
+    }
+    
+    #[\Override]
+    public function engineStart(): void
+    {
+        try {
+            
             $engine                 = $this->systemEnvironment->findDependency(EngineInterface::class);
             
             if($engine === null) {
