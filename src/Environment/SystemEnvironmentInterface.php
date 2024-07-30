@@ -7,8 +7,10 @@ use IfCastle\Application\Async\CoroutineContextInterface;
 use IfCastle\Application\Async\ScheduleTimerInterface;
 use IfCastle\Application\EngineInterface;
 use IfCastle\Application\RequestEnvironment\RequestEnvironmentInterface;
+use IfCastle\DI\ContainerInterface;
+use IfCastle\DI\DisposableInterface;
 
-interface SystemEnvironmentInterface
+interface SystemEnvironmentInterface extends ContainerInterface, DisposableInterface
 {
     public const string EXECUTION_ROLES = 'execution_roles';
     
