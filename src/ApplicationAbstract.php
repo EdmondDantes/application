@@ -138,13 +138,19 @@ abstract class ApplicationAbstract implements ApplicationInterface
                 throw new FatalException('Engine is not found');
             }
             
+            $this->engineStartBefore();
             $engine->start();
+            $this->engineStartAfter();
             
         } catch (\Throwable $throwable) {
             $this->logger?->critical(new FatalException('Application init error', 0, $throwable));
             $this->criticalLog($throwable);
         }
     }
+    
+    protected function engineStartBefore(): void {}
+    
+    protected function engineStartAfter(): void {}
     
     #[\Override]
     public function end(): void
