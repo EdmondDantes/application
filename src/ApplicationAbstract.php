@@ -16,11 +16,13 @@ use Psr\Log\LoggerInterface;
 
 abstract class ApplicationAbstract implements ApplicationInterface
 {
+    public const string APP_CODE    = 'app';
+    
     public static function run(string $appDir, BootloaderBuilderInterface $bootloaderBuilder = null): never
     {
         try {
             
-            $bootloaderBuilder      = $bootloaderBuilder ?? new BootloaderBuilderByDirectory($appDir.'/bootloader');
+            $bootloaderBuilder      = $bootloaderBuilder ?? static::defineBootloader($appDir);
             
             $bootloaderBuilder->build();
             $bootloader             = $bootloaderBuilder->getBootloader();
@@ -57,6 +59,11 @@ abstract class ApplicationAbstract implements ApplicationInterface
         }
         
         exit;
+    }
+    
+    protected static function defineBootloader(string $appDir): BootloaderBuilderInterface
+    {
+        return new BootloaderBuilderByDirectory($appDir.'/bootloader', static::APP_CODE);
     }
     
     protected LoggerInterface|null $logger = null;

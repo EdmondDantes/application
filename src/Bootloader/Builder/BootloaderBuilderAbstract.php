@@ -7,7 +7,7 @@ use IfCastle\Application\Bootloader\BootloaderExecutor;
 use IfCastle\Application\Bootloader\BootloaderExecutorInterface;
 use IfCastle\Application\Bootloader\BootloaderInterface;
 
-abstract class BootloaderBuilderAbstract
+abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
 {
     protected BootloaderExecutorInterface|null $bootloader = null;
     

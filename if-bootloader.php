@@ -1,0 +1,63 @@
+<?php
+
+declare(strict_types=1);
+
+// load dependencies
+(function () {
+    $require = true;
+    if (class_exists('Phar')) {
+        // Maybe this file is used as phar-stub? Let's try!
+        try {
+            Phar::mapPhar('ifc.phar');
+            
+            require_once 'phar://ifc.phar/vendor/autoload.php';
+            $require = false;
+        } catch (PharException $e) {
+        }
+    }
+    
+    if ($require) {
+        // OK, it's not, let give Composer autoloader a try!
+        $possibleFiles = [__DIR__.'/../../autoload.php', __DIR__.'/../autoload.php', __DIR__.'/vendor/autoload.php'];
+        $file = null;
+        foreach ($possibleFiles as $possibleFile) {
+            if (file_exists($possibleFile)) {
+                $file = $possibleFile;
+                
+                break;
+            }
+        }
+        
+        if (null === $file) {
+            throw new \RuntimeException('Unable to locate autoload.php file.');
+        }
+        
+        require_once $file;
+    }
+})();
+
+if(!isset($BootCommand)) {
+    $BootCommand = null;
+}
+
+\IfCastle\Application\Bootloader\BootManager\BootManagerApplication::run((function(): string {
+    
+    $possibleDirs = [__DIR__.'/../../', __DIR__.'/../', __DIR__.'/vendor/'];
+    
+    $dir = null;
+    
+    foreach ($possibleDirs as $possibleDir) {
+        if (file_exists($possibleDir.'autoload.php')) {
+            
+            $dir = realpath($possibleDir.'../');
+            
+            break;
+        }
+    }
+    
+    if (null === $dir) {
+        throw new \RuntimeException('Unable to locate autoload.php dir.');
+    }
+    
+    return $dir;
+})(), $BootCommand);

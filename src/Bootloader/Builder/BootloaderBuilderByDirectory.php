@@ -11,7 +11,7 @@ final class BootloaderBuilderByDirectory extends BootloaderBuilderAbstract
     {
         foreach (glob($this->bootloaderDir.'/*.ini') as $file) {
             
-            $bootloaderConfig        = $this->convertIniToArray($file);
+            $bootloaderConfig        = $this->read($file);
             
             if(null === $bootloaderConfig) {
                 continue;
@@ -37,7 +37,7 @@ final class BootloaderBuilderByDirectory extends BootloaderBuilderAbstract
         }
     }
     
-    protected function convertIniToArray(string $file): array|null
+    protected function read(string $file): array|null
     {
         $data                       = parse_ini_file($file, true);
         
@@ -45,32 +45,6 @@ final class BootloaderBuilderByDirectory extends BootloaderBuilderAbstract
             return null;
         }
         
-        $result                     = [];
-        
-        // Convert all sections with dot notation to nest arrays
-        foreach ($data as $section => $values) {
-            
-            $parts                  = explode('.', $section);
-            
-            if(count($parts) === 1) {
-                $result[$section]   = $values;
-                continue;
-            }
-            
-            $pointer                = &$result;
-            
-            foreach ($parts as $part) {
-                
-                if(array_key_exists($part, $pointer) === false) {
-                    $pointer[$part] = [];
-                }
-                
-                $pointer            = &$pointer[$part];
-            }
-            
-            $pointer                = array_merge($pointer, $values);
-        }
-        
-        return $result;
+        return $data;
     }
 }
