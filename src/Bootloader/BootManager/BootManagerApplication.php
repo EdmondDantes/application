@@ -3,12 +3,27 @@ declare(strict_types=1);
 
 namespace IfCastle\Application\Bootloader\BootManager;
 
-class BootManagerApplication
+final class BootManagerApplication
 {
     public static function run(string $appDir, array $command = null): never
     {
         $appDir                     = $appDir.'/bootloader';
-        $manager                    = new BootManagerByDirectory($appDir);
+        
+        if(file_exists($appDir) === false) {
+            echo 'Bootloader directory not found: '.$appDir.PHP_EOL;
+            exit(1);
+        }
+        
+        if(file_exists($appDir.'/bootloader.php')) {
+            $manager                = include_once $appDir.'/bootloader.php';
+        } else {
+            $manager                = new BootManagerByDirectory($appDir);
+        }
+        
+        if($manager instanceof BootManagerInterface === false) {
+            echo 'Invalid bootloader manager: '.get_debug_type($manager).PHP_EOL;
+            exit(2);
+        }
         
         if($command === null) {
             echo 'No command specified. Exiting...'.PHP_EOL;
