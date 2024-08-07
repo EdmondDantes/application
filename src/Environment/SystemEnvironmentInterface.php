@@ -10,7 +10,7 @@ use IfCastle\Application\ScheduleTimerInterface;
 use IfCastle\DI\ContainerInterface;
 use IfCastle\DI\DisposableInterface;
 
-interface SystemEnvironmentInterface extends ContainerInterface, DisposableInterface
+interface SystemEnvironmentInterface extends EnvironmentInterface, DisposableInterface
 {
     public const string EXECUTION_ROLES = 'execution_roles';
     

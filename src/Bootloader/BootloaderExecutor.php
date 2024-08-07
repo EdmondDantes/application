@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace IfCastle\Application\Bootloader;
 
+use IfCastle\Application\Bootloader\Builder\PublicEnvironmentBuilderInterface;
+use IfCastle\Application\Environment\PublicEnvironmentInterface;
 use IfCastle\Application\RequestEnvironment\Builder\RequestEnvironmentBuilder;
 use IfCastle\DesignPatterns\ExecutionPlan\BeforeAfterExecutor;
 use IfCastle\DI\BuilderInterface;
@@ -15,19 +17,27 @@ use IfCastle\DI\ResolverInterface;
 class BootloaderExecutor            extends BeforeAfterExecutor
                                     implements BootloaderExecutorInterface, DisposableInterface
 {
-    protected BuilderInterface                   $systemEnvironmentBootBuilder;
-    protected RequestEnvironmentBuilderInterface $requestEnvironmentBuilder;
-    
+    protected BootloaderContextInterface $bootloaderContext;
     protected mixed $startApplicationHandler = null;
     
     public function __construct()
     {
-        parent::__construct(new HandlerExecutor);
+        $this->initContext();
+        
+        parent::__construct(new HandlerExecutor($this->bootloaderContext));
+        
         // Main stage
         $this->addHandler($this->startApplication(...));
         
-        $this->initBuilders();
+        $this->initContext();
     }
+    
+    #[\Override]
+    public function getBootloaderContext(): BootloaderContextInterface
+    {
+        return $this->bootloaderContext;
+    }
+    
     
     #[\Override]
     public function dispose(): void
@@ -35,16 +45,14 @@ class BootloaderExecutor            extends BeforeAfterExecutor
         $this->stages               = [];
     }
     
-    #[\Override]
     public function getSystemEnvironmentBootBuilder(): BuilderInterface
     {
-        return $this->systemEnvironmentBootBuilder;
+        return $this->bootloaderContext->getSystemEnvironmentBootBuilder();
     }
     
-    #[\Override]
     public function getRequestEnvironmentBuilder(): RequestEnvironmentBuilderInterface
     {
-        return $this->requestEnvironmentBuilder;
+        return $this->bootloaderContext->getRequestEnvironmentBuilder();
     }
     
     #[\Override]
@@ -54,10 +62,14 @@ class BootloaderExecutor            extends BeforeAfterExecutor
         return $this;
     }
     
-    protected function initBuilders(): void
+    protected function initContext(): void
     {
-        $this->systemEnvironmentBootBuilder = new ContainerBuilder();
-        $this->requestEnvironmentBuilder    = new RequestEnvironmentBuilder();
+        $this->bootloaderContext = new BootloaderContext(new Resolver, [
+            BootloaderExecutorInterface::class          => \WeakReference::create($this),
+            BuilderInterface::class                     => new ContainerBuilder(),
+            PublicEnvironmentBuilderInterface::class    => new ContainerBuilder(),
+            RequestEnvironmentBuilderInterface::class   => new RequestEnvironmentBuilder()
+        ]);
     }
     
     protected function startApplication(): void
@@ -67,8 +79,13 @@ class BootloaderExecutor            extends BeforeAfterExecutor
         }
         
         // Build system environment
-        $this->systemEnvironmentBootBuilder->bindObject(RequestEnvironmentBuilderInterface::class, $this->requestEnvironmentBuilder);
-        $systemEnvironment          = $this->systemEnvironmentBootBuilder->buildContainer($this->getDependencyResolver());
+        $this->getSystemEnvironmentBootBuilder()->bindObject(RequestEnvironmentBuilderInterface::class, $this->getRequestEnvironmentBuilder());
+        $systemEnvironment          = $this->getSystemEnvironmentBootBuilder()->buildContainer($this->getDependencyResolver());
+        
+        $builder                    = $this->bootloaderContext->getPublicEnvironmentBootBuilder();
+        
+        $publicEnvironment          = $builder->buildContainer($this->getDependencyResolver(), $systemEnvironment, true);
+        $systemEnvironment->set(PublicEnvironmentInterface::class, $publicEnvironment);
         
         // Start application
         $startApplicationHandler    = $this->startApplicationHandler;
