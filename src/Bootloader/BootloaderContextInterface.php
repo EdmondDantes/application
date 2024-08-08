@@ -6,10 +6,20 @@ namespace IfCastle\Application\Bootloader;
 use IfCastle\Application\Bootloader\Builder\PublicEnvironmentBuilderInterface;
 use IfCastle\Application\RequestEnvironment\Builder\RequestEnvironmentBuilderInterface;
 use IfCastle\DI\BuilderInterface;
+use IfCastle\DI\ConfigInterface;
 use IfCastle\DI\ContainerInterface;
 
 interface BootloaderContextInterface extends ContainerInterface
 {
+    public const string APPLICATION_DIRECTORY = 'applicationDirectory';
+    public const string APPLICATION_TYPE = 'applicationType';
+    
+    public function getApplicationDirectory(): string;
+    
+    public function getApplicationType(): string;
+    
+    public function getApplicationConfig(): ConfigInterface;
+    
     public function getSystemEnvironmentBootBuilder(): BuilderInterface;
     
     public function getPublicEnvironmentBootBuilder(): PublicEnvironmentBuilderInterface;

@@ -5,8 +5,9 @@ namespace IfCastle\Application\Bootloader\Builder;
 
 use IfCastle\Application\Bootloader\BootloaderExecutorInterface;
 
-interface BootloaderBuilderInterface
+interface BootloaderBuilderInterface extends ZeroContextInterface
 {
     public function build(): void;
+    
     public function getBootloader(): BootloaderExecutorInterface;
 }

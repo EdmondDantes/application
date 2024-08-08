@@ -63,7 +63,7 @@ abstract class ApplicationAbstract implements ApplicationInterface
     
     protected static function defineBootloader(string $appDir): BootloaderBuilderInterface
     {
-        return new BootloaderBuilderByDirectory($appDir.'/bootloader', static::APP_CODE);
+        return new BootloaderBuilderByDirectory($appDir, $appDir.'/bootloader', static::APP_CODE);
     }
     
     protected LoggerInterface|null $logger = null;

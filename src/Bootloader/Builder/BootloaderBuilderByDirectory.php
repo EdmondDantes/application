@@ -3,13 +3,57 @@ declare(strict_types=1);
 
 namespace IfCastle\Application\Bootloader\Builder;
 
+use IfCastle\DI\ConfigInterface;
+
 final class BootloaderBuilderByDirectory extends BootloaderBuilderAbstract
 {
-    public function __construct(private readonly string $bootloaderDir, protected string $appCode) {}
+    public function __construct(
+        protected readonly string $appDirectory,
+        private readonly string   $bootloaderDir,
+        protected readonly string $applicationType
+    ) {}
+    
+    #[\Override]
+    protected function initConfigurator(): ConfigInterface
+    {
+        $configuratorFile           = $this->bootloaderDir.'/configurator.ini';
+        
+        if(false === file_exists($configuratorFile)) {
+            throw new \RuntimeException('Configurator file not found: ' . $configuratorFile);
+        }
+        
+        $bootloaderConfig           = $this->read($configuratorFile);
+        
+        if(empty($bootloaderConfig['bootloader'])) {
+            throw new \RuntimeException('Bootloader not found in configurator file: ' . $configuratorFile);
+        }
+        
+        $configuratorClass          = $bootloaderConfig['bootloader'];
+        
+        if(false === class_exists($configuratorClass)) {
+            throw new \RuntimeException('Configurator class not found: ' . $configuratorClass);
+        }
+        
+        $configurator              = new $configuratorClass;
+        
+        if(false === $configurator instanceof ConfigInterface) {
+            throw new \RuntimeException('Configurator class must implement ConfigInterface: ' . $configuratorClass);
+        }
+        
+        if($configurator instanceof ZeroContextRequiredInterface) {
+            $configurator->setZeroContext($this);
+        }
+        
+        return $configurator;
+    }
     
     protected function fetchBootloaders(): iterable
     {
         foreach (glob($this->bootloaderDir.'/*.ini') as $file) {
+            
+            if(str_ends_with('configurator.ini', $file)) {
+                continue;
+            }
             
             $bootloaderConfig        = $this->read($file);
             
@@ -23,7 +67,7 @@ final class BootloaderBuilderByDirectory extends BootloaderBuilderAbstract
             
             if(array_key_exists('for_application', $bootloaderConfig)
                && is_array($bootloaderConfig['for_application'])
-               && in_array($this->appCode, $bootloaderConfig['for_application']) === false) {
+               && in_array($this->applicationType, $bootloaderConfig['for_application']) === false) {
                 continue;
             }
             

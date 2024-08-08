@@ -6,11 +6,30 @@ namespace IfCastle\Application\Bootloader;
 use IfCastle\Application\Bootloader\Builder\PublicEnvironmentBuilderInterface;
 use IfCastle\Application\RequestEnvironment\Builder\RequestEnvironmentBuilderInterface;
 use IfCastle\DI\BuilderInterface;
+use IfCastle\DI\ConfigInterface;
 use IfCastle\DI\Container;
 
 class BootloaderContext             extends Container
                                     implements BootloaderContextInterface
 {
+    #[\Override]
+    public function getApplicationDirectory(): string
+    {
+        return $this->container[self::APPLICATION_DIRECTORY] ?? '';
+    }
+    
+    #[\Override]
+    public function getApplicationType(): string
+    {
+        return $this->container[self::APPLICATION_TYPE] ?? '';
+    }
+    
+    #[\Override]
+    public function getApplicationConfig(): ConfigInterface
+    {
+        return $this->resolveDependency(ConfigInterface::class);
+    }
+    
     #[\Override]
     public function getSystemEnvironmentBootBuilder(): BuilderInterface
     {

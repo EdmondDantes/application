@@ -6,15 +6,32 @@ namespace IfCastle\Application\Bootloader\Builder;
 use IfCastle\Application\Bootloader\BootloaderExecutor;
 use IfCastle\Application\Bootloader\BootloaderExecutorInterface;
 use IfCastle\Application\Bootloader\BootloaderInterface;
+use IfCastle\DI\ConfigInterface;
 
 abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
 {
-    protected BootloaderExecutorInterface|null $bootloader = null;
+    protected readonly string $appDirectory;
     
+    protected BootloaderExecutorInterface|null $bootloader = null;
+    protected readonly string $applicationType;
+    
+    #[\Override]
+    public function getApplicationDirectory(): string
+    {
+        return $this->appDirectory;
+    }
+    
+    #[\Override]
+    public function getApplicationType(): string
+    {
+        return $this->applicationType;
+    }
+    
+    #[\Override]
     public function build(): void
     {
         if($this->bootloader === null) {
-            $this->bootloader        = new BootloaderExecutor();
+            $this->bootloader        = new BootloaderExecutor($this->initConfigurator(), $this->applicationType);
         }
         
         foreach ($this->fetchBootloaders() as $bootloaderClass) {
@@ -26,6 +43,7 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
         }
     }
     
+    #[\Override]
     public function getBootloader(): BootloaderExecutorInterface
     {
         if($this->bootloader === null) {
@@ -36,6 +54,7 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
     }
     
     abstract protected function fetchBootloaders(): iterable;
+    abstract protected function initConfigurator(): ConfigInterface;
     
     protected function handleBootloaderClass(string $bootloaderClass): void
     {
