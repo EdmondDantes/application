@@ -5,6 +5,8 @@ namespace IfCastle\Application\Bootloader\BootManager;
 
 final class BootManagerApplication
 {
+    public const string CONFIGURATOR = 'configurator';
+    
     public static function run(string $appDir, array $command = null): never
     {
         $appDir                     = $appDir.'/bootloader';

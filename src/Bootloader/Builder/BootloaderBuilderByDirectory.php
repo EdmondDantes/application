@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace IfCastle\Application\Bootloader\Builder;
 
+use IfCastle\Application\Bootloader\BootManager\BootManagerApplication;
 use IfCastle\DI\ConfigInterface;
 
 final class BootloaderBuilderByDirectory extends BootloaderBuilderAbstract
@@ -16,7 +17,7 @@ final class BootloaderBuilderByDirectory extends BootloaderBuilderAbstract
     #[\Override]
     protected function initConfigurator(): ConfigInterface
     {
-        $configuratorFile           = $this->bootloaderDir.'/configurator.ini';
+        $configuratorFile           = $this->bootloaderDir.'/'.BootManagerApplication::CONFIGURATOR.'.ini';
         
         if(false === file_exists($configuratorFile)) {
             throw new \RuntimeException('Configurator file not found: ' . $configuratorFile);
