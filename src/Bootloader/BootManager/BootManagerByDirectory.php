@@ -129,7 +129,7 @@ INI;
         foreach ($data as $key => $value) {
             if(is_array($value)) {
                 foreach ($value as $subValue) {
-                    $ini[] = $key.'[] = '.$this->valueToIni($subValue);
+                    $ini[]          = $key.'[] = '.$this->valueToIni($subValue);
                 }
                 
                 $ini[]              = '';
