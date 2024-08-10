@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace IfCastle\Application\Bootloader\BootManager;
 
+use IfCastle\Application\Bootloader\BootManager\Exceptions\BootloaderException;
+use IfCastle\Application\Bootloader\BootManager\Exceptions\PackageAlreadyExists;
+use IfCastle\Application\Bootloader\BootManager\Exceptions\PackageNotFound;
 use IfCastle\OsUtilities\FileSystem\File;
 use IfCastle\OsUtilities\Safe;
 
@@ -23,7 +26,7 @@ class BootManagerByDirectory        implements BootManagerInterface
         $file                       = $this->bootloaderDir.'/'.$componentName.'.ini';
         
         if(file_exists($file)) {
-            throw new \RuntimeException('Bootloader already exists: '.$componentName);
+            throw new PackageAlreadyExists($componentName);
         }
 
         $data = <<<INI
@@ -49,13 +52,13 @@ INI;
         $file                       = $this->bootloaderDir.'/'.$componentName.'.ini';
         
         if(false === file_exists($file)) {
-            throw new \RuntimeException('Bootloader not found: '.$componentName);
+            throw new PackageNotFound($componentName);
         }
         
         $data                       = parse_ini_file($file, true);
         
         if(false === is_array($data)) {
-            throw new \RuntimeException('Invalid bootloader file: '.$file);
+            throw new BootloaderException('Invalid bootloader file: '.$file);
         }
         
         $data['is_active']          = true;
@@ -71,13 +74,13 @@ INI;
         $file                       = $this->bootloaderDir.'/'.$componentName.'.ini';
         
         if(false === file_exists($file)) {
-            throw new \RuntimeException('Bootloader not found: '.$componentName);
+            throw new BootloaderException('Bootloader not found: '.$componentName);
         }
         
         $data                       = parse_ini_file($file, true);
         
         if(false === is_array($data)) {
-            throw new \RuntimeException('Invalid bootloader file: '.$file);
+            throw new BootloaderException('Invalid bootloader file: '.$file);
         }
         
         $data['is_active']          = false;
@@ -93,7 +96,7 @@ INI;
         $file                       = $this->bootloaderDir.'/'.$componentName.'.ini';
         
         if(false === file_exists($file)) {
-            throw new \RuntimeException('Bootloader not found: '.$componentName);
+            throw new PackageNotFound($componentName);
         }
         
         Safe::execute(fn() => unlink($file));
@@ -102,7 +105,7 @@ INI;
     protected function validateComponent(string $componentName): void
     {
         if(preg_match('/[^a-z0-9_]/', $componentName)) {
-            throw new \RuntimeException('Invalid component name: '.$componentName);
+            throw new BootloaderException('Invalid component name: '.$componentName);
         }
     }
     
