@@ -24,8 +24,5 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.60",
         "amphp/php-cs-fixer-config": "^2.1"
-    },
-    "bin": [
-        "if-bootloader"
-    ]
+    }
 }
