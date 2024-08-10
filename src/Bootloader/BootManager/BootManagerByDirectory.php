@@ -117,7 +117,7 @@ class BootManagerByDirectory        implements BootManagerInterface
 ; ========================================================
 INI;
         
-        return $header.$this->arrayToIni($data);
+        return $header.PHP_EOL.PHP_EOL.$this->arrayToIni($data);
     }
     
     protected function arrayToIni(array $data): string
