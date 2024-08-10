@@ -126,17 +126,62 @@ INI;
         
         foreach ($data as $key => $value) {
             if(is_array($value)) {
-                foreach ($value as $subValue) {
-                    $ini[]          = $key.'[] = '.$this->valueToIni($subValue);
+                
+                if(!is_string($key)) {
+                    throw new BootloaderException('Nested arrays are not supported for ini files with not string keys');
                 }
                 
-                $ini[]              = '';
+                if(array_is_list($value)) {
+                    $ini[]          = array_merge($ini, $this->arrayToBlock($key, $value));
+                } else {
+                    $ini[]          = array_merge($ini, $this->arrayToSection($key, $value));
+                }
+                
             } else {
                 $ini[]              = $key.' = '.$this->valueToIni($value);
             }
         }
         
         return implode(PHP_EOL, $ini);
+    }
+    
+    protected function arrayToSection(string $section, array $data): array
+    {
+        $ini                        = [];
+        $ini[]                      = '';
+        $ini[]                      = '['.$section.']';
+        
+        foreach ($data as $key => $value) {
+            if(is_array($value)) {
+                $ini[]              = array_merge($ini, $this->arrayToBlock($key, $value));
+            } else {
+                $ini[]              = $key.' = '.$this->valueToIni($value);
+            }
+        }
+        
+        return $ini;
+    }
+    
+    protected function arrayToBlock(string $block, array $data): array
+    {
+        $ini                        = [];
+        $ini[]                      = '';
+        $isList                     = array_is_list($data);
+        
+        foreach ($data as $key => $value) {
+            
+            if(is_array($value)) {
+                throw new BootloaderException('Nested arrays are not supported for sections: ' . $block);
+            }
+            
+            if($isList) {
+                $ini[]              = $block . '[] = ' . $this->valueToIni($value);
+            } else {
+                $ini[]              = $block . '[' . $key . '] = ' . $this->valueToIni($value);
+            }
+        }
+
+        return $ini;
     }
     
     protected function valueToIni(mixed $value): string
