@@ -29,19 +29,17 @@ class BootManagerByDirectory        implements BootManagerInterface
             throw new PackageAlreadyExists($componentName);
         }
 
-        $data = <<<INI
-is_active = true
-INI;
+        $data['is_active']          = true;
 
         foreach ($bootloaders as $bootloader) {
-            $data .= 'bootloader[] = "'.$bootloader.'"'.PHP_EOL;
+            $data['bootloader'][]   = $bootloader;
         }
 
         foreach ($applications as $application) {
-            $data .= 'for_application[] = "'.$application.'"'.PHP_EOL;
+            $data['for_application'][] = $application;
         }
 
-        File::put($file, $data);
+        File::put($file, $this->generateBootloaderContent($data));
     }
     
     #[\Override]
@@ -150,6 +148,9 @@ INI;
         if(is_bool($value)) {
             return $value ? 'true' : 'false';
         }
+
+        // escape double quotes and backslashes
+        $value                      = str_replace(['\\', '"'], ['\\\\', '\"'], $value);
         
         return '"'.$value.'"';
     }
