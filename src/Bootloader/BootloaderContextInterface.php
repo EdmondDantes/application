@@ -8,8 +8,9 @@ use IfCastle\Application\RequestEnvironment\Builder\RequestEnvironmentBuilderInt
 use IfCastle\DI\BuilderInterface;
 use IfCastle\DI\ConfigInterface;
 use IfCastle\DI\ContainerInterface;
+use IfCastle\DI\ContainerMutableInterface;
 
-interface BootloaderContextInterface extends ContainerInterface
+interface BootloaderContextInterface extends ContainerInterface, ContainerMutableInterface
 {
     public const string APPLICATION_DIRECTORY = 'applicationDirectory';
     public const string APPLICATION_TYPE = 'applicationType';

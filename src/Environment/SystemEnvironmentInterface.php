@@ -12,7 +12,7 @@ use IfCastle\DI\DisposableInterface;
 
 interface SystemEnvironmentInterface extends EnvironmentInterface, DisposableInterface
 {
-    public const string EXECUTION_ROLES = 'execution_roles';
+    public const string EXECUTION_ROLES = 'executionRoles';
     
     public function getEngine(): EngineInterface;
     

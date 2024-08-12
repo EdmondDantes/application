@@ -53,16 +53,16 @@
         },
         {
             "name": "ifcastle/di",
-            "version": "v0.5.8",
+            "version": "v0.5.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EdmondDantes/di.git",
-                "reference": "ed726dc6c9864164ab5b2b27c9babec8df4954d4"
+                "reference": "df1d53257237a1c2cd48342661c107a04ca33b26"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EdmondDantes/di/zipball/ed726dc6c9864164ab5b2b27c9babec8df4954d4",
-                "reference": "ed726dc6c9864164ab5b2b27c9babec8df4954d4",
+                "url": "https://api.github.com/repos/EdmondDantes/di/zipball/df1d53257237a1c2cd48342661c107a04ca33b26",
+                "reference": "df1d53257237a1c2cd48342661c107a04ca33b26",
                 "shasum": ""
             },
             "require": {
@@ -99,9 +99,9 @@
             ],
             "support": {
                 "issues": "https://github.com/EdmondDantes/di/issues",
-                "source": "https://github.com/EdmondDantes/di/tree/v0.5.8"
+                "source": "https://github.com/EdmondDantes/di/tree/v0.5.10"
             },
-            "time": "2024-08-08T07:24:30+00:00"
+            "time": "2024-08-12T12:18:51+00:00"
         },
         {
             "name": "ifcastle/exceptions",
@@ -195,16 +195,16 @@
         },
         {
             "name": "ifcastle/service-manager",
-            "version": "v0.5.5",
+            "version": "v0.5.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EdmondDantes/service-manager.git",
-                "reference": "f951a0addbde322ceac74fdf3cfba1ff9e28c301"
+                "reference": "336415a818b2e34518e69e47514a5f84032e2b62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EdmondDantes/service-manager/zipball/f951a0addbde322ceac74fdf3cfba1ff9e28c301",
-                "reference": "f951a0addbde322ceac74fdf3cfba1ff9e28c301",
+                "url": "https://api.github.com/repos/EdmondDantes/service-manager/zipball/336415a818b2e34518e69e47514a5f84032e2b62",
+                "reference": "336415a818b2e34518e69e47514a5f84032e2b62",
                 "shasum": ""
             },
             "require": {
@@ -233,9 +233,9 @@
             ],
             "support": {
                 "issues": "https://github.com/EdmondDantes/service-manager/issues",
-                "source": "https://github.com/EdmondDantes/service-manager/tree/v0.5.5"
+                "source": "https://github.com/EdmondDantes/service-manager/tree/v0.5.6"
             },
-            "time": "2024-08-07T16:39:08+00:00"
+            "time": "2024-08-12T09:49:10+00:00"
         },
         {
             "name": "ifcastle/type-definitions",

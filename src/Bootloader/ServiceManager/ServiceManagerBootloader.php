@@ -34,7 +34,7 @@ final class ServiceManagerBootloader implements AutoResolverInterface, Disposabl
     #[\Override]
     public function dispose(): void
     {
-        $this->systemEnvironment = null;
+        $this->systemEnvironment    = null;
     }
     
     public function __invoke(): void

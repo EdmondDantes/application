@@ -8,10 +8,13 @@ use IfCastle\Application\RequestEnvironment\Builder\RequestEnvironmentBuilderInt
 use IfCastle\DI\BuilderInterface;
 use IfCastle\DI\ConfigInterface;
 use IfCastle\DI\Container;
+use IfCastle\DI\ContainerMutableTrait;
 
 class BootloaderContext             extends Container
                                     implements BootloaderContextInterface
 {
+    use ContainerMutableTrait;
+    
     #[\Override]
     public function getApplicationDirectory(): string
     {

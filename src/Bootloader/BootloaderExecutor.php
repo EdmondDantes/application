@@ -5,6 +5,7 @@ namespace IfCastle\Application\Bootloader;
 
 use IfCastle\Application\Bootloader\Builder\PublicEnvironmentBuilderInterface;
 use IfCastle\Application\Environment\PublicEnvironmentInterface;
+use IfCastle\Application\Environment\SystemEnvironmentInterface;
 use IfCastle\Application\RequestEnvironment\Builder\RequestEnvironmentBuilder;
 use IfCastle\DesignPatterns\ExecutionPlan\BeforeAfterExecutor;
 use IfCastle\DI\BuilderInterface;
@@ -79,7 +80,18 @@ class BootloaderExecutor            extends BeforeAfterExecutor
     
     protected function defineExecutionRoles(): void
     {
-    
+        foreach ($this->config->findSection(SystemEnvironmentInterface::EXECUTION_ROLES) ?? [] as $role => $value) {
+            if(!empty($value)) {
+                $executionRoles[]   = $role;
+            }
+        }
+        
+        $executionRoles[]           = $this->applicationType;
+        
+        $executionRoles             = array_unique($executionRoles);
+        
+        $this->bootloaderContext->set(SystemEnvironmentInterface::EXECUTION_ROLES, $executionRoles);
+        $this->getSystemEnvironmentBootBuilder()->set(SystemEnvironmentInterface::EXECUTION_ROLES, $executionRoles);
     }
     
     protected function startApplication(): void
