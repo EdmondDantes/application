@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace IfCastle\Application\Bootloader;
 
 use IfCastle\Application\Bootloader\Builder\PublicEnvironmentBuilderInterface;
+use IfCastle\Application\Environment\SystemEnvironmentInterface;
 use IfCastle\Application\RequestEnvironment\Builder\RequestEnvironmentBuilderInterface;
 use IfCastle\DI\BuilderInterface;
 use IfCastle\DI\ConfigInterface;
@@ -25,6 +26,12 @@ class BootloaderContext             extends Container
     public function getApplicationType(): string
     {
         return $this->container[self::APPLICATION_TYPE] ?? '';
+    }
+    
+    #[\Override]
+    public function getExecutionRoles(): array
+    {
+        return $this->container[SystemEnvironmentInterface::EXECUTION_ROLES] ?? [];
     }
     
     #[\Override]

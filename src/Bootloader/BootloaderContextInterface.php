@@ -19,6 +19,11 @@ interface BootloaderContextInterface extends ContainerInterface, ContainerMutabl
     
     public function getApplicationType(): string;
     
+    /**
+     * @return string[]
+     */
+    public function getExecutionRoles(): array;
+    
     public function getApplicationConfig(): ConfigInterface;
     
     public function getSystemEnvironmentBootBuilder(): BuilderInterface;

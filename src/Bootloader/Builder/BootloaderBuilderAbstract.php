@@ -6,6 +6,7 @@ namespace IfCastle\Application\Bootloader\Builder;
 use IfCastle\Application\Bootloader\BootloaderExecutor;
 use IfCastle\Application\Bootloader\BootloaderExecutorInterface;
 use IfCastle\Application\Bootloader\BootloaderInterface;
+use IfCastle\Application\Environment\SystemEnvironmentInterface;
 use IfCastle\DI\ConfigInterface;
 
 abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
@@ -14,6 +15,8 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
     
     protected BootloaderExecutorInterface|null $bootloader = null;
     protected readonly string $applicationType;
+    
+    protected array $executionRoles;
     
     #[\Override]
     public function getApplicationDirectory(): string
@@ -28,10 +31,18 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
     }
     
     #[\Override]
+    public function getExecutionRoles(): array
+    {
+        return $this->executionRoles;
+    }
+    
+    #[\Override]
     public function build(): void
     {
         if($this->bootloader === null) {
-            $this->bootloader        = new BootloaderExecutor($this->initConfigurator(), $this->applicationType);
+            $configurator           = $this->initConfigurator();
+            $this->bootloader        = new BootloaderExecutor($configurator, $this->applicationType);
+            $this->defineExecutionRoles($configurator);
         }
         
         foreach ($this->fetchBootloaders() as $bootloaderClass) {
@@ -65,5 +76,17 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
         }
         
         $object->buildBootloader($this->bootloader);
+    }
+    
+    protected function defineExecutionRoles(ConfigInterface $configurator): void
+    {
+        foreach ($configurator->findSection(SystemEnvironmentInterface::EXECUTION_ROLES) ?? [] as $role => $value) {
+            if(!empty($value)) {
+                $executionRoles[]   = $role;
+            }
+        }
+        
+        $executionRoles[]           = $this->applicationType;
+        $this->executionRoles       = array_unique($executionRoles);
     }
 }

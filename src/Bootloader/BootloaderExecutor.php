@@ -25,15 +25,12 @@ class BootloaderExecutor            extends BeforeAfterExecutor
     public function __construct(protected ConfigInterface $config, protected readonly string $applicationType)
     {
         $this->initContext();
+        $this->defineExecutionRoles();
         
         parent::__construct(new HandlerExecutor($this->bootloaderContext));
         
-        $this->addBeforeHandler($this->defineExecutionRoles(...));
-        
         // Main stage
         $this->addHandler($this->startApplication(...));
-        
-        $this->initContext();
     }
     
     #[\Override]

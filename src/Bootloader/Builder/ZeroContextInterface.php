@@ -8,4 +8,9 @@ interface ZeroContextInterface
     public function getApplicationDirectory(): string;
     
     public function getApplicationType(): string;
+    
+    /**
+     * @return string[]
+     */
+    public function getExecutionRoles(): array;
 }
