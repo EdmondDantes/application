@@ -103,7 +103,6 @@ final class ServiceManagerBootloader implements AutoResolverInterface, Disposabl
     
     protected function defineScopes(): array
     {
-        /** @todo Implement defineScopes method */
-        return [];
+        return $this->systemEnvironment->getExecutionRoles();
     }
 }

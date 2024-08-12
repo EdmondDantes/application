@@ -25,8 +25,12 @@ final class HandlerExecutor         implements HandlerExecutorInterface
             return;
         }
         
+        if($handler instanceof BootloaderContextRequiredInterface) {
+            $handler->setBootloaderContext($bootloaderContext);
+        }
+        
         if($handler instanceof AutoResolverInterface) {
-            $handler->resolveDependencies($bootloaderContext);
+            $handler->resolveDependencies($bootloaderContext->getSystemEnvironment());
         }
         
         if(is_callable($handler)) {

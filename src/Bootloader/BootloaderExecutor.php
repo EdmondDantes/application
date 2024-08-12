@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace IfCastle\Application\Bootloader;
 
 use IfCastle\Application\Bootloader\Builder\PublicEnvironmentBuilderInterface;
+use IfCastle\Application\Bootloader\ServiceManager\ServiceManagerBootloader;
 use IfCastle\Application\Environment\PublicEnvironmentInterface;
 use IfCastle\Application\Environment\SystemEnvironmentInterface;
 use IfCastle\Application\RequestEnvironment\Builder\RequestEnvironmentBuilder;
@@ -31,6 +32,8 @@ class BootloaderExecutor            extends BeforeAfterExecutor
         
         // Main stage
         $this->addHandler($this->startApplication(...));
+        
+        $this->addAfterHandler(new ServiceManagerBootloader);
     }
     
     #[\Override]
