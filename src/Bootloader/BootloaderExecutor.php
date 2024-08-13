@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace IfCastle\Application\Bootloader;
 
+use IfCastle\Application\Bootloader\Builder\PublicEnvironmentBuilder;
 use IfCastle\Application\Bootloader\Builder\PublicEnvironmentBuilderInterface;
+use IfCastle\Application\Bootloader\Builder\SystemEnvironmentBuilder;
 use IfCastle\Application\Bootloader\ServiceManager\ServiceManagerBootloader;
 use IfCastle\Application\Environment\PublicEnvironmentInterface;
 use IfCastle\Application\Environment\SystemEnvironmentInterface;
@@ -72,8 +74,8 @@ class BootloaderExecutor            extends BeforeAfterExecutor
             ConfigInterface::class                      => $this->config,
             BootloaderContextInterface::APPLICATION_TYPE => $this->applicationType,
             BootloaderExecutorInterface::class          => \WeakReference::create($this),
-            BuilderInterface::class                     => new ContainerBuilder(),
-            PublicEnvironmentBuilderInterface::class    => new ContainerBuilder(),
+            BuilderInterface::class                     => new SystemEnvironmentBuilder(),
+            PublicEnvironmentBuilderInterface::class    => new PublicEnvironmentBuilder(),
             RequestEnvironmentBuilderInterface::class   => new RequestEnvironmentBuilder()
         ]);
     }

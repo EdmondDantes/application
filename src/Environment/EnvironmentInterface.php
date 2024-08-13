@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace IfCastle\Application\Environment;
 
 use IfCastle\DI\ContainerInterface;
+use IfCastle\DI\ContainerMutableInterface;
 
-interface EnvironmentInterface      extends ContainerInterface
+interface EnvironmentInterface      extends ContainerInterface, ContainerMutableInterface
 {
     public function get(string $key): mixed;
     
@@ -14,10 +15,6 @@ interface EnvironmentInterface      extends ContainerInterface
     public function find(string ...$path): mixed;
     
     public function is(string ...$path): bool;
-    
-    public function set(string $key, mixed $value): static;
-    
-    public function del(string $key): static;
     
     public function destroy(string $key): static;
     

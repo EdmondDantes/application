@@ -72,7 +72,7 @@ class Environment                   extends Container
      * @return  $this
      */
     #[\Override]
-    public function del(string $key): static
+    public function delete(string $key): static
     {
         if(array_key_exists($key, $this->container)) {
             unset($this->container[$key]);

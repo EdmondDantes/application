@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace IfCastle\Application\Bootloader\Builder;
 
-use IfCastle\Application\Environment\PublicEnvironment;
+use IfCastle\Application\Environment\SystemEnvironment;
 use IfCastle\DI\ContainerBuilder;
 use IfCastle\DI\ContainerInterface;
 use IfCastle\DI\ResolverInterface;
 
-class PublicEnvironmentBuilder extends ContainerBuilder implements PublicEnvironmentBuilderInterface
+class SystemEnvironmentBuilder      extends ContainerBuilder
 {
     #[\Override]
     public function buildContainer(
@@ -20,6 +20,6 @@ class PublicEnvironmentBuilder extends ContainerBuilder implements PublicEnviron
         $bindings                   = $this->bindings;
         $this->bindings             = [];
         
-        return new PublicEnvironment($resolver, $bindings, $parentContainer, $isWeakParent);
+        return new SystemEnvironment($resolver, $bindings, $parentContainer, $isWeakParent);
     }
 }
