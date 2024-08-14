@@ -30,7 +30,10 @@ final class HandlerExecutor         implements HandlerExecutorInterface
         }
         
         if($handler instanceof AutoResolverInterface) {
-            $handler->resolveDependencies($bootloaderContext->getSystemEnvironment());
+            $handler->resolveDependencies(
+                $bootloaderContext->getSystemEnvironment()
+                ?? throw new \Exception('System environment is required for AutoResolverInterface handler: '.$handler::class)
+            );
         }
         
         if(is_callable($handler)) {

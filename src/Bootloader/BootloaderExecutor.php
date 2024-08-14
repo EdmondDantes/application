@@ -13,7 +13,6 @@ use IfCastle\Application\RequestEnvironment\Builder\RequestEnvironmentBuilder;
 use IfCastle\DesignPatterns\ExecutionPlan\BeforeAfterExecutor;
 use IfCastle\DI\BuilderInterface;
 use IfCastle\DI\ConfigInterface;
-use IfCastle\DI\ContainerBuilder;
 use IfCastle\DI\DisposableInterface;
 use IfCastle\Application\RequestEnvironment\Builder\RequestEnvironmentBuilderInterface;
 use IfCastle\DI\Resolver;
@@ -118,6 +117,9 @@ class BootloaderExecutor            extends BeforeAfterExecutor
         
         $publicEnvironment          = $builder->buildContainer($this->getDependencyResolver(), $systemEnvironment, true);
         $systemEnvironment->set(PublicEnvironmentInterface::class, $publicEnvironment);
+        
+        // Assign system environment for bootloader context
+        $this->bootloaderContext->set(SystemEnvironmentInterface::class, $systemEnvironment);
         
         // Start application
         $startApplicationHandler    = $this->startApplicationHandler;
