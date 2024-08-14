@@ -54,6 +54,12 @@ abstract class ApplicationAbstract implements ApplicationInterface
             
         } catch (\Throwable $throwable) {
             $app?->criticalLog($throwable);
+            
+            if($app === null) {
+                echo $throwable->getMessage().' in '.$throwable->getFile().':'.$throwable->getLine();
+                exit(5);
+            }
+            
         } finally {
             $app?->end();
         }

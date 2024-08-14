@@ -57,4 +57,10 @@ class BootloaderContext             extends Container
     {
         return $this->resolveDependency(RequestEnvironmentBuilderInterface::class);
     }
+    
+    #[\Override]
+    public function getSystemEnvironment(): SystemEnvironmentInterface|null
+    {
+        return $this->findDependency(SystemEnvironmentInterface::class);
+    }
 }
