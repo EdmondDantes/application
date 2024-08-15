@@ -21,10 +21,8 @@ use IfCastle\ServiceManager\ServiceDescriptorBuilderInterface;
 use IfCastle\ServiceManager\ServiceLocator;
 use IfCastle\ServiceManager\ServiceLocatorInterface;
 
-final class ServiceManagerBootloader implements AutoResolverInterface, BootloaderContextRequiredInterface, DisposableInterface
+final class ServiceManagerBootloaderWithPublic implements AutoResolverInterface, BootloaderContextRequiredInterface, DisposableInterface
 {
-    public const string WAS_SERVICE_MANAGER_BOOTLOADER_EXECUTED = 'wasServiceManagerBootloaderExecuted';
-    
     protected SystemEnvironmentInterface|null $systemEnvironment = null;
 
     protected BootloaderContextInterface|null $bootloaderContext = null;
@@ -51,12 +49,6 @@ final class ServiceManagerBootloader implements AutoResolverInterface, Bootloade
     
     public function __invoke(): void
     {
-        if($this->bootloaderContext?->findKey(self::WAS_SERVICE_MANAGER_BOOTLOADER_EXECUTED) !== null) {
-            return;
-        }
-        
-        $this->bootloaderContext?->set(self::WAS_SERVICE_MANAGER_BOOTLOADER_EXECUTED, true);
-        
         $sysEnv                     = $this->systemEnvironment ?? $this->bootloaderContext?->getSystemEnvironment();
         
         if($sysEnv === null) {
