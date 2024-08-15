@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace IfCastle\Application\Bootloader\ServiceManager;
 
+use IfCastle\Application\Bootloader\BootloaderContextInterface;
+use IfCastle\Application\Bootloader\BootloaderContextRequiredInterface;
 use IfCastle\Application\Environment\PublicEnvironmentInterface;
 use IfCastle\Application\Environment\SystemEnvironmentInterface;
 use IfCastle\DI\AutoResolverInterface;
@@ -19,9 +21,19 @@ use IfCastle\ServiceManager\ServiceDescriptorBuilderInterface;
 use IfCastle\ServiceManager\ServiceLocator;
 use IfCastle\ServiceManager\ServiceLocatorInterface;
 
-final class ServiceManagerBootloader implements AutoResolverInterface, DisposableInterface
+final class ServiceManagerBootloader implements AutoResolverInterface, BootloaderContextRequiredInterface, DisposableInterface
 {
+    public const string WAS_SERVICE_MANAGER_BOOTLOADER_EXECUTED = 'wasServiceManagerBootloaderExecuted';
+    
     protected SystemEnvironmentInterface|null $systemEnvironment = null;
+
+    protected BootloaderContextInterface|null $bootloaderContext = null;
+    
+    #[\Override]
+    public function setBootloaderContext(BootloaderContextInterface $bootloaderContext): void
+    {
+        $this->bootloaderContext    = $bootloaderContext;
+    }
     
     #[\Override]
     public function resolveDependencies(ContainerInterface $container): void
@@ -39,11 +51,17 @@ final class ServiceManagerBootloader implements AutoResolverInterface, Disposabl
     
     public function __invoke(): void
     {
-        if($this->systemEnvironment === null) {
+        if($this->bootloaderContext?->findKey(self::WAS_SERVICE_MANAGER_BOOTLOADER_EXECUTED) !== null) {
             return;
         }
         
-        $sysEnv                     = $this->systemEnvironment;
+        $this->bootloaderContext?->set(self::WAS_SERVICE_MANAGER_BOOTLOADER_EXECUTED, true);
+        
+        $sysEnv                     = $this->systemEnvironment ?? $this->bootloaderContext?->getSystemEnvironment();
+        
+        if($sysEnv === null) {
+            throw new \Exception('System environment is required for ServiceManagerBootloader');
+        }
         
         $publicEnvironment          = $sysEnv->resolveDependency(PublicEnvironmentInterface::class);
         $reader                     = $sysEnv->resolveDependency(RepositoryReaderByScopeInterface::class);

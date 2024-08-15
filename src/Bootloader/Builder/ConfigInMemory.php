@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace IfCastle\Application\MockApplication;
+namespace IfCastle\Application\Bootloader\Builder;
 
 use IfCastle\DI\ConfigInterface;
 
-final class MemoryConfig implements ConfigInterface
+final class ConfigInMemory implements ConfigInterface
 {
     public function __construct(public array $data = []) {}
     
