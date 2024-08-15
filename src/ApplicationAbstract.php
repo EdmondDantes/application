@@ -91,7 +91,7 @@ abstract class ApplicationAbstract implements ApplicationInterface
     ) {}
     
     #[\Override]
-    public function start(): void
+    final public function start(): void
     {
         if($this->isStarted) {
             return;
@@ -148,6 +148,11 @@ abstract class ApplicationAbstract implements ApplicationInterface
             $engine                 = $this->systemEnvironment->findDependency(EngineInterface::class);
             
             if($engine === null) {
+                $engine             = $this->defineEngine();
+                $this->systemEnvironment->set(EngineInterface::class, $engine);
+            }
+            
+            if($engine === null) {
                 throw new FatalException('Engine is not found');
             }
             
@@ -165,8 +170,13 @@ abstract class ApplicationAbstract implements ApplicationInterface
     
     protected function engineStartAfter(): void {}
     
+    protected function defineEngine(): EngineInterface|null
+    {
+        return null;
+    }
+    
     #[\Override]
-    public function end(): void
+    final public function end(): void
     {
         if($this->isEnded) {
             return;
