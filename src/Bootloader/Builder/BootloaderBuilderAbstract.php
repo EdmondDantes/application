@@ -6,8 +6,11 @@ namespace IfCastle\Application\Bootloader\Builder;
 use IfCastle\Application\Bootloader\BootloaderExecutor;
 use IfCastle\Application\Bootloader\BootloaderExecutorInterface;
 use IfCastle\Application\Bootloader\BootloaderInterface;
+use IfCastle\Application\Bootloader\ServiceManager\ServiceManagerBootloader;
 use IfCastle\Application\Environment\SystemEnvironmentInterface;
 use IfCastle\DI\ConfigInterface;
+use IfCastle\ServiceManager\ExecutorInterface;
+use IfCastle\ServiceManager\ServiceLocatorInterface;
 
 abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
 {
@@ -52,6 +55,8 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
             
             $this->handleBootloaderClass($bootloaderClass);
         }
+        
+        $this->defineServiceManagerBootloader();
     }
     
     #[\Override]
@@ -88,5 +93,16 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
         
         $executionRoles[]           = $this->applicationType;
         $this->executionRoles       = array_unique($executionRoles);
+    }
+    
+    protected function defineServiceManagerBootloader(): void
+    {
+        $builder                    = $this->bootloader->getBootloaderContext()->getSystemEnvironmentBootBuilder();
+        
+        if($builder->isBound(ServiceLocatorInterface::class, ExecutorInterface::class)) {
+            return;
+        }
+        
+        $this->handleBootloaderClass(ServiceManagerBootloader::class);
     }
 }

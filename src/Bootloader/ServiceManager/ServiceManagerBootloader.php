@@ -10,6 +10,7 @@ use IfCastle\ServiceManager\DescriptorRepository;
 use IfCastle\ServiceManager\DescriptorRepositoryInterface;
 use IfCastle\ServiceManager\ServiceDescriptorBuilderByReflection;
 use IfCastle\ServiceManager\ServiceDescriptorBuilderInterface;
+use IfCastle\ServiceManager\ServiceLocatorInterface;
 use IfCastle\ServiceManager\ServiceLocatorPublicInternal;
 use IfCastle\ServiceManager\ServiceLocatorPublicInternalInterface;
 
@@ -23,20 +24,25 @@ final class ServiceManagerBootloader implements BootloaderInterface
         $this->defineServiceLocatorPublicInternal($builder);
         $this->defineDescriptorRepository($builder);
         $this->defineDescriptorBuilder($builder);
+        
+        $bootloaderExecutor->addAfterHandler(new ServiceExecutorPublicInternalBootloader);
     }
     
     private function defineServiceLocatorPublicInternal(BuilderInterface $builder): void
     {
-        if($builder->isBound(ServiceLocatorPublicInternalInterface::class) !== null) {
+        if($builder->isBound(ServiceLocatorInterface::class)) {
             return;
         }
         
-        $builder->bindConstructible(ServiceLocatorPublicInternalInterface::class, ServiceLocatorPublicInternal::class);
+        $builder->bindConstructible(
+            [ServiceLocatorInterface::class, ServiceLocatorPublicInternalInterface::class],
+            ServiceLocatorPublicInternal::class
+        );
     }
     
     private function defineDescriptorRepository(BuilderInterface $builder): void
     {
-        if($builder->isBound(DescriptorRepositoryInterface::class) !== null) {
+        if($builder->isBound(DescriptorRepositoryInterface::class)) {
             return;
         }
         
@@ -45,7 +51,7 @@ final class ServiceManagerBootloader implements BootloaderInterface
     
     private function defineDescriptorBuilder(BuilderInterface $builder): void
     {
-        if($builder->isBound(ServiceDescriptorBuilderInterface::class) !== null) {
+        if($builder->isBound(ServiceDescriptorBuilderInterface::class)) {
             return;
         }
         
