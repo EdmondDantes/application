@@ -18,20 +18,26 @@ abstract class ApplicationAbstract implements ApplicationInterface
 {
     public const string APP_CODE    = 'app';
     
-    public static function run(string $appDir, BootloaderBuilderInterface $bootloaderBuilder = null): never
+    final public static function runAndExit(string $appDir, BootloaderBuilderInterface $bootloaderBuilder = null): never
     {
         try {
-            
-            $bootloaderBuilder      = $bootloaderBuilder ?? static::defineBootloader($appDir);
-            
-            $bootloaderBuilder->build();
-            $bootloader             = $bootloaderBuilder->getBootloader();
-            
-            unset($bootloaderBuilder);
+            static::run($appDir, $bootloaderBuilder);
         } catch (\Throwable $throwable) {
             echo $throwable->getMessage().' in '.$throwable->getFile().':'.$throwable->getLine();
-            exit(4);
+            exit(1);
         }
+        
+        exit(0);
+    }
+    
+    final public static function run(string $appDir, BootloaderBuilderInterface $bootloaderBuilder = null): void
+    {
+        $bootloaderBuilder          = $bootloaderBuilder ?? static::defineBootloader($appDir);
+        
+        $bootloaderBuilder->build();
+        $bootloader                 = $bootloaderBuilder->getBootloader();
+        
+        unset($bootloaderBuilder);
         
         try {
             
@@ -56,15 +62,12 @@ abstract class ApplicationAbstract implements ApplicationInterface
             $app?->criticalLog($throwable);
             
             if($app === null) {
-                echo $throwable->getMessage().' in '.$throwable->getFile().':'.$throwable->getLine();
-                exit(5);
+                throw $throwable;
             }
             
         } finally {
             $app?->end();
         }
-        
-        exit;
     }
     
     protected static function defineBootloader(string $appDir): BootloaderBuilderInterface

@@ -35,7 +35,7 @@ class ApplicationAbstractTest       extends TestCase
             ]
         );
         
-        TestApplication::runTest(self::APP_DIR, $bootloader);
+        TestApplication::run(self::APP_DIR, $bootloader);
         $this->assertLogFileNotExist();
     }
     
