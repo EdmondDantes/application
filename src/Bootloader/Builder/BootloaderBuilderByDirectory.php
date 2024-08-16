@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace IfCastle\Application\Bootloader\Builder;
 
+use IfCastle\Application\Bootloader\BootloaderInterface;
 use IfCastle\Application\Bootloader\BootManager\BootManagerApplication;
 use IfCastle\DI\ConfigInterface;
 
@@ -47,6 +48,10 @@ final class BootloaderBuilderByDirectory extends BootloaderBuilderAbstract
         
         if($configurator instanceof ZeroContextRequiredInterface) {
             $configurator->setZeroContext($this);
+        }
+        
+        if($configurator instanceof BootloaderInterface) {
+            $configurator->buildBootloader($this->bootloader);
         }
         
         return $configurator;
