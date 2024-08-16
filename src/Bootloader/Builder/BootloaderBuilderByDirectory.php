@@ -31,6 +31,10 @@ final class BootloaderBuilderByDirectory extends BootloaderBuilderAbstract
         
         $configuratorClass          = $bootloaderConfig['bootloader'];
         
+        if(is_array($configuratorClass)) {
+            $configuratorClass      = $configuratorClass[0];
+        }
+        
         if(false === class_exists($configuratorClass)) {
             throw new \RuntimeException('Configurator class not found: ' . $configuratorClass);
         }
