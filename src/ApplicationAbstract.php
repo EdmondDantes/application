@@ -3,9 +3,13 @@ declare(strict_types=1);
 
 namespace IfCastle\Application;
 
+use IfCastle\Application\Bootloader\BootloaderExecutorInterface;
 use IfCastle\Application\Bootloader\Builder\BootloaderBuilderByDirectory;
 use IfCastle\Application\Bootloader\Builder\BootloaderBuilderInterface;
 use IfCastle\Application\Environment\SystemEnvironmentInterface;
+use IfCastle\DI\BuilderInterface;
+use IfCastle\DI\ConstructibleDependency;
+use IfCastle\DI\ConstructibleDependencyByReflection;
 use IfCastle\DI\DisposableInterface;
 use IfCastle\Exceptions\BaseException;
 use IfCastle\Exceptions\BaseExceptionInterface;
@@ -36,6 +40,8 @@ abstract class ApplicationAbstract implements ApplicationInterface
         
         $bootloaderBuilder->build();
         $bootloader                 = $bootloaderBuilder->getBootloader();
+        static::predefineEngine($bootloader);
+        static::postConfigureBootloader($bootloader);
         
         unset($bootloaderBuilder);
         
@@ -74,6 +80,10 @@ abstract class ApplicationAbstract implements ApplicationInterface
     {
         return new BootloaderBuilderByDirectory($appDir, $appDir.'/bootloader', static::APP_CODE);
     }
+    
+    protected static function postConfigureBootloader(BootloaderExecutorInterface $bootloaderExecutor): void {}
+    
+    protected static function predefineEngine(BootloaderExecutorInterface $bootloaderExecutor): void {}
     
     protected LoggerInterface|null $logger = null;
     
@@ -148,12 +158,7 @@ abstract class ApplicationAbstract implements ApplicationInterface
     {
         try {
             
-            $engine                 = $this->systemEnvironment->findDependency(EngineInterface::class);
-            
-            if($engine === null) {
-                $engine             = $this->defineEngine();
-                $this->systemEnvironment->set(EngineInterface::class, $engine);
-            }
+            $engine                 = $this->defineEngine();
             
             if($engine === null) {
                 throw new FatalException('Engine is not found');
@@ -177,7 +182,7 @@ abstract class ApplicationAbstract implements ApplicationInterface
     
     protected function defineEngine(): EngineInterface|null
     {
-        return null;
+        return $this->systemEnvironment->findDependency(EngineInterface::class);
     }
     
     abstract protected function defineEngineRole(): EngineRolesEnum;
