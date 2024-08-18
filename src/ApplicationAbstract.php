@@ -159,6 +159,8 @@ abstract class ApplicationAbstract implements ApplicationInterface
                 throw new FatalException('Engine is not found');
             }
             
+            $engine->defineEngineRole($this->defineEngineRole());
+            
             $this->engineStartBefore();
             $engine->start();
             $this->engineStartAfter();
@@ -177,6 +179,8 @@ abstract class ApplicationAbstract implements ApplicationInterface
     {
         return null;
     }
+    
+    abstract protected function defineEngineRole(): EngineRolesEnum;
     
     #[\Override]
     final public function end(): void

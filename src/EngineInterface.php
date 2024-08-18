@@ -5,6 +5,8 @@ namespace IfCastle\Application;
 
 interface EngineInterface
 {
+    public function defineEngineRole(EngineRolesEnum $engineRole = null): static;
+    
     /**
      * Start of Engine
      */

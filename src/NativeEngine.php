@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace IfCastle\Application;
 
-class NativeEngine                  implements EngineInterface
+class NativeEngine                  extends EngineAbstract
 {
     #[\Override]
     public function start(): void
@@ -18,30 +18,6 @@ class NativeEngine                  implements EngineInterface
         } else {
             return 'php-cli/'.phpversion();
         }
-    }
-    
-    #[\Override]
-    public function getEngineRole(): EngineRolesEnum
-    {
-        return $this->isServer() ? EngineRolesEnum::SERVER : EngineRolesEnum::CONSOLE;
-    }
-    
-    #[\Override]
-    public function isServer(): bool
-    {
-        return \php_sapi_name() !== 'cli';
-    }
-    
-    #[\Override]
-    public function isProcess(): bool
-    {
-        return false;
-    }
-    
-    #[\Override]
-    public function isConsole(): bool
-    {
-        return \php_sapi_name() === 'cli';
     }
     
     #[\Override]
