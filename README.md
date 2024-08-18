@@ -7,4 +7,4 @@ to function as an `API`, with components that will be permanently loaded into me
 
 ![Application pattern](docs/application.svg)
 
-Read more about the [Application pattern](docs/architecture.md).
+Read more about the [Application pattern](docs/01-architecture).
