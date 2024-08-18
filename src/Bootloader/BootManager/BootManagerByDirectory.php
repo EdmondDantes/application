@@ -53,7 +53,7 @@ class BootManagerByDirectory        implements BootManagerInterface
             throw new PackageNotFound($componentName);
         }
         
-        $data                       = parse_ini_file($file, true);
+        $data                       = parse_ini_file($file, true, INI_SCANNER_TYPED);
         
         if(false === is_array($data)) {
             throw new BootloaderException('Invalid bootloader file: '.$file);
@@ -102,7 +102,7 @@ class BootManagerByDirectory        implements BootManagerInterface
     
     protected function validateComponent(string $componentName): void
     {
-        if(preg_match('/[^a-z0-9_]/', $componentName)) {
+        if(preg_match('/[^a-z0-9_]/i', $componentName)) {
             throw new BootloaderException('Invalid component name: '.$componentName);
         }
     }
@@ -132,9 +132,9 @@ INI;
                 }
                 
                 if(array_is_list($value)) {
-                    $ini[]          = array_merge($ini, $this->arrayToBlock($key, $value));
+                    $ini            = array_merge($ini, $this->arrayToBlock($key, $value));
                 } else {
-                    $ini[]          = array_merge($ini, $this->arrayToSection($key, $value));
+                    $ini            = array_merge($ini, $this->arrayToSection($key, $value));
                 }
                 
             } else {
@@ -153,7 +153,7 @@ INI;
         
         foreach ($data as $key => $value) {
             if(is_array($value)) {
-                $ini[]              = array_merge($ini, $this->arrayToBlock($key, $value));
+                $ini                = array_merge($ini, $this->arrayToBlock($key, $value));
             } else {
                 $ini[]              = $key.' = '.$this->valueToIni($value);
             }
