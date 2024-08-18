@@ -95,6 +95,9 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
         $this->executionRoles       = array_unique($executionRoles);
     }
     
+    /**
+     * Define the Service Manager Bootloader if it is not already defined.
+     */
     protected function defineServiceManagerBootloader(): void
     {
         $builder                    = $this->bootloader->getBootloaderContext()->getSystemEnvironmentBootBuilder();

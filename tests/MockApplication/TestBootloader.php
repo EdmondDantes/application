@@ -7,7 +7,6 @@ use IfCastle\Application\Bootloader\BootloaderExecutorInterface;
 use IfCastle\Application\Bootloader\BootloaderInterface;
 use IfCastle\Application\EngineInterface;
 use IfCastle\Application\NativeEngine;
-use Random\Engine;
 
 final class TestBootloader implements BootloaderInterface
 {

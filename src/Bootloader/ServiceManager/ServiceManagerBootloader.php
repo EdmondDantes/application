@@ -14,6 +14,11 @@ use IfCastle\ServiceManager\ServiceLocatorInterface;
 use IfCastle\ServiceManager\ServiceLocatorPublicInternal;
 use IfCastle\ServiceManager\ServiceLocatorPublicInternalInterface;
 
+/**
+ * The Service Manager is the only mandatory component that must always be initialized for the `SystemEnvironment`.
+ * If it is not specified during the creation of the `BootloaderExecutor` object,
+ * it is initialized by default using the `ServiceManagerBootloader` class.
+ */
 final class ServiceManagerBootloader implements BootloaderInterface
 {
     #[\Override]
