@@ -4,24 +4,24 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "951f3b424dc0c97ffc5371a7796015df",
+    "content-hash": "c5bf7282e21ab36961cfb33970b10041",
     "packages": [
         {
             "name": "ifcastle/design-patterns",
-            "version": "v0.1.3",
+            "version": "v0.2.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EdmondDantes/design-patterns.git",
-                "reference": "ba1e08686c61970dfb59d10a1052c05a06183c7a"
+                "reference": "94c6bd335827f0eb181ca1cbe6ebf2cdcb240efb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EdmondDantes/design-patterns/zipball/ba1e08686c61970dfb59d10a1052c05a06183c7a",
-                "reference": "ba1e08686c61970dfb59d10a1052c05a06183c7a",
+                "url": "https://api.github.com/repos/EdmondDantes/design-patterns/zipball/94c6bd335827f0eb181ca1cbe6ebf2cdcb240efb",
+                "reference": "94c6bd335827f0eb181ca1cbe6ebf2cdcb240efb",
                 "shasum": ""
             },
             "require": {
-                "ifcastle/di": "^0.5.2",
+                "ifcastle/di": "^0.6.0",
                 "ifcastle/exceptions": "^5.0"
             },
             "require-dev": {
@@ -47,22 +47,22 @@
             ],
             "support": {
                 "issues": "https://github.com/EdmondDantes/design-patterns/issues",
-                "source": "https://github.com/EdmondDantes/design-patterns/tree/v0.1.3"
+                "source": "https://github.com/EdmondDantes/design-patterns/tree/v0.2.20"
             },
-            "time": "2024-08-14T09:39:10+00:00"
+            "time": "2024-09-08T08:25:57+00:00"
         },
         {
             "name": "ifcastle/di",
-            "version": "v0.5.19",
+            "version": "v0.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EdmondDantes/di.git",
-                "reference": "b75c03dd0cac98954999ca0a039d0c1e9ebed39c"
+                "reference": "672c02f749c5203e7aff958550b8fd115cfb02da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EdmondDantes/di/zipball/b75c03dd0cac98954999ca0a039d0c1e9ebed39c",
-                "reference": "b75c03dd0cac98954999ca0a039d0c1e9ebed39c",
+                "url": "https://api.github.com/repos/EdmondDantes/di/zipball/672c02f749c5203e7aff958550b8fd115cfb02da",
+                "reference": "672c02f749c5203e7aff958550b8fd115cfb02da",
                 "shasum": ""
             },
             "require": {
@@ -99,9 +99,9 @@
             ],
             "support": {
                 "issues": "https://github.com/EdmondDantes/di/issues",
-                "source": "https://github.com/EdmondDantes/di/tree/v0.5.19"
+                "source": "https://github.com/EdmondDantes/di/tree/v0.6.2"
             },
-            "time": "2024-09-06T14:31:59+00:00"
+            "time": "2024-09-11T14:18:32+00:00"
         },
         {
             "name": "ifcastle/exceptions",
@@ -192,20 +192,20 @@
         },
         {
             "name": "ifcastle/service-manager",
-            "version": "v0.5.6",
+            "version": "v0.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EdmondDantes/service-manager.git",
-                "reference": "336415a818b2e34518e69e47514a5f84032e2b62"
+                "reference": "4b2e967183f564244087bd1b120a3f64f1175747"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EdmondDantes/service-manager/zipball/336415a818b2e34518e69e47514a5f84032e2b62",
-                "reference": "336415a818b2e34518e69e47514a5f84032e2b62",
+                "url": "https://api.github.com/repos/EdmondDantes/service-manager/zipball/4b2e967183f564244087bd1b120a3f64f1175747",
+                "reference": "4b2e967183f564244087bd1b120a3f64f1175747",
                 "shasum": ""
             },
             "require": {
-                "ifcastle/di": "^0.5.0",
+                "ifcastle/di": "^0.6.0",
                 "ifcastle/exceptions": "^5.0",
                 "ifcastle/type-definitions": "^0.5.0"
             },
@@ -230,9 +230,9 @@
             ],
             "support": {
                 "issues": "https://github.com/EdmondDantes/service-manager/issues",
-                "source": "https://github.com/EdmondDantes/service-manager/tree/v0.5.6"
+                "source": "https://github.com/EdmondDantes/service-manager/tree/v0.5.7"
             },
-            "time": "2024-08-12T09:49:10+00:00"
+            "time": "2024-09-14T15:15:15+00:00"
         },
         {
             "name": "ifcastle/type-definitions",
