@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace IfCastle\Application\Bootloader\Builder;
 
-use IfCastle\Application\Bootloader\BootloaderInterface;
 use IfCastle\Application\Bootloader\BootManager\BootManagerApplication;
 use IfCastle\DI\ConfigInterface;
 
