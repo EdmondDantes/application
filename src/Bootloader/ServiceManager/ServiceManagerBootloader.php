@@ -6,6 +6,8 @@ namespace IfCastle\Application\Bootloader\ServiceManager;
 use IfCastle\Application\Bootloader\BootloaderExecutorInterface;
 use IfCastle\Application\Bootloader\BootloaderInterface;
 use IfCastle\DI\BuilderInterface;
+use IfCastle\TypeDefinitions\Resolver\ExplicitTypeResolver;
+use IfCastle\TypeDefinitions\Resolver\ResolverInterface;
 use IfCastle\ServiceManager\DescriptorRepository;
 use IfCastle\ServiceManager\DescriptorRepositoryInterface;
 use IfCastle\ServiceManager\ServiceDescriptorBuilderByReflection;
@@ -28,6 +30,7 @@ final class ServiceManagerBootloader implements BootloaderInterface
         
         $this->defineServiceLocatorPublicInternal($builder);
         $this->defineDescriptorRepository($builder);
+        $this->defineResolver($builder);
         $this->defineDescriptorBuilder($builder);
         
         $bootloaderExecutor->addAfterHandler(new ServiceExecutorPublicInternalBootloader);
@@ -52,6 +55,15 @@ final class ServiceManagerBootloader implements BootloaderInterface
         }
         
         $builder->bindConstructible(DescriptorRepositoryInterface::class, DescriptorRepository::class);
+    }
+    
+    private function defineResolver(BuilderInterface $builder): void
+    {
+        if($builder->isBound(ResolverInterface::class)) {
+            return;
+        }
+        
+        $builder->bindConstructible(ResolverInterface::class, ExplicitTypeResolver::class);
     }
     
     private function defineDescriptorBuilder(BuilderInterface $builder): void
