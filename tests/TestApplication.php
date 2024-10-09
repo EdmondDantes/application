@@ -13,4 +13,10 @@ final class TestApplication extends ApplicationAbstract
     {
         return new BootloaderBuilderInMemory($appDir, 'test');
     }
+    
+    #[\Override]
+    protected function defineEngineRole(): EngineRolesEnum
+    {
+        return EngineRolesEnum::CONSOLE;
+    }
 }
