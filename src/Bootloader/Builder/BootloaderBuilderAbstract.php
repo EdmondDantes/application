@@ -44,7 +44,12 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
     {
         if($this->bootloader === null) {
             $configurator           = $this->initConfigurator();
-            $this->bootloader        = new BootloaderExecutor($configurator, $this->applicationType);
+            $this->bootloader       = new BootloaderExecutor($configurator, $this->applicationType);
+            
+            if($configurator instanceof BootloaderInterface) {
+                $configurator->buildBootloader($this->bootloader);
+            }
+            
             $this->defineExecutionRoles($configurator);
         }
         

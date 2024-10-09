@@ -50,10 +50,6 @@ final class BootloaderBuilderByDirectory extends BootloaderBuilderAbstract
             $configurator->setZeroContext($this);
         }
         
-        if($configurator instanceof BootloaderInterface) {
-            $configurator->buildBootloader($this->bootloader);
-        }
-        
         return $configurator;
     }
     
