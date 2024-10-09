@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace IfCastle\Application\Bootloader\Builder;
 
+use IfCastle\Application\Bootloader\BootloaderContextInterface;
 use IfCastle\Application\Bootloader\BootloaderExecutor;
 use IfCastle\Application\Bootloader\BootloaderExecutorInterface;
 use IfCastle\Application\Bootloader\BootloaderInterface;
@@ -45,6 +46,8 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
         if($this->bootloader === null) {
             $configurator           = $this->initConfigurator();
             $this->bootloader       = new BootloaderExecutor($configurator, $this->applicationType);
+            // Bind the application directory to the bootloader context
+            $this->bootloader->getBootloaderContext()->set(BootloaderContextInterface::APPLICATION_DIRECTORY, $this->appDirectory);
             
             if($configurator instanceof BootloaderInterface) {
                 $configurator->buildBootloader($this->bootloader);
