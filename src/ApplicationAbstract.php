@@ -34,7 +34,7 @@ abstract class ApplicationAbstract implements ApplicationInterface
         exit(0);
     }
     
-    final public static function run(string $appDir, BootloaderBuilderInterface $bootloaderBuilder = null, bool $withEnd = true): void
+    final public static function run(string $appDir, BootloaderBuilderInterface $bootloaderBuilder = null, bool $withEnd = true): ApplicationInterface
     {
         $bootloaderBuilder          = $bootloaderBuilder ?? static::defineBootloader($appDir);
         
@@ -77,6 +77,8 @@ abstract class ApplicationAbstract implements ApplicationInterface
                 $app?->end();
             }
         }
+        
+        return $app;
     }
     
     protected static function defineBootloader(string $appDir): BootloaderBuilderInterface
