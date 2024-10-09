@@ -57,7 +57,7 @@ final class BootloaderBuilderByDirectory extends BootloaderBuilderAbstract
     {
         foreach (glob($this->bootloaderDir.'/*.ini') as $file) {
             
-            if(str_ends_with('configurator.ini', $file)) {
+            if(str_ends_with($file, 'configurator.ini')) {
                 continue;
             }
             
