@@ -4,43 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d82046606152086290202ec3d502aaff",
+    "content-hash": "b139fc81e33b1c2422e4193fb200f260",
     "packages": [
-        {
-            "name": "ifcastle/async-contracts",
-            "version": "v0.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/EdmondDantes/async-contracts.git",
-                "reference": "b4bd347b5a1ff55490b2715e9fec3db4853e0871"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/EdmondDantes/async-contracts/zipball/b4bd347b5a1ff55490b2715e9fec3db4853e0871",
-                "reference": "b4bd347b5a1ff55490b2715e9fec3db4853e0871",
-                "shasum": ""
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "IfCastle\\Async\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Async contracts.",
-            "keywords": [
-                "async",
-                "contracts"
-            ],
-            "support": {
-                "issues": "https://github.com/EdmondDantes/async-contracts/issues",
-                "source": "https://github.com/EdmondDantes/async-contracts/tree/v0.5.0"
-            },
-            "time": "2024-10-12T12:14:18+00:00"
-        },
         {
             "name": "ifcastle/design-patterns",
             "version": "v0.2.21",
@@ -224,45 +189,6 @@
                 "source": "https://github.com/EdmondDantes/os-utilities/tree/v0.5.0"
             },
             "time": "2024-07-30T12:32:03+00:00"
-        },
-        {
-            "name": "ifcastle/protocol-contracts",
-            "version": "v0.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/EdmondDantes/protocol-contracts.git",
-                "reference": "3d59a5b6e2e456df3facf69acb5b3b222667fb7c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/EdmondDantes/protocol-contracts/zipball/3d59a5b6e2e456df3facf69acb5b3b222667fb7c",
-                "reference": "3d59a5b6e2e456df3facf69acb5b3b222667fb7c",
-                "shasum": ""
-            },
-            "require": {
-                "ifcastle/async-contracts": "^0.5.0",
-                "ifcastle/di": "^0.6.8"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "IfCastle\\Protocol\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Protocol contracts.",
-            "keywords": [
-                "contracts",
-                "protocol"
-            ],
-            "support": {
-                "issues": "https://github.com/EdmondDantes/protocol-contracts/issues",
-                "source": "https://github.com/EdmondDantes/protocol-contracts/tree/v0.5.0"
-            },
-            "time": "2024-10-12T12:22:47+00:00"
         },
         {
             "name": "ifcastle/service-manager",
