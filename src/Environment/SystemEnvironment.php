@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace IfCastle\Application\Environment;
 
-use IfCastle\Application\CoroutineContextInterface;
 use IfCastle\Application\EngineInterface;
 use IfCastle\Application\ExecutionRolesEnum;
 use IfCastle\Application\RequestEnvironment\RequestEnvironmentInterface;
-use IfCastle\Application\ScheduleTimerInterface;
+use IfCastle\Async\CoroutineContextInterface;
+use IfCastle\Async\ScheduleTimerInterface;
 
 class SystemEnvironment             extends Environment
                                     implements SystemEnvironmentInterface
@@ -16,6 +16,12 @@ class SystemEnvironment             extends Environment
     public function getEngine(): EngineInterface
     {
         return $this->resolveDependency(EngineInterface::class);
+    }
+    
+    #[\Override]
+    public function getApplicationDirectory(): string
+    {
+        return $this->get(self::APPLICATION_DIR);
     }
     
     #[\Override]

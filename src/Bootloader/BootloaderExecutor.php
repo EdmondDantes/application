@@ -99,6 +99,7 @@ class BootloaderExecutor            extends BeforeAfterExecutor
         }
         
         $bootBuilder                = $this->getSystemEnvironmentBootBuilder();
+        $bootBuilder->set(SystemEnvironmentInterface::APPLICATION_DIR, $this->bootloaderContext->getApplicationDirectory());
         
         // Build system environment
         $bootBuilder->bindObject(RequestEnvironmentBuilderInterface::class, $this->getRequestEnvironmentBuilder());

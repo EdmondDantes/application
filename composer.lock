@@ -4,8 +4,43 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b139fc81e33b1c2422e4193fb200f260",
+    "content-hash": "613773b2a3178f0e1f6d6ba6ad142f6f",
     "packages": [
+        {
+            "name": "ifcastle/async-contracts",
+            "version": "v0.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/EdmondDantes/async-contracts.git",
+                "reference": "b4bd347b5a1ff55490b2715e9fec3db4853e0871"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/EdmondDantes/async-contracts/zipball/b4bd347b5a1ff55490b2715e9fec3db4853e0871",
+                "reference": "b4bd347b5a1ff55490b2715e9fec3db4853e0871",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "IfCastle\\Async\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Async contracts.",
+            "keywords": [
+                "async",
+                "contracts"
+            ],
+            "support": {
+                "issues": "https://github.com/EdmondDantes/async-contracts/issues",
+                "source": "https://github.com/EdmondDantes/async-contracts/tree/v0.5.0"
+            },
+            "time": "2024-10-12T12:14:18+00:00"
+        },
         {
             "name": "ifcastle/design-patterns",
             "version": "v0.2.23",
