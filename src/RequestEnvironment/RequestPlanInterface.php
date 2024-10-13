@@ -15,4 +15,13 @@ interface RequestPlanInterface              extends ExecutionPlanInterface
     public const string RESPONSE            = 'r';
     public const string AFTER_RESPONSE      = '+r';
     public const string FINALLY             = 'f';
+    
+    public function addBuildHandler(callable $handler): static;
+    public function addBeforeDispatchHandler(callable $handler): static;
+    public function addDispatchHandler(callable $handler): static;
+    public function addBeforeHandleHandler(callable $handler): static;
+    public function addExecuteHandler(callable $handler): static;
+    public function addResponseHandler(callable $handler): static;
+    public function addAfterResponseHandler(callable $handler): static;
+    public function addFinallyHandler(callable $handler): static;
 }
