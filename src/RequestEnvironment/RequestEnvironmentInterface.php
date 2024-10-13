@@ -10,6 +10,10 @@ use IfCastle\Protocol\ResponseInterface;
 
 interface RequestEnvironmentInterface extends ContainerInterface
 {
+    public const string ORIGINAL_REQUEST = 'originalRequest';
+    
+    public function originalRequest(): object|null;
+    
     public function getRequest(): RequestInterface;
     
     public function getResponseFactory(): ResponseFactoryInterface;

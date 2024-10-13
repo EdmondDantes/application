@@ -5,7 +5,7 @@ namespace IfCastle\Application\Bootloader;
 
 use IfCastle\Application\Bootloader\Builder\PublicEnvironmentBuilderInterface;
 use IfCastle\Application\Environment\SystemEnvironmentInterface;
-use IfCastle\Application\RequestEnvironment\Builder\RequestEnvironmentBuilderInterface;
+use IfCastle\Application\RequestEnvironment\RequestPlanInterface;
 use IfCastle\DI\BuilderInterface;
 use IfCastle\DI\ConfigInterface;
 use IfCastle\DI\Container;
@@ -53,9 +53,9 @@ class BootloaderContext             extends Container
     }
     
     #[\Override]
-    public function getRequestEnvironmentBuilder(): RequestEnvironmentBuilderInterface
+    public function getRequestEnvironmentPlan(): RequestPlanInterface
     {
-        return $this->resolveDependency(RequestEnvironmentBuilderInterface::class);
+        return $this->resolveDependency(RequestPlanInterface::class);
     }
     
     #[\Override]

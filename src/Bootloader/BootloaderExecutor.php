@@ -8,12 +8,12 @@ use IfCastle\Application\Bootloader\Builder\PublicEnvironmentBuilderInterface;
 use IfCastle\Application\Bootloader\Builder\SystemEnvironmentBuilder;
 use IfCastle\Application\Environment\PublicEnvironmentInterface;
 use IfCastle\Application\Environment\SystemEnvironmentInterface;
-use IfCastle\Application\RequestEnvironment\Builder\RequestEnvironmentBuilder;
+use IfCastle\Application\RequestEnvironment\RequestPlan;
+use IfCastle\Application\RequestEnvironment\RequestPlanInterface;
 use IfCastle\DesignPatterns\ExecutionPlan\BeforeAfterExecutor;
 use IfCastle\DI\BuilderInterface;
 use IfCastle\DI\ConfigInterface;
 use IfCastle\DI\DisposableInterface;
-use IfCastle\Application\RequestEnvironment\Builder\RequestEnvironmentBuilderInterface;
 use IfCastle\DI\Resolver;
 use IfCastle\DI\ResolverInterface;
 
@@ -52,9 +52,9 @@ class BootloaderExecutor            extends BeforeAfterExecutor
         return $this->bootloaderContext->getSystemEnvironmentBootBuilder();
     }
     
-    public function getRequestEnvironmentBuilder(): RequestEnvironmentBuilderInterface
+    public function getRequestEnvironmentPlan(): RequestPlanInterface
     {
-        return $this->bootloaderContext->getRequestEnvironmentBuilder();
+        return $this->bootloaderContext->getRequestEnvironmentPlan();
     }
     
     #[\Override]
@@ -72,7 +72,7 @@ class BootloaderExecutor            extends BeforeAfterExecutor
             BootloaderExecutorInterface::class          => \WeakReference::create($this),
             BuilderInterface::class                     => new SystemEnvironmentBuilder(),
             PublicEnvironmentBuilderInterface::class    => new PublicEnvironmentBuilder(),
-            RequestEnvironmentBuilderInterface::class   => new RequestEnvironmentBuilder()
+            RequestPlanInterface::class                 => new RequestPlan()
         ]);
     }
     
@@ -102,7 +102,7 @@ class BootloaderExecutor            extends BeforeAfterExecutor
         $bootBuilder->set(SystemEnvironmentInterface::APPLICATION_DIR, $this->bootloaderContext->getApplicationDirectory());
         
         // Build system environment
-        $bootBuilder->bindObject(RequestEnvironmentBuilderInterface::class, $this->getRequestEnvironmentBuilder());
+        $bootBuilder->bindObject(RequestPlanInterface::class, $this->getRequestEnvironmentPlan()->asImmutable());
         
         // Assign app-config
         if(false === $bootBuilder->isBound(ConfigInterface::class)) {

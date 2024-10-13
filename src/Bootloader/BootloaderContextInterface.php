@@ -5,7 +5,7 @@ namespace IfCastle\Application\Bootloader;
 
 use IfCastle\Application\Bootloader\Builder\PublicEnvironmentBuilderInterface;
 use IfCastle\Application\Environment\SystemEnvironmentInterface;
-use IfCastle\Application\RequestEnvironment\Builder\RequestEnvironmentBuilderInterface;
+use IfCastle\Application\RequestEnvironment\RequestPlanInterface;
 use IfCastle\DI\BuilderInterface;
 use IfCastle\DI\ConfigInterface;
 use IfCastle\DI\ContainerInterface;
@@ -31,7 +31,7 @@ interface BootloaderContextInterface extends ContainerInterface, ContainerMutabl
     
     public function getPublicEnvironmentBootBuilder(): PublicEnvironmentBuilderInterface;
     
-    public function getRequestEnvironmentBuilder(): RequestEnvironmentBuilderInterface;
+    public function getRequestEnvironmentPlan(): RequestPlanInterface;
     
     public function getSystemEnvironment(): SystemEnvironmentInterface|null;
 }
