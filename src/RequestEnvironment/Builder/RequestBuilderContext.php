@@ -3,9 +3,16 @@ declare(strict_types=1);
 
 namespace IfCastle\Application\RequestEnvironment\Builder;
 
+use IfCastle\Application\RequestEnvironment\RequestEnvironmentInterface;
+
 class RequestBuilderContext implements RequestBuilderContextInterface
 {
-    public function __construct(protected object|null $originalRequest = null, protected object|null $result = null) {}
+    protected RequestEnvironmentInterface $requestEnvironment;
+    
+    public function __construct(protected object|null $originalRequest = null)
+    {
+        $this->requestEnvironment = new RequestEnvironment();
+    }
     
     #[\Override]
     public function getOriginalRequest(): object|null
@@ -19,7 +26,8 @@ class RequestBuilderContext implements RequestBuilderContextInterface
         return $this->result;
     }
     
-    #[\Override] public function setRequest(object $request): static
+    #[\Override]
+    public function setRequest(object $request): static
     {
         $this->result               = $request;
         return $this;
