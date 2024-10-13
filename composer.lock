@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "ifcastle/design-patterns",
-            "version": "v0.2.21",
+            "version": "v0.2.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EdmondDantes/design-patterns.git",
-                "reference": "14753ed26da0acd8c63e9991c316750a930d3be9"
+                "reference": "687960b9cd2d96dce9bbf97c051fd598f9ee1731"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EdmondDantes/design-patterns/zipball/14753ed26da0acd8c63e9991c316750a930d3be9",
-                "reference": "14753ed26da0acd8c63e9991c316750a930d3be9",
+                "url": "https://api.github.com/repos/EdmondDantes/design-patterns/zipball/687960b9cd2d96dce9bbf97c051fd598f9ee1731",
+                "reference": "687960b9cd2d96dce9bbf97c051fd598f9ee1731",
                 "shasum": ""
             },
             "require": {
@@ -47,9 +47,9 @@
             ],
             "support": {
                 "issues": "https://github.com/EdmondDantes/design-patterns/issues",
-                "source": "https://github.com/EdmondDantes/design-patterns/tree/v0.2.21"
+                "source": "https://github.com/EdmondDantes/design-patterns/tree/v0.2.23"
             },
-            "time": "2024-09-22T06:53:38+00:00"
+            "time": "2024-10-13T07:19:02+00:00"
         },
         {
             "name": "ifcastle/di",

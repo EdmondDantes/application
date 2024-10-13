@@ -7,5 +7,5 @@ use IfCastle\DesignPatterns\ExecutionPlan\BeforeAfterExecutorInterface;
 
 interface RequestEnvironmentBuilderInterface extends BeforeAfterExecutorInterface
 {
-    
+    public function handleRequest(RequestBuilderContextInterface $requestBuilderContext): void;
 }
