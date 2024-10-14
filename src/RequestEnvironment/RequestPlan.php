@@ -18,6 +18,7 @@ class RequestPlan                   extends ExecutionPlan
                         => $self->executeHandler($handler, $requestEnvironment), $this
             ),
             [
+                self::RAW_BUILD,
                 self::BUILD,
                 self::BEFORE_DISPATCH,
                 self::DISPATCH,
@@ -36,6 +37,12 @@ class RequestPlan                   extends ExecutionPlan
         if(is_callable($handler)) {
             $handler($requestEnvironment);
         }
+    }
+    
+    #[\Override]
+    public function addRawBuildHandler(callable $handler): static
+    {
+        return $this->addStageHandler(self::RAW_BUILD, $handler);
     }
     
     #[\Override]
