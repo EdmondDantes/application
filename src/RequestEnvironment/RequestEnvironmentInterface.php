@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace IfCastle\Application\RequestEnvironment;
 
-use IfCastle\DI\ContainerInterface;
+use IfCastle\DI\ContainerMutableInterface;
 use IfCastle\Protocol\RequestInterface;
 use IfCastle\Protocol\ResponseFactoryInterface;
 use IfCastle\Protocol\ResponseInterface;
 
-interface RequestEnvironmentInterface extends ContainerInterface
+interface RequestEnvironmentInterface extends ContainerMutableInterface
 {
     public const string ORIGINAL_REQUEST = 'originalRequest';
     

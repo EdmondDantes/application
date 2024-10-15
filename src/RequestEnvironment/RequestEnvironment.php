@@ -7,6 +7,7 @@ use IfCastle\DesignPatterns\FinalHandlers\FinalHandlersInterface;
 use IfCastle\DesignPatterns\FinalHandlers\FinalHandlersTrait;
 use IfCastle\DI\Container;
 use IfCastle\DI\ContainerInterface;
+use IfCastle\DI\ContainerMutableTrait;
 use IfCastle\DI\Resolver;
 use IfCastle\Exceptions\CompositeException;
 use IfCastle\Protocol\RequestInterface;
@@ -16,6 +17,7 @@ use IfCastle\Protocol\ResponseInterface;
 class RequestEnvironment            extends Container
                                     implements RequestEnvironmentInterface, FinalHandlersInterface
 {
+    use ContainerMutableTrait;
     use FinalHandlersTrait;
     
     public function __construct(protected object|null $originalRequest = null, ContainerInterface $parentContainer = null)
