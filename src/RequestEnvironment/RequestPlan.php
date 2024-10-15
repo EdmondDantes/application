@@ -4,8 +4,12 @@ declare(strict_types=1);
 namespace IfCastle\Application\RequestEnvironment;
 
 use IfCastle\DesignPatterns\ExecutionPlan\ExecutionPlan;
-use IfCastle\DesignPatterns\ExecutionPlan\SequentialPlanExecutorWithFinal;
+use IfCastle\DesignPatterns\ExecutionPlan\PlanExecutorWithFinalAndStageControl;
+use IfCastle\DesignPatterns\ExecutionPlan\StagePointer;
 use IfCastle\DesignPatterns\ExecutionPlan\WeakStaticClosureExecutor;
+use IfCastle\Exceptions\ClientException;
+use IfCastle\Protocol\Exceptions\ParseException;
+use IfCastle\Exceptions\ClientAvailableInterface;
 
 class RequestPlan                   extends ExecutionPlan
                                     implements RequestPlanInterface
@@ -22,21 +26,14 @@ class RequestPlan                   extends ExecutionPlan
                 self::BUILD,
                 self::BEFORE_DISPATCH,
                 self::DISPATCH,
-                self::BEFORE_HANDLE,
+                self::BEFORE_EXECUTE,
                 self::EXECUTE,
                 self::RESPONSE,
                 self::AFTER_RESPONSE,
                 self::FINALLY
             ],
-            new SequentialPlanExecutorWithFinal
+            new PlanExecutorWithFinalAndStageControl
         );
-    }
-    
-    protected function executeHandler(mixed $handler, RequestEnvironmentInterface $requestEnvironment): void
-    {
-        if(is_callable($handler)) {
-            $handler($requestEnvironment);
-        }
     }
     
     #[\Override]
@@ -66,7 +63,7 @@ class RequestPlan                   extends ExecutionPlan
     #[\Override]
     public function addBeforeHandleHandler(callable $handler): static
     {
-        return $this->addStageHandler(self::BEFORE_HANDLE, $handler);
+        return $this->addStageHandler(self::BEFORE_EXECUTE, $handler);
     }
     
     #[\Override]
@@ -91,5 +88,42 @@ class RequestPlan                   extends ExecutionPlan
     public function addFinallyHandler(callable $handler): static
     {
         return $this->addStageHandler(self::FINALLY, $handler);
+    }
+    
+    protected function executeHandler(mixed $handler, RequestEnvironmentInterface $requestEnvironment): StagePointer|null
+    {
+        if(false === is_callable($handler)) {
+            return null;
+        }
+        
+        try {
+            $result                 = $handler($requestEnvironment);
+            
+            if($result instanceof StagePointer) {
+                return $result;
+            }
+            
+        } catch (ParseException|ClientAvailableInterface $exception) {
+            
+            if($exception instanceof ParseException) {
+                $exception          = new ClientException('Failed to parse request', [], ['exception' => $exception]);
+            }
+            
+            return $this->setClientExceptionAsResponse($exception, $requestEnvironment);
+        } catch (\Throwable $exception) {
+            return $this->setServerExceptionAsResponse($exception, $requestEnvironment);
+        }
+        
+        return null;
+    }
+
+    protected function setClientExceptionAsResponse(ClientAvailableInterface & \Throwable $exception, RequestEnvironmentInterface $requestEnvironment): StagePointer
+    {
+        $requestEnvironment->getResponseFactory()->createFailedResponse($exception);
+    }
+    
+    protected function setServerExceptionAsResponse(\Throwable $exception, RequestEnvironmentInterface $requestEnvironment): StagePointer
+    {
+        $requestEnvironment->getResponseFactory()->createFailedResponse($exception);
     }
 }

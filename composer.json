@@ -15,6 +15,7 @@
         }
     },
     "require": {
+        "ifcastle/exceptions": "^5.0",
         "ifcastle/di": "^0.6.7",
         "ifcastle/design-patterns": "^0.2.20",
         "ifcastle/os-utilities": "^0.5.0",
