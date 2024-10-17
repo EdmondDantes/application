@@ -10,4 +10,6 @@ interface BootloaderExecutorInterface extends BeforeAfterExecutorInterface
     public function getBootloaderContext(): BootloaderContextInterface;
     
     public function defineStartApplicationHandler(callable $handler): static;
+    
+    public function addWarmUpOperation(callable $handler): static;
 }

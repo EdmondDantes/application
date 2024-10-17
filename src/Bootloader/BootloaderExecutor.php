@@ -20,6 +20,8 @@ use IfCastle\DI\ResolverInterface;
 class BootloaderExecutor            extends BeforeAfterExecutor
                                     implements BootloaderExecutorInterface, DisposableInterface
 {
+    private const string WARM_UP    = 'warm-up';
+    
     protected BootloaderContextInterface $bootloaderContext;
     protected mixed $startApplicationHandler = null;
     
@@ -29,6 +31,8 @@ class BootloaderExecutor            extends BeforeAfterExecutor
         $this->defineExecutionRoles();
         
         parent::__construct(new HandlerExecutor($this->bootloaderContext));
+        
+        $this->stages[self::WARM_UP] = [];
         
         // Main stage
         $this->addHandler($this->startApplication(...));
@@ -62,6 +66,12 @@ class BootloaderExecutor            extends BeforeAfterExecutor
     {
         $this->startApplicationHandler   = $handler;
         return $this;
+    }
+    
+    #[\Override]
+    public function addWarmUpOperation(callable $handler): static
+    {
+        return $this->addStageHandler(self::WARM_UP, $handler);
     }
     
     protected function initContext(): void
