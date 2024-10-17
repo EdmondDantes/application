@@ -16,6 +16,8 @@ class BootloaderContext             extends Container
 {
     use ContainerMutableTrait;
     
+    protected bool $isWarmUpEnabled = false;
+    
     #[\Override]
     public function getApplicationDirectory(): string
     {
@@ -32,6 +34,19 @@ class BootloaderContext             extends Container
     public function getExecutionRoles(): array
     {
         return $this->container[SystemEnvironmentInterface::EXECUTION_ROLES] ?? [];
+    }
+    
+    #[\Override]
+    public function isWarmUpEnabled(): bool
+    {
+        return $this->isWarmUpEnabled;
+    }
+    
+    #[\Override]
+    public function enabledWarmUp(): static
+    {
+        $this->isWarmUpEnabled      = true;
+        return $this;
     }
     
     #[\Override]
