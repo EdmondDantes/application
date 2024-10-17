@@ -53,6 +53,7 @@ abstract class ApplicationAbstract implements ApplicationInterface
             
             try {
                 $bootloader->executePlan();
+                $app->afterEngineHandlers = $bootloader->getEngineAfterHandlers();
             } finally {
                 $bootloader->dispose();
                 unset($bootloader);
@@ -88,6 +89,8 @@ abstract class ApplicationAbstract implements ApplicationInterface
     protected static function predefineEngine(BootloaderExecutorInterface $bootloaderExecutor): void {}
     
     protected LoggerInterface|null $logger = null;
+    
+    protected array $afterEngineHandlers = [];
     
     private bool $isStarted         = false;
     
@@ -169,6 +172,11 @@ abstract class ApplicationAbstract implements ApplicationInterface
             $engine->defineEngineRole($this->defineEngineRole());
             
             $this->engineStartBefore();
+            
+            foreach ($this->afterEngineHandlers as $handler) {
+                $handler($this->systemEnvironment, $engine);
+            }
+            
             $engine->start();
             $this->engineStartAfter();
             

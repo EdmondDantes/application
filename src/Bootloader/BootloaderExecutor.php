@@ -25,6 +25,8 @@ class BootloaderExecutor            extends BeforeAfterExecutor
     protected BootloaderContextInterface $bootloaderContext;
     protected mixed $startApplicationHandler = null;
     
+    protected array $afterEngineHandlers = [];
+    
     public function __construct(protected ConfigInterface $config, protected readonly string $applicationType)
     {
         $this->initContext();
@@ -48,7 +50,8 @@ class BootloaderExecutor            extends BeforeAfterExecutor
     #[\Override]
     public function dispose(): void
     {
-        $this->stages               = [];
+        $this->stages              = [];
+        $this->afterEngineHandlers = [];
     }
     
     public function getSystemEnvironmentBootBuilder(): BuilderInterface
@@ -72,6 +75,19 @@ class BootloaderExecutor            extends BeforeAfterExecutor
     public function addWarmUpOperation(callable $handler): static
     {
         return $this->addStageHandler(self::WARM_UP, $handler);
+    }
+    
+    #[\Override]
+    public function runAfterEngine(callable $handler): static
+    {
+        $this->afterEngineHandlers[] = $handler;
+        return $this;
+    }
+    
+    #[\Override]
+    public function getEngineAfterHandlers(): array
+    {
+        return $this->afterEngineHandlers;
     }
     
     protected function initContext(): void
