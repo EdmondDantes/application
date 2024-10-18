@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace IfCastle\Application\RequestEnvironment;
 
+use IfCastle\Application\Environment\SystemEnvironmentInterface;
 use IfCastle\DesignPatterns\FinalHandlers\FinalHandlersInterface;
 use IfCastle\DesignPatterns\FinalHandlers\FinalHandlersTrait;
 use IfCastle\DI\Container;
@@ -20,13 +21,25 @@ class RequestEnvironment            extends Container
     use ContainerMutableTrait;
     use FinalHandlersTrait;
     
-    public function __construct(protected object|null $originalRequest = null, ContainerInterface $parentContainer = null)
+    public function __construct(protected object|null $originalRequest = null, SystemEnvironmentInterface $parentContainer = null)
     {
         parent::__construct(new Resolver, [
             RequestInterface::class             => null,
             ResponseFactoryInterface::class     => null,
             ResponseInterface::class            => null
         ], $parentContainer, true);
+    }
+    
+    #[\Override]
+    public function getSystemEnvironment(): SystemEnvironmentInterface
+    {
+        $parent                     = $this->getParentContainer();
+        
+        if($parent instanceof SystemEnvironmentInterface) {
+            return $parent;
+        }
+        
+        throw new \RuntimeException('SystemEnvironment not found in parent containers');
     }
     
     #[\Override]
