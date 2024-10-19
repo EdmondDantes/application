@@ -7,7 +7,6 @@ use IfCastle\Application\Environment\SystemEnvironmentInterface;
 use IfCastle\DesignPatterns\FinalHandlers\FinalHandlersInterface;
 use IfCastle\DesignPatterns\FinalHandlers\FinalHandlersTrait;
 use IfCastle\DI\Container;
-use IfCastle\DI\ContainerInterface;
 use IfCastle\DI\ContainerMutableTrait;
 use IfCastle\DI\Resolver;
 use IfCastle\Exceptions\CompositeException;
