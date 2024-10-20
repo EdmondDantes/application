@@ -17,12 +17,12 @@ final class HandlerExecutor         implements HandlerExecutorInterface
     
     
     #[\Override]
-    public function executeHandler(mixed $handler, string $stage): void
+    public function executeHandler(mixed $handler, string $stage, mixed ...$parameters): mixed
     {
         $bootloaderContext          = $this->bootloaderContext->get();
         
         if($bootloaderContext === null) {
-            return;
+            return null;
         }
         
         if($handler instanceof BootloaderContextRequiredInterface) {
@@ -37,7 +37,9 @@ final class HandlerExecutor         implements HandlerExecutorInterface
         }
         
         if(is_callable($handler)) {
-            $handler();
+            return $handler();
         }
+        
+        return null;
     }
 }
