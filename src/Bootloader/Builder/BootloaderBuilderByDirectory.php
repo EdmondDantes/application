@@ -20,13 +20,13 @@ final class BootloaderBuilderByDirectory extends BootloaderBuilderAbstract
         $configuratorFile           = $this->bootloaderDir.'/'.BootManagerApplication::CONFIGURATOR.'.ini';
         
         if(false === file_exists($configuratorFile)) {
-            throw new \RuntimeException('Configurator file not found: ' . $configuratorFile);
+            throw new \RuntimeException('Configuration component not found. Try installing one of the following: "composer require ifcastle/configurator-ini"');
         }
         
         $bootloaderConfig           = $this->read($configuratorFile);
         
         if(empty($bootloaderConfig['bootloader'])) {
-            throw new \RuntimeException('Bootloader not found in configurator file: ' . $configuratorFile);
+            throw new \RuntimeException('Bootloader can\'t access to configurator file: ' . $configuratorFile);
         }
         
         $configuratorClass          = $bootloaderConfig['bootloader'];
