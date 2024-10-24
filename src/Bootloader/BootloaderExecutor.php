@@ -27,9 +27,14 @@ class BootloaderExecutor            extends BeforeAfterExecutor
     
     protected array $afterEngineHandlers = [];
     
-    public function __construct(protected ConfigInterface $config, protected readonly string $applicationType)
+    public function __construct(
+        protected ConfigInterface $config,
+        protected readonly string $applicationType,
+        array $executionRoles = [],
+        array $runtimeTags = []
+    )
     {
-        $this->initContext();
+        $this->initContext($executionRoles, $runtimeTags);
         $this->defineExecutionRoles();
         
         parent::__construct(new HandlerExecutor($this->bootloaderContext));
@@ -90,9 +95,11 @@ class BootloaderExecutor            extends BeforeAfterExecutor
         return $this->afterEngineHandlers;
     }
     
-    protected function initContext(): void
+    protected function initContext($executionRoles, $runtimeTags): void
     {
         $this->bootloaderContext = new BootloaderContext(new Resolver, [
+            SystemEnvironmentInterface::EXECUTION_ROLES => $executionRoles,
+            SystemEnvironmentInterface::RUNTIME_TAGS    => $runtimeTags,
             ConfigInterface::class                      => $this->config,
             BootloaderContextInterface::APPLICATION_TYPE => $this->applicationType,
             BootloaderExecutorInterface::class          => \WeakReference::create($this),

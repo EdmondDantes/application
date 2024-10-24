@@ -37,6 +37,12 @@ class BootloaderContext             extends Container
     }
     
     #[\Override]
+    public function getRuntimeTags(): array
+    {
+        return $this->container[SystemEnvironmentInterface::RUNTIME_TAGS] ?? [];
+    }
+    
+    #[\Override]
     public function isWarmUpEnabled(): bool
     {
         return $this->isWarmUpEnabled;

@@ -15,6 +15,8 @@ interface SystemEnvironmentInterface extends EnvironmentInterface, DisposableInt
     
     public const string EXECUTION_ROLES     = 'executionRoles';
     
+    public const string RUNTIME_TAGS        = 'runtimeTags';
+    
     public const string IS_DEVELOPER_MODE   = 'devMode';
     
     public function getEngine(): EngineInterface;

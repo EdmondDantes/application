@@ -28,6 +28,9 @@ class ApplicationAbstractTest       extends TestCase
             self::APP_DIR,
             'test',
             [
+                'some-tag'
+            ],
+            [
                 TestBootloader::class
             ],
             [
@@ -35,7 +38,10 @@ class ApplicationAbstractTest       extends TestCase
             ]
         );
         
-        TestApplication::run(self::APP_DIR, $bootloader);
+        (new Runner(self::APP_DIR, 'test', TestApplication::class))
+            ->defineBootloaderBuilder($bootloader)
+            ->run();
+        
         $this->assertLogFileNotExist();
     }
     

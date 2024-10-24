@@ -3,9 +3,6 @@ declare(strict_types=1);
 
 namespace IfCastle\Application;
 
-use IfCastle\Application\Bootloader\BootloaderExecutorInterface;
-use IfCastle\Application\Bootloader\Builder\BootloaderBuilderByDirectory;
-use IfCastle\Application\Bootloader\Builder\BootloaderBuilderInterface;
 use IfCastle\Application\Environment\SystemEnvironmentInterface;
 use IfCastle\DI\DisposableInterface;
 use IfCastle\Exceptions\BaseException;
@@ -18,75 +15,6 @@ use Psr\Log\LoggerInterface;
 abstract class ApplicationAbstract implements ApplicationInterface
 {
     public const string APP_CODE    = 'app';
-    
-    final public static function runAndExit(string $appDir, BootloaderBuilderInterface $bootloaderBuilder = null): never
-    {
-        try {
-            static::run($appDir, $bootloaderBuilder);
-        } catch (\Throwable $throwable) {
-            echo $throwable->getMessage().' in '.$throwable->getFile().':'.$throwable->getLine();
-            exit(1);
-        }
-        
-        exit(0);
-    }
-    
-    final public static function run(string $appDir, BootloaderBuilderInterface $bootloaderBuilder = null, bool $withEnd = true): ApplicationInterface
-    {
-        $bootloaderBuilder          = $bootloaderBuilder ?? static::defineBootloader($appDir);
-        
-        $bootloaderBuilder->build();
-        $bootloader                 = $bootloaderBuilder->getBootloader();
-        static::predefineEngine($bootloader);
-        static::postConfigureBootloader($bootloader);
-        
-        unset($bootloaderBuilder);
-        
-        try {
-            
-            $app                    = null;
-            
-            $bootloader->defineStartApplicationHandler(function (SystemEnvironmentInterface $systemEnvironment) use($appDir, &$app) {
-                $app                = new static($appDir, $systemEnvironment);
-                $app->start();
-            });
-            
-            try {
-                $bootloader->executePlan();
-                $app->afterEngineHandlers = $bootloader->getEngineAfterHandlers();
-            } finally {
-                $bootloader->dispose();
-                unset($bootloader);
-            }
-            
-            // Start the engine
-            $app->engineStart();
-            
-        } catch (\Throwable $throwable) {
-            $app?->criticalLog($throwable);
-            
-            if($app === null) {
-                throw $throwable;
-            }
-            
-        } finally {
-            
-            if($withEnd) {
-                $app?->end();
-            }
-        }
-        
-        return $app;
-    }
-    
-    protected static function defineBootloader(string $appDir): BootloaderBuilderInterface
-    {
-        return new BootloaderBuilderByDirectory($appDir, $appDir.'/bootloader', static::APP_CODE);
-    }
-    
-    protected static function postConfigureBootloader(BootloaderExecutorInterface $bootloaderExecutor): void {}
-    
-    protected static function predefineEngine(BootloaderExecutorInterface $bootloaderExecutor): void {}
     
     protected LoggerInterface|null $logger = null;
     
@@ -108,6 +36,9 @@ abstract class ApplicationAbstract implements ApplicationInterface
                                 protected readonly SystemEnvironmentInterface $systemEnvironment
     ) {}
     
+    /**
+     * @throws BaseException
+     */
     #[\Override]
     final public function start(): void
     {
@@ -156,6 +87,12 @@ abstract class ApplicationAbstract implements ApplicationInterface
             $this->logger?->critical(new FatalException('Application init error', 0, $throwable));
             $this->criticalLog($throwable);
         }
+    }
+    
+    #[\Override]
+    public function defineAfterEngineHandlers(array $afterEngineHandlers): void
+    {
+        $this->afterEngineHandlers  = $afterEngineHandlers;
     }
     
     #[\Override]

@@ -19,8 +19,9 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
     
     protected BootloaderExecutorInterface|null $bootloader = null;
     protected readonly string $applicationType;
+    protected readonly array  $runtimeTags;
     
-    protected array $executionRoles;
+    protected array $executionRoles = [];
     
     #[\Override]
     public function getApplicationDirectory(): string
@@ -41,11 +42,17 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
     }
     
     #[\Override]
+    public function getRuntimeTags(): array
+    {
+        return $this->runtimeTags;
+    }
+    
+    #[\Override]
     public function build(): void
     {
         if($this->bootloader === null) {
             $configurator           = $this->initConfigurator();
-            $this->bootloader       = new BootloaderExecutor($configurator, $this->applicationType);
+            $this->bootloader       = new BootloaderExecutor($configurator, $this->applicationType, $this->executionRoles, $this->runtimeTags);
             // Bind the application directory to the bootloader context
             $this->bootloader->getBootloaderContext()->set(BootloaderContextInterface::APPLICATION_DIRECTORY, $this->appDirectory);
             

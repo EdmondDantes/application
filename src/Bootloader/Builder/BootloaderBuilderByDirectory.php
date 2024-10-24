@@ -11,7 +11,8 @@ final class BootloaderBuilderByDirectory extends BootloaderBuilderAbstract
     public function __construct(
         protected readonly string $appDirectory,
         private readonly string   $bootloaderDir,
-        protected readonly string $applicationType
+        protected readonly string $applicationType,
+        protected readonly array  $runtimeTags
     ) {}
     
     #[\Override]

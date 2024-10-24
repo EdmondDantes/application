@@ -7,6 +7,8 @@ interface ApplicationInterface
 {
     public function start(): void;
     
+    public function defineAfterEngineHandlers(array $afterEngineHandlers): void;
+    
     public function engineStart(): void;
     
     public function end(): void;

@@ -9,12 +9,6 @@ use IfCastle\Application\Bootloader\Builder\BootloaderBuilderInterface;
 final class TestApplication extends ApplicationAbstract
 {
     #[\Override]
-    protected static function defineBootloader(string $appDir): BootloaderBuilderInterface
-    {
-        return new BootloaderBuilderInMemory($appDir, 'test');
-    }
-    
-    #[\Override]
     protected function defineEngineRole(): EngineRolesEnum
     {
         return EngineRolesEnum::CONSOLE;
