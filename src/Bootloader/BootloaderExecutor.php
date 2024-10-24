@@ -34,8 +34,8 @@ class BootloaderExecutor            extends BeforeAfterExecutor
         array $runtimeTags = []
     )
     {
-        $this->initContext($executionRoles, $runtimeTags);
-        $this->defineExecutionRoles();
+        $this->initContext();
+        $this->defineExecutionRolesAndRuntimeTags($executionRoles, $runtimeTags);
         
         parent::__construct(new HandlerExecutor($this->bootloaderContext));
         
@@ -95,11 +95,11 @@ class BootloaderExecutor            extends BeforeAfterExecutor
         return $this->afterEngineHandlers;
     }
     
-    protected function initContext($executionRoles, $runtimeTags): void
+    protected function initContext(): void
     {
         $this->bootloaderContext = new BootloaderContext(new Resolver, [
-            SystemEnvironmentInterface::EXECUTION_ROLES => $executionRoles,
-            SystemEnvironmentInterface::RUNTIME_TAGS    => $runtimeTags,
+            SystemEnvironmentInterface::EXECUTION_ROLES => [],
+            SystemEnvironmentInterface::RUNTIME_TAGS    => [],
             ConfigInterface::class                      => $this->config,
             BootloaderContextInterface::APPLICATION_TYPE => $this->applicationType,
             BootloaderExecutorInterface::class          => \WeakReference::create($this),
@@ -109,7 +109,7 @@ class BootloaderExecutor            extends BeforeAfterExecutor
         ]);
     }
     
-    protected function defineExecutionRoles(): void
+    protected function defineExecutionRolesAndRuntimeTags(array $executionRoles, array $runtimeTags): void
     {
         foreach ($this->config->findSection(SystemEnvironmentInterface::EXECUTION_ROLES) ?? [] as $role => $value) {
             if(!empty($value)) {
@@ -117,12 +117,16 @@ class BootloaderExecutor            extends BeforeAfterExecutor
             }
         }
         
-        $executionRoles[]           = $this->applicationType;
-        
+        $runtimeTags                = array_merge($runtimeTags, $executionRoles, [$this->applicationType]);
         $executionRoles             = array_unique($executionRoles);
-        
+        $runtimeTags                = array_unique($runtimeTags);
+
+        //
         $this->bootloaderContext->set(SystemEnvironmentInterface::EXECUTION_ROLES, $executionRoles);
         $this->getSystemEnvironmentBootBuilder()->set(SystemEnvironmentInterface::EXECUTION_ROLES, $executionRoles);
+        
+        $this->bootloaderContext->set(SystemEnvironmentInterface::RUNTIME_TAGS, $runtimeTags);
+        $this->getSystemEnvironmentBootBuilder()->set(SystemEnvironmentInterface::RUNTIME_TAGS, $runtimeTags);
     }
     
     protected function startApplication(): void

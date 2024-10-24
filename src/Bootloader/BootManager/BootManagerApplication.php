@@ -97,6 +97,6 @@ final class BootManagerApplication
             exit(6);
         }
         
-        $bootManager->removeBootloader($command['component']);
+        $bootManager->removeComponent($command['component']);
     }
 }

@@ -21,22 +21,20 @@ final class BootloaderBuilderByDirectory extends BootloaderBuilderAbstract
         $configuratorFile           = $this->bootloaderDir.'/'.BootManagerApplication::CONFIGURATOR.'.ini';
         
         if(false === file_exists($configuratorFile)) {
-            throw new \RuntimeException('Configuration component not found. Try installing one of the following: "composer require ifcastle/configurator-ini"');
+            throw new \RuntimeException('Configuration component not found.'
+                                        .' Try installing one of the following: '
+                                        .'"composer require ifcastle/configurator-ini"');
         }
         
-        $bootloaderConfig           = $this->read($configuratorFile);
+        $bootloaderConfigs          = $this->read($configuratorFile);
         
-        if(empty($bootloaderConfig['bootloader'])) {
-            throw new \RuntimeException('Bootloader can\'t access to configurator file: ' . $configuratorFile);
+        if(empty($bootloaderConfig)) {
+            throw new \RuntimeException('Bootloader can\'t access to configurator file: ' . $configuratorFile. ' or it is empty');
         }
         
-        $configuratorClass          = $bootloaderConfig['bootloader'];
+        $configuratorClass          = $this->getFirstBootloaderClass($bootloaderConfigs);
         
-        if(is_array($configuratorClass)) {
-            $configuratorClass      = $configuratorClass[0];
-        }
-        
-        if(false === class_exists($configuratorClass)) {
+        if(empty($configuratorClass) || false === class_exists($configuratorClass)) {
             throw new \RuntimeException('Configurator class not found: ' . $configuratorClass);
         }
         
@@ -61,27 +59,43 @@ final class BootloaderBuilderByDirectory extends BootloaderBuilderAbstract
                 continue;
             }
             
-            $bootloaderConfig        = $this->read($file);
+            $bootloaders            = $this->read($file);
             
-            if(null === $bootloaderConfig) {
+            if(null === $bootloaders || $bootloaders === []) {
                 continue;
             }
             
-            if(array_key_exists('is_active', $bootloaderConfig) === false || empty($bootloaderConfig['is_active'])) {
+            yield from $this->walkByBootloaderConfig($bootloaders);
+        }
+    }
+    
+    protected function getFirstBootloaderClass(array $bootloaders): string|null
+    {
+        foreach ($this->walkByBootloaderConfig($bootloaders) as $bootloaderClass) {
+            return $bootloaderClass;
+        }
+        
+        return null;
+    }
+    
+    protected function walkByBootloaderConfig(array $bootloaders): iterable
+    {
+        foreach ($bootloaders as $bootloader) {
+            if(array_key_exists('isActive', $bootloader) === false || empty($bootloader['isActive'])) {
                 continue;
             }
             
-            if(array_key_exists('for_application', $bootloaderConfig)
-               && is_array($bootloaderConfig['for_application'])
-               && in_array($this->applicationType, $bootloaderConfig['for_application']) === false) {
+            if(array_key_exists('forApplication', $bootloader)
+               && is_array($bootloader['forApplication'])
+               && in_array($this->applicationType, $bootloader['forApplication']) === false) {
                 continue;
             }
             
-            if(array_key_exists('bootloader', $bootloaderConfig) === false || empty($bootloaderConfig['bootloader'])) {
+            if(array_key_exists('bootloader', $bootloader) === false || empty($bootloader['bootloader'])) {
                 continue;
             }
             
-            foreach ($bootloaderConfig['bootloader'] as $bootloaderClass) {
+            foreach ($bootloader['bootloader'] as $bootloaderClass) {
                 yield $bootloaderClass;
             }
         }

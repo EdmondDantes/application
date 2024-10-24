@@ -38,9 +38,9 @@ class BootManagerByDirectoryTest extends TestCase
         $file                       = $this->bootloaderDir.'/'.$componentName.'.ini';
         
         $data                       = [
-            'is_active'             => true,
+            'isActive'              => true,
             'bootloader'            => $bootloaders,
-            'for_application'       => $applications
+            'forApplication'        => $applications
         ];
         
         $bootManager = new BootManagerByDirectory($this->bootloaderDir);

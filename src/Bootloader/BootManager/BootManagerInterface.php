@@ -5,11 +5,13 @@ namespace IfCastle\Application\Bootloader\BootManager;
 
 interface BootManagerInterface
 {
-    public function addBootloader(string $componentName, array $bootloaders, array $applications = []): void;
+    public function createComponent(string $componentName): ComponentInterface;
     
-    public function activateBootloader(string $componentName): void;
+    public function getComponent(string $componentName): ComponentInterface;
     
-    public function deactivateBootloader(string $componentName): void;
+    public function addComponent(ComponentInterface $component): void;
     
-    public function removeBootloader(string $componentName): void;
+    public function updateComponent(ComponentInterface $component): void;
+    
+    public function removeComponent(string $componentName): void;
 }

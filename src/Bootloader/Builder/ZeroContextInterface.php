@@ -14,5 +14,8 @@ interface ZeroContextInterface
      */
     public function getExecutionRoles(): array;
     
+    /**
+     * @return string[]
+     */
     public function getRuntimeTags(): array;
 }
