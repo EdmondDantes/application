@@ -34,5 +34,5 @@ interface ComponentInterface
     
     public function deactivateGroup(string $group): static;
     
-    public function asSaved(): static;
+    public function markAsSaved(): static;
 }

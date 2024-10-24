@@ -42,6 +42,10 @@ class BootManagerByDirectory        implements BootManagerInterface
     #[\Override]
     public function addComponent(ComponentInterface $component): void
     {
+        if(false === $component->isNew()) {
+            throw new BootloaderException('Component already exists: '.$component->name);
+        }
+        
         $this->validateComponent($component->name);
         
         $file                       = $this->bootloaderDir.'/'.$component->name.'.ini';
@@ -109,7 +113,10 @@ INI;
             }
         }
         
-        $data                       = ['isActive' => $component->isActivated()] + $component->getGroups();
+        $data                       = [
+            'isActive'              => $component->isActivated(),
+            'description'           => $component->getDescription()
+        ] + $component->getGroups();
         
         return $header.PHP_EOL.PHP_EOL.$this->arrayToIni($data);
     }

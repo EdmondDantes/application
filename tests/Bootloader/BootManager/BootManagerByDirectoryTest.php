@@ -33,58 +33,95 @@ class BootManagerByDirectoryTest extends TestCase
     public function testAddBootloader(): void
     {
         $componentName              = 'componentName';
-        $bootloaders                = ['bootloader1', 'bootloader2'];
-        $applications               = ['application1', 'application2'];
         $file                       = $this->bootloaderDir.'/'.$componentName.'.ini';
         
-        $data                       = [
-            'isActive'              => true,
-            'bootloader'            => $bootloaders,
-            'forApplication'        => $applications
-        ];
-        
-        $bootManager = new BootManagerByDirectory($this->bootloaderDir);
-        $bootManager->addBootloader($componentName, $bootloaders, $applications);
+        $bootManager                = new BootManagerByDirectory($this->bootloaderDir);
+        $component                  = $bootManager->createComponent($componentName)
+                                                  ->add(['bootloader1', 'bootloader2'], ['application1', 'application2'])
+                                                  ->add(['bootloader3'], runtimeTags: ['tag1', 'tag2'])
+                                                  ->add(['bootloader4'], runtimeTags: ['tag3', 'tag4'], group: 'group1');
+        $bootManager->addComponent($component);
         
         $this->assertFileExists($file);
-        $this->assertEquals($data, parse_ini_file($file, true));
+        
+        $data                       = [
+            'isActive'              => '1',
+            'description'           => '',
+            'group-0'               =>
+                [
+                    'isActive'       => '1',
+                    'bootloader'     =>
+                        [
+                            0       => 'bootloader1',
+                            1       => 'bootloader2',
+                        ],
+                    'forApplication' =>
+                        [
+                            0       => 'application1',
+                            1       => 'application2',
+                        ],
+                ],
+            'group-1'               =>
+                [
+                    'isActive'      => '1',
+                    'bootloader'    =>
+                        [
+                            0       => 'bootloader3',
+                        ],
+                    'runtimeTags' =>
+                        [
+                            0       => 'tag1',
+                            1       => 'tag2',
+                        ],
+                ],
+            'group1'                =>
+                [
+                    'isActive'      => '1',
+                    'bootloader'    =>
+                        [
+                            0       => 'bootloader4',
+                        ],
+                    'runtimeTags'   =>
+                        [
+                            0       => 'tag3',
+                            1       => 'tag4',
+                        ],
+                ],
+        ];
+        
+        $this->assertEquals($data, parse_ini_file($file, true, INI_SCANNER_TYPED));
     }
 
     public function testActivateBootloader(): void
     {
-        
         $componentName              = 'componentName';
         $file                       = $this->bootloaderDir.'/'.$componentName.'.ini';
         
+        $bootManager                = new BootManagerByDirectory($this->bootloaderDir);
+        $component                  = $bootManager->createComponent($componentName)
+                                                  ->defineDescription('description')
+                                                  ->add(['bootloader1'], ['application1'], excludeTags: ['tag1'], isActive: false);
+        
+        $component->deactivate();
+        
+        $bootManager->addComponent($component);
+        
+        $component                  = $bootManager->getComponent($componentName);
+        $component->activate();
+        $bootManager->updateComponent($component);
+        
         $data                       = [
-            'is_active' => false,
-            'bootloader' => ['bootloader1', 'bootloader2'],
-            'for_application' => ['application1', 'application2']
+            'isActive'              => true,
+            'description'           => 'description',
+            'group-0'               =>
+                [
+                    'isActive'       => false,
+                    'bootloader'     => ['bootloader1'],
+                    'forApplication' => ['application1'],
+                    'excludeTags'    => ['tag1'],
+                ],
         ];
         
-        $bootManager = new BootManagerByDirectory($this->bootloaderDir);
-        file_put_contents($file, $this->generateBootloaderContent($data));
-        
-        $bootManager->activateBootloader($componentName);
-        
-        $data = parse_ini_file($file, true, INI_SCANNER_TYPED);
-        
-        $this->assertTrue($data['is_active']);
-    }
-
-    private function generateBootloaderContent(array $data): string
-    {
-        $content = '';
-        foreach ($data as $key => $value) {
-            if (is_array($value)) {
-                $content .= "[$key]\n";
-                foreach ($value as $item) {
-                    $content .= "$item\n";
-                }
-            } else {
-                $content .= "$key = $value\n";
-            }
-        }
-        return $content;
+        $this->assertEquals($data, parse_ini_file($file, true, INI_SCANNER_TYPED));
     }
 }

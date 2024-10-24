@@ -16,7 +16,23 @@ final class Component           implements ComponentInterface
     public function __construct(public string $name, array|null $groups = null)
     {
         if($groups !== null) {
-            $this->groups        = $groups;
+            
+            if(array_key_exists('description', $groups)) {
+                $this->description   = $groups['description'];
+                unset($groups['description']);
+            }
+            
+            if(array_key_exists('isActive', $groups)) {
+                $this->isActivated  = $groups['isActive'];
+                unset($groups['isActive']);
+            }
+            
+            foreach ($groups as $group => $data) {
+                if(is_array($data)) {
+                    $this->groups[$group] = $data;
+                }
+            }
+            
             $this->isNew         = false;
         } else {
             $this->isNew         = true;
@@ -69,7 +85,7 @@ final class Component           implements ComponentInterface
                                      ?string $group = null
     ): static
     {
-        $group                  = $group ?? 'bootloaders'.count($this->groups);
+        $group                  = $group ?? 'group-'.count($this->groups);
         
         if(array_key_exists($group, $this->groups)) {
             throw new \InvalidArgumentException('Group '.$group.' already exists');
@@ -117,7 +133,7 @@ final class Component           implements ComponentInterface
     }
     
     #[\Override]
-    public function asSaved(): static
+    public function markAsSaved(): static
     {
         $this->isNew             = false;
         
