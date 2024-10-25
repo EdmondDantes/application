@@ -14,7 +14,7 @@ use IfCastle\DI\ResolverInterface;
 use IfCastle\ServiceManager\DescriptorRepository;
 use IfCastle\ServiceManager\DescriptorRepositoryInterface;
 use IfCastle\ServiceManager\ExecutorInterface;
-use IfCastle\ServiceManager\RepositoryStorages\RepositoryReaderByScopeBridge;
+use IfCastle\ServiceManager\RepositoryStorages\RepositoryReaderByTagsBridge;
 use IfCastle\ServiceManager\RepositoryStorages\RepositoryReaderByScopeInterface;
 use IfCastle\ServiceManager\RepositoryStorages\RepositoryReaderInterface;
 use IfCastle\ServiceManager\ServiceDescriptorBuilderInterface;
@@ -58,8 +58,8 @@ final class ServiceManagerBootloaderWithPublic implements AutoResolverInterface,
         $publicEnvironment          = $sysEnv->resolveDependency(PublicEnvironmentInterface::class);
         $reader                     = $sysEnv->resolveDependency(RepositoryReaderByScopeInterface::class);
         
-        $publicReader               = new RepositoryReaderByScopeBridge($reader, $this->defineScopes());
-        $internalReader             = new RepositoryReaderByScopeBridge($reader, []);
+        $publicReader               = new RepositoryReaderByTagsBridge($reader, $this->defineRuntimeTags());
+        $internalReader             = new RepositoryReaderByTagsBridge($reader, []);
         
         $sysEnv->set(RepositoryReaderInterface::class, $internalReader);
         $publicEnvironment->set(RepositoryReaderInterface::class, $publicReader);
@@ -111,8 +111,8 @@ final class ServiceManagerBootloaderWithPublic implements AutoResolverInterface,
         $this->dispose();
     }
     
-    protected function defineScopes(): array
+    protected function defineRuntimeTags(): array
     {
-        return $this->systemEnvironment->getExecutionRoles();
+        return $this->systemEnvironment->getRuntimeTags();
     }
 }

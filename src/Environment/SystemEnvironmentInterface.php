@@ -6,7 +6,7 @@ namespace IfCastle\Application\Environment;
 use IfCastle\Application\EngineInterface;
 use IfCastle\Application\RequestEnvironment\RequestEnvironmentInterface;
 use IfCastle\Async\CoroutineContextInterface;
-use IfCastle\Async\ScheduleTimerInterface;
+use IfCastle\Async\CoroutineSchedulerInterface;
 use IfCastle\DI\DisposableInterface;
 
 interface SystemEnvironmentInterface extends EnvironmentInterface, DisposableInterface
@@ -25,7 +25,7 @@ interface SystemEnvironmentInterface extends EnvironmentInterface, DisposableInt
     
     public function getCoroutineContext(): CoroutineContextInterface|null;
     
-    public function getScheduleTimer(): ScheduleTimerInterface|null;
+    public function getCoroutineScheduler(): CoroutineSchedulerInterface|null;
     
     /**
      * Return current request env if exists
@@ -43,6 +43,8 @@ interface SystemEnvironmentInterface extends EnvironmentInterface, DisposableInt
     public function isJobProcess(): bool;
     
     public function getExecutionRoles(): array;
+    
+    public function getRuntimeTags(): array;
     
     public function isRoleWebServer(): bool;
     

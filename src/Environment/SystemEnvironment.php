@@ -7,7 +7,7 @@ use IfCastle\Application\EngineInterface;
 use IfCastle\Application\ExecutionRolesEnum;
 use IfCastle\Application\RequestEnvironment\RequestEnvironmentInterface;
 use IfCastle\Async\CoroutineContextInterface;
-use IfCastle\Async\ScheduleTimerInterface;
+use IfCastle\Async\CoroutineSchedulerInterface;
 
 class SystemEnvironment             extends Environment
                                     implements SystemEnvironmentInterface
@@ -31,9 +31,9 @@ class SystemEnvironment             extends Environment
     }
     
     #[\Override]
-    public function getScheduleTimer(): ScheduleTimerInterface|null
+    public function getCoroutineScheduler(): CoroutineSchedulerInterface|null
     {
-        return $this->findDependency(ScheduleTimerInterface::class);
+        return $this->findDependency(CoroutineSchedulerInterface::class);
     }
     
     #[\Override]
@@ -76,6 +76,12 @@ class SystemEnvironment             extends Environment
     public function getExecutionRoles(): array
     {
         return $this->get(self::EXECUTION_ROLES) ?? [];
+    }
+    
+    #[\Override]
+    public function getRuntimeTags(): array
+    {
+        return $this->get(self::RUNTIME_TAGS) ?? [];
     }
     
     #[\Override]
