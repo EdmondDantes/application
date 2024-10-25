@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace IfCastle\Application\Bootloader\Builder;
@@ -13,13 +14,12 @@ class PublicEnvironmentBuilder extends ContainerBuilder implements PublicEnviron
     #[\Override]
     public function buildContainer(
         ResolverInterface $resolver,
-        ContainerInterface $parentContainer = null,
+        ?ContainerInterface $parentContainer = null,
         bool $isWeakParent = false
-    ): ContainerInterface
-    {
+    ): ContainerInterface {
         $bindings                   = $this->bindings;
         $this->bindings             = [];
-        
+
         return new PublicEnvironment($resolver, $bindings, $parentContainer, $isWeakParent);
     }
 }

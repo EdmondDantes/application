@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace IfCastle\Application\Bootloader\ServiceManager;
@@ -14,8 +15,8 @@ use IfCastle\DI\ResolverInterface;
 use IfCastle\ServiceManager\DescriptorRepository;
 use IfCastle\ServiceManager\DescriptorRepositoryInterface;
 use IfCastle\ServiceManager\ExecutorInterface;
-use IfCastle\ServiceManager\RepositoryStorages\RepositoryReaderByTagsBridge;
 use IfCastle\ServiceManager\RepositoryStorages\RepositoryReaderByScopeInterface;
+use IfCastle\ServiceManager\RepositoryStorages\RepositoryReaderByTagsBridge;
 use IfCastle\ServiceManager\RepositoryStorages\RepositoryReaderInterface;
 use IfCastle\ServiceManager\ServiceDescriptorBuilderInterface;
 use IfCastle\ServiceManager\ServiceLocator;
@@ -26,56 +27,56 @@ final class ServiceManagerBootloaderWithPublic implements AutoResolverInterface,
     protected SystemEnvironmentInterface|null $systemEnvironment = null;
 
     protected BootloaderContextInterface|null $bootloaderContext = null;
-    
+
     #[\Override]
     public function setBootloaderContext(BootloaderContextInterface $bootloaderContext): void
     {
         $this->bootloaderContext    = $bootloaderContext;
     }
-    
+
     #[\Override]
     public function resolveDependencies(ContainerInterface $container): void
     {
-        if($container instanceof SystemEnvironmentInterface) {
+        if ($container instanceof SystemEnvironmentInterface) {
             $this->systemEnvironment = $container;
         }
     }
-    
+
     #[\Override]
     public function dispose(): void
     {
         $this->systemEnvironment    = null;
     }
-    
+
     public function __invoke(): void
     {
         $sysEnv                     = $this->systemEnvironment ?? $this->bootloaderContext?->getSystemEnvironment();
-        
-        if($sysEnv === null) {
+
+        if ($sysEnv === null) {
             throw new \Exception('System environment is required for ServiceManagerBootloader');
         }
-        
+
         $publicEnvironment          = $sysEnv->resolveDependency(PublicEnvironmentInterface::class);
         $reader                     = $sysEnv->resolveDependency(RepositoryReaderByScopeInterface::class);
-        
+
         $publicReader               = new RepositoryReaderByTagsBridge($reader, $this->defineRuntimeTags());
         $internalReader             = new RepositoryReaderByTagsBridge($reader, []);
-        
+
         $sysEnv->set(RepositoryReaderInterface::class, $internalReader);
         $publicEnvironment->set(RepositoryReaderInterface::class, $publicReader);
-        
-        if(false === $this->systemEnvironment->hasDependency(DescriptorRepositoryInterface::class)) {
-            
+
+        if (false === $this->systemEnvironment->hasDependency(DescriptorRepositoryInterface::class)) {
+
             $descriptorRepository = new DescriptorRepository(
                 $internalReader,
                 $sysEnv->resolveDependency(ResolverInterface::class),
                 $sysEnv->resolveDependency(ServiceDescriptorBuilderInterface::class)
             );
-            
+
             $this->systemEnvironment->set(DescriptorRepositoryInterface::class, $descriptorRepository);
         }
-        
-        if(false === $publicEnvironment->hasDependency(DescriptorRepositoryInterface::class)) {
+
+        if (false === $publicEnvironment->hasDependency(DescriptorRepositoryInterface::class)) {
             $publicEnvironment->set(
                 DescriptorRepositoryInterface::class,
                 new DescriptorRepository(
@@ -85,32 +86,32 @@ final class ServiceManagerBootloaderWithPublic implements AutoResolverInterface,
                 )
             );
         }
-        
-        if(false === $sysEnv->hasDependency(ServiceLocatorInterface::class)) {
+
+        if (false === $sysEnv->hasDependency(ServiceLocatorInterface::class)) {
             $sysEnv->set(
                 ServiceLocatorInterface::class,
                 new ServiceLocator($sysEnv->resolveDependency(DescriptorRepositoryInterface::class))
             );
         }
-        
-        if(false === $publicEnvironment->hasDependency(ServiceLocatorInterface::class)) {
+
+        if (false === $publicEnvironment->hasDependency(ServiceLocatorInterface::class)) {
             $publicEnvironment->set(
                 ServiceLocatorInterface::class,
                 new ServiceLocator($publicEnvironment->resolveDependency(DescriptorRepositoryInterface::class))
             );
         }
-        
-        if(false === $sysEnv->hasDependency(ExecutorInterface::class)) {
-            $sysEnv->set(ExecutorInterface::class, new InternalExecutorInitializer);
+
+        if (false === $sysEnv->hasDependency(ExecutorInterface::class)) {
+            $sysEnv->set(ExecutorInterface::class, new InternalExecutorInitializer());
         }
-        
-        if(false === $publicEnvironment->hasDependency(ExecutorInterface::class)) {
-            $publicEnvironment->set(ExecutorInterface::class, new PublicExecutorInitializer);
+
+        if (false === $publicEnvironment->hasDependency(ExecutorInterface::class)) {
+            $publicEnvironment->set(ExecutorInterface::class, new PublicExecutorInitializer());
         }
-        
+
         $this->dispose();
     }
-    
+
     protected function defineRuntimeTags(): array
     {
         return $this->systemEnvironment->getRuntimeTags();

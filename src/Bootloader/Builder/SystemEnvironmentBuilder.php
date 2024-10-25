@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace IfCastle\Application\Bootloader\Builder;
@@ -8,18 +9,17 @@ use IfCastle\DI\ContainerBuilder;
 use IfCastle\DI\ContainerInterface;
 use IfCastle\DI\ResolverInterface;
 
-class SystemEnvironmentBuilder      extends ContainerBuilder
+class SystemEnvironmentBuilder extends ContainerBuilder
 {
     #[\Override]
     public function buildContainer(
         ResolverInterface $resolver,
-        ContainerInterface $parentContainer = null,
+        ?ContainerInterface $parentContainer = null,
         bool $isWeakParent = false
-    ): ContainerInterface
-    {
+    ): ContainerInterface {
         $bindings                   = $this->bindings;
         $this->bindings             = [];
-        
+
         return new SystemEnvironment($resolver, $bindings, $parentContainer, $isWeakParent);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace IfCastle\Application;
@@ -46,11 +47,11 @@ use IfCastle\DI\DisposableInterface;
  * @enduml
  *
  */
-class Runner                        implements DisposableInterface
+class Runner implements DisposableInterface
 {
     protected ApplicationInterface|null $application = null;
     protected BootloaderBuilderInterface|null $bootloaderBuilder = null;
-    
+
     public function __construct(
         protected readonly string $appDir,
         protected readonly string $appType,
@@ -68,9 +69,8 @@ class Runner                        implements DisposableInterface
          */
         protected array $runtimeTags = []
     ) {}
-    
+
     /**
-     * @return void
      * @throws \Throwable
      */
     final public function run(): void
@@ -81,67 +81,67 @@ class Runner                        implements DisposableInterface
             $this->dispose();
         }
     }
-    
+
     final public function runAndExit(): never
     {
         try {
             $this->execute($this->buildBootloader());
         } catch (\Throwable $throwable) {
-            echo $throwable->getMessage().' in '.$throwable->getFile().':'.$throwable->getLine();
+            echo $throwable->getMessage() . ' in ' . $throwable->getFile() . ':' . $throwable->getLine();
             exit(1);
         }
-        
+
         exit(0);
     }
-    
+
     public function __destruct()
     {
         $this->dispose();
     }
-    
+
     public function defineBootloaderBuilder(BootloaderBuilderInterface $bootloaderBuilder): static
     {
         $this->bootloaderBuilder    = $bootloaderBuilder;
         return $this;
     }
-    
+
     public function withRuntimeTags(string ...$runtimeTags): static
     {
-        $this->runtimeTags           = array_unique(array_merge($this->runtimeTags, $runtimeTags));
+        $this->runtimeTags           = \array_unique(\array_merge($this->runtimeTags, $runtimeTags));
         return $this;
     }
-    
+
     protected function getBootloaderBuilder(): BootloaderBuilderInterface
     {
-        if($this->bootloaderBuilder !== null) {
+        if ($this->bootloaderBuilder !== null) {
             return $this->bootloaderBuilder;
         }
-        
+
         $this->bootloaderBuilder = new BootloaderBuilderByIniFiles(
-            $this->appDir, $this->appDir.'/bootloader', $this->appType, $this->runtimeTags
+            $this->appDir, $this->appDir . '/bootloader', $this->appType, $this->runtimeTags
         );
-        
+
         return $this->bootloaderBuilder;
     }
-    
+
     protected function predefineEngine(BootloaderExecutorInterface $bootloaderExecutor): void {}
-    
+
     protected function postConfigureBootloader(BootloaderExecutorInterface $bootloaderExecutor): void {}
-    
+
     protected function buildBootloader(): BootloaderExecutorInterface
     {
         $bootloaderBuilder          = $this->getBootloaderBuilder();
-        
+
         $bootloaderBuilder->build();
         $bootloader                 = $bootloaderBuilder->getBootloader();
         $this->bootloaderBuilder    = null;
-        
+
         $this->predefineEngine($bootloader);
         $this->postConfigureBootloader($bootloader);
-        
+
         return $bootloader;
     }
-    
+
     protected function execute(BootloaderExecutorInterface $bootloader): void
     {
         try {
@@ -149,7 +149,7 @@ class Runner                        implements DisposableInterface
                 $this->application  = new ($this->applicationClass)($this->appDir, $systemEnvironment);
                 $this->application->start();
             });
-            
+
             try {
                 $bootloader->executePlan();
                 $this->application->defineAfterEngineHandlers($bootloader->getEngineAfterHandlers());
@@ -157,19 +157,19 @@ class Runner                        implements DisposableInterface
                 $bootloader->dispose();
                 unset($bootloader);
             }
-            
+
             // Start the engine
             $this->application->engineStart();
-            
+
         } catch (\Throwable $throwable) {
             $this->application?->criticalLog($throwable);
-            
-            if($this->application === null) {
+
+            if ($this->application === null) {
                 throw $throwable;
             }
         }
     }
-    
+
     public function dispose(): void
     {
         $this->bootloaderBuilder    = null;

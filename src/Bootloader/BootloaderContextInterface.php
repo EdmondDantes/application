@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace IfCastle\Application\Bootloader;
@@ -15,29 +16,29 @@ interface BootloaderContextInterface extends ContainerInterface, ContainerMutabl
 {
     public const string APPLICATION_DIRECTORY = 'applicationDirectory';
     public const string APPLICATION_TYPE = 'applicationType';
-    
+
     public function getApplicationDirectory(): string;
-    
+
     public function getApplicationType(): string;
-    
+
     /**
      * @return string[]
      */
     public function getExecutionRoles(): array;
-    
+
     public function getRuntimeTags(): array;
-    
+
     public function isWarmUpEnabled(): bool;
-    
+
     public function enabledWarmUp(): static;
-    
+
     public function getApplicationConfig(): ConfigInterface;
-    
+
     public function getSystemEnvironmentBootBuilder(): BuilderInterface;
-    
+
     public function getPublicEnvironmentBootBuilder(): PublicEnvironmentBuilderInterface;
-    
+
     public function getRequestEnvironmentPlan(): RequestPlanInterface;
-    
+
     public function getSystemEnvironment(): SystemEnvironmentInterface|null;
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace IfCastle\Application\Bootloader\ServiceManager;
@@ -18,7 +19,7 @@ final class InternalExecutorInitializer extends InitializerAbstract
     protected function initialize(ContainerInterface $container): mixed
     {
         $publicEnvironment          = $container->resolveDependency(PublicEnvironmentInterface::class);
-        
+
         return new InternalExecutor(
             $publicEnvironment->resolveDependency(ServiceLocatorInterface::class),
             $container->resolveDependency(ServiceLocatorInterface::class),
