@@ -185,6 +185,27 @@ the harder it will be to debug the application,
 and the more potential errors other developers working with your component may make.
 Therefore, you should strive for simplicity whenever it is sufficient.
 
+## Runtime tags and execution roles
+
+Additionally, for controlling component loading in the application, `runtime tags` and `execution roles` 
+are used.
+
+`Runtime tags` are a set of tags defined at the start of the application.
+`Execution roles` are a set of tags defined in the application configuration.
+
+Before execution begins, the `Runner` calculates the execution roles and attaches them to the `Runtime tags`. 
+During the Bootloader class loading, the loader uses the `Runtime` tags to filter the list.
+
+`Execution roles` enable creating a monolithic application that functions like "microservices." 
+The roles are defined in the configuration, which can vary across different nodes. 
+This way, you can run different instances of the application on various nodes, 
+each performing different aspects of tasks while still using a unified codebase. 
+This approach is very convenient for certain use cases.
+
+For example, you can (and should) use different nodes for long-running background tasks and for handling web requests. 
+In this case, your `Engine` stack for handling web requests could be `Swoole`, 
+while on another node, an `AMPHP server` would be running.
+
 ## After or Before Action Handlers
 
 The `Bootloader` class can define handlers that will be executed.
