@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace IfCastle\Application;
 
 use IfCastle\Application\Bootloader\BootloaderExecutorInterface;
-use IfCastle\Application\Bootloader\Builder\BootloaderBuilderByDirectory;
+use IfCastle\Application\Bootloader\Builder\BootloaderBuilderByIniFiles;
 use IfCastle\Application\Bootloader\Builder\BootloaderBuilderInterface;
 use IfCastle\Application\Environment\SystemEnvironmentInterface;
 use IfCastle\DI\DisposableInterface;
@@ -117,7 +117,7 @@ class Runner                        implements DisposableInterface
             return $this->bootloaderBuilder;
         }
         
-        $this->bootloaderBuilder = new BootloaderBuilderByDirectory(
+        $this->bootloaderBuilder = new BootloaderBuilderByIniFiles(
             $this->appDir, $this->appDir.'/bootloader', $this->appType, $this->runtimeTags
         );
         

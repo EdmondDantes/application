@@ -6,7 +6,7 @@ namespace IfCastle\Application\Bootloader\Builder;
 use IfCastle\Application\Bootloader\BootManager\BootManagerApplication;
 use IfCastle\DI\ConfigInterface;
 
-final class BootloaderBuilderByDirectory extends BootloaderBuilderAbstract
+final class BootloaderBuilderByIniFiles extends BootloaderBuilderAbstract
 {
     public function __construct(
         protected readonly string $appDirectory,
