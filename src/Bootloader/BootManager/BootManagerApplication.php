@@ -68,7 +68,15 @@ final class BootManagerApplication
             }
         }
 
-        $bootManager->addBootloader($command['component'], $command['bootloaders'], $command['applications'] ?? []);
+        $component                  = $bootManager->createComponent($command['component']);
+        $component->add(
+            $command['bootloaders'],
+            $command['applications'] ?? [],
+            $command['tags'] ?? [],
+            $command['excludeTags'] ?? []
+        );
+
+        $bootManager->addComponent($component);
     }
 
     public static function activate(BootManagerInterface $bootManager, array $command): void
@@ -78,7 +86,9 @@ final class BootManagerApplication
             exit(4);
         }
 
-        $bootManager->activateBootloader($command['component']);
+        $component                  = $bootManager->getComponent($command['component']);
+        $component->activate();
+        $bootManager->updateComponent($component);
     }
 
     public static function disable(BootManagerInterface $bootManager, array $command): void
@@ -88,7 +98,9 @@ final class BootManagerApplication
             exit(5);
         }
 
-        $bootManager->deactivateBootloader($command['component']);
+        $component                  = $bootManager->getComponent($command['component']);
+        $component->deactivate();
+        $bootManager->updateComponent($component);
     }
 
     public static function remove(BootManagerInterface $bootManager, array $command): void
