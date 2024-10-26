@@ -18,8 +18,21 @@ interface ComponentInterface
 
     public function deactivate(): void;
 
+    /**
+     * @return array<string, array>
+     */
     public function getGroups(): array;
-
+    
+    /**
+     * @param string[]    $bootloaders
+     * @param string[]    $applications
+     * @param string[]    $runtimeTags
+     * @param string[]    $excludeTags
+     * @param bool        $isActive
+     * @param string|null $group
+     *
+     * @return $this
+     */
     public function add(
         array  $bootloaders,
         array  $applications    = [],

@@ -122,6 +122,11 @@ class BootManagerByDirectory implements BootManagerInterface
         return $header . PHP_EOL . PHP_EOL . $this->arrayToIni($data);
     }
 
+    /**
+     * @param array<string, scalar|array<scalar>> $data
+     *
+     * @return string
+     */
     protected function arrayToIni(array $data): string
     {
         $ini                        = [];
@@ -147,6 +152,12 @@ class BootManagerByDirectory implements BootManagerInterface
         return \implode(PHP_EOL, $ini);
     }
 
+    /**
+     * @param string $section
+     * @param array<string, scalar|array<scalar>> $data
+     *
+     * @return array<string>
+     */
     protected function arrayToSection(string $section, array $data): array
     {
         $ini                        = [];
@@ -164,6 +175,12 @@ class BootManagerByDirectory implements BootManagerInterface
         return $ini;
     }
 
+    /**
+     * @param string $block
+     * @param array<scalar> $data
+     *
+     * @return array<string>
+     */
     protected function arrayToBlock(string $block, array $data): array
     {
         $ini                        = [];

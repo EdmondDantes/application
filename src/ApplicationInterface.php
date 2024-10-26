@@ -7,7 +7,10 @@ namespace IfCastle\Application;
 interface ApplicationInterface
 {
     public function start(): void;
-
+    
+    /**
+     * @param array<callable> $afterEngineHandlers
+     */
     public function defineAfterEngineHandlers(array $afterEngineHandlers): void;
 
     public function engineStart(): void;

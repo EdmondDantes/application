@@ -15,11 +15,15 @@ use Psr\Log\LoggerInterface;
 
 abstract class ApplicationAbstract implements ApplicationInterface
 {
-    public $engine;
     public const string APP_CODE    = 'app';
-
+    
+    protected EngineInterface|null $engine = null;
+    
     protected LoggerInterface|null $logger = null;
 
+    /**
+     * @var callable[]
+     */
     protected array $afterEngineHandlers = [];
 
     private bool $isStarted         = false;
@@ -34,7 +38,7 @@ abstract class ApplicationAbstract implements ApplicationInterface
 
     private static string $reservedMemory = '';
 
-    public function __construct(protected readonly string                    $appDir,
+    public function __construct(protected readonly string $appDir,
         protected readonly SystemEnvironmentInterface $systemEnvironment
     ) {}
 
@@ -146,8 +150,8 @@ abstract class ApplicationAbstract implements ApplicationInterface
         $this->isEnded              = true;
         $this->endTime              = (new SystemClock())->now();
 
-        if (property_exists($this, 'engine') && $this->engine !== null) {
-            $this->engine->free();
+        if ($this->engine instanceof DisposableInterface) {
+            $this->engine->dispose();
         }
 
         $this->systemEnvironment->dispose();

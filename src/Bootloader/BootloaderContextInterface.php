@@ -27,6 +27,9 @@ interface BootloaderContextInterface extends ContainerInterface, ContainerMutabl
      */
     public function getExecutionRoles(): array;
 
+    /**
+     * @return string[]
+     */
     public function getRuntimeTags(): array;
 
     public function isWarmUpEnabled(): bool;

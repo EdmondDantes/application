@@ -6,6 +6,9 @@ namespace IfCastle\Application\Bootloader\BootManager;
 
 final class Component implements ComponentInterface
 {
+    /**
+     * @var array<string, array> $groups
+     */
     private array $groups       = [];
 
     private string $description  = '';
@@ -14,6 +17,12 @@ final class Component implements ComponentInterface
 
     private bool $isNew;
 
+    /**
+     * Component constructor.
+     *
+     * @param string $name
+     * @param array<string, array>|null $groups
+     */
     public function __construct(public string $name, array|null $groups = null)
     {
         if ($groups !== null) {
