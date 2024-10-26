@@ -19,7 +19,9 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
     protected readonly string $appDirectory;
 
     protected BootloaderExecutorInterface|null $bootloader = null;
+    
     protected readonly string $applicationType;
+    
     protected readonly array  $runtimeTags;
 
     protected array $executionRoles = [];
@@ -86,6 +88,7 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
     }
 
     abstract protected function fetchBootloaders(): iterable;
+    
     abstract protected function initConfigurator(): ConfigInterface;
 
     protected function handleBootloaderClass(string $bootloaderClass): void

@@ -140,6 +140,7 @@ final class Component implements ComponentInterface
         return $this;
     }
 
+    #[\Override]
     public function getGroups(): array
     {
         return $this->groups;

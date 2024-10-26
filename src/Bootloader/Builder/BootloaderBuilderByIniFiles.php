@@ -52,6 +52,7 @@ final class BootloaderBuilderByIniFiles extends BootloaderBuilderAbstract
         return $configurator;
     }
 
+    #[\Override]
     protected function fetchBootloaders(): iterable
     {
         foreach (\glob($this->bootloaderDir . '/*.ini') as $file) {

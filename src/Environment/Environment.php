@@ -11,6 +11,7 @@ use IfCastle\DI\InitializerInterface;
 
 class Environment extends Container implements EnvironmentInterface
 {
+    #[\Override]
     public function get(string $key): mixed
     {
         // Initialize an object if initializer was defined

@@ -10,7 +10,7 @@ final class BootManagerApplication
 
     public static function run(string $appDir, ?array $command = null): never
     {
-        $appDir                     = $appDir . '/bootloader';
+        $appDir .= '/bootloader';
 
         if (\file_exists($appDir) === false) {
             echo 'Bootloader directory not found: ' . $appDir . PHP_EOL;
@@ -88,6 +88,7 @@ final class BootManagerApplication
 
         $component                  = $bootManager->getComponent($command['component']);
         $component->activate();
+        
         $bootManager->updateComponent($component);
     }
 
@@ -100,6 +101,7 @@ final class BootManagerApplication
 
         $component                  = $bootManager->getComponent($command['component']);
         $component->deactivate();
+        
         $bootManager->updateComponent($component);
     }
 

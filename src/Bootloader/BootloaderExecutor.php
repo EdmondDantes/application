@@ -23,6 +23,7 @@ class BootloaderExecutor extends BeforeAfterExecutor implements BootloaderExecut
     private const string WARM_UP    = 'warm-up';
 
     protected BootloaderContextInterface $bootloaderContext;
+    
     protected mixed $startApplicationHandler = null;
 
     protected array $afterEngineHandlers = [];

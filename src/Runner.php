@@ -50,6 +50,7 @@ use IfCastle\DI\DisposableInterface;
 class Runner implements DisposableInterface
 {
     protected ApplicationInterface|null $application = null;
+    
     protected BootloaderBuilderInterface|null $bootloaderBuilder = null;
 
     public function __construct(
@@ -133,6 +134,7 @@ class Runner implements DisposableInterface
         $bootloaderBuilder          = $this->getBootloaderBuilder();
 
         $bootloaderBuilder->build();
+        
         $bootloader                 = $bootloaderBuilder->getBootloader();
         $this->bootloaderBuilder    = null;
 
@@ -170,6 +172,7 @@ class Runner implements DisposableInterface
         }
     }
 
+    #[\Override]
     public function dispose(): void
     {
         $this->bootloaderBuilder    = null;

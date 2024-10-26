@@ -15,6 +15,7 @@ use Psr\Log\LoggerInterface;
 
 abstract class ApplicationAbstract implements ApplicationInterface
 {
+    public $engine;
     public const string APP_CODE    = 'app';
 
     protected LoggerInterface|null $logger = null;
@@ -145,7 +146,7 @@ abstract class ApplicationAbstract implements ApplicationInterface
         $this->isEnded              = true;
         $this->endTime              = (new SystemClock())->now();
 
-        if (isset($this->engine)) {
+        if (property_exists($this, 'engine') && $this->engine !== null) {
             $this->engine->free();
         }
 

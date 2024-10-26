@@ -7,7 +7,7 @@ namespace IfCastle\Application\Bootloader;
 use IfCastle\DesignPatterns\ExecutionPlan\HandlerExecutorInterface;
 use IfCastle\DI\AutoResolverInterface;
 
-final class HandlerExecutor implements HandlerExecutorInterface
+final readonly class HandlerExecutor implements HandlerExecutorInterface
 {
     private \WeakReference $bootloaderContext;
 

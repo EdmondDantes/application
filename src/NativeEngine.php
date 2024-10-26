@@ -15,6 +15,7 @@ class NativeEngine extends EngineAbstract
         if ($this->isServer()) {
             return 'php-cgi/' . PHP_VERSION;
         }
+        
         return 'php-cli/' . PHP_VERSION;
 
     }
