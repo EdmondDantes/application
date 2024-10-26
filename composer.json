@@ -29,5 +29,9 @@
         "phpunit/phpunit": "^11.3",
         "ifcastle/codestyle": "^0.1.5",
         "phpstan/phpstan": "^1.12"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit ./tests",
+        "analysis": "phpstan"
     }
 }
