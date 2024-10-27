@@ -10,10 +10,10 @@ use IfCastle\DI\ConfigInterface;
 final class BootloaderBuilderByIniFiles extends BootloaderBuilderAbstract
 {
     public function __construct(
-        protected readonly string $appDirectory,
+        protected string $appDirectory,
         private readonly string   $bootloaderDir,
-        protected readonly string $applicationType,
-        protected readonly array  $runtimeTags
+        protected string $applicationType,
+        protected array  $runtimeTags
     ) {}
 
     #[\Override]

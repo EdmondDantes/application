@@ -9,9 +9,9 @@ use IfCastle\DI\ConfigInterface;
 final class BootloaderBuilderInMemory extends BootloaderBuilderAbstract
 {
     public function __construct(
-        protected readonly string $appDirectory,
-        protected readonly string $applicationType,
-        protected readonly array $runtimeTags,
+        protected string $appDirectory,
+        protected string $applicationType,
+        protected array $runtimeTags,
         protected readonly array $bootloaders   = [],
         protected readonly array $config        = []
     ) {}

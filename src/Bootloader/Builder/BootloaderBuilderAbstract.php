@@ -16,14 +16,20 @@ use IfCastle\ServiceManager\ServiceLocatorInterface;
 
 abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
 {
-    protected readonly string $appDirectory;
+    protected string $appDirectory;
 
     protected BootloaderExecutorInterface|null $bootloader = null;
     
-    protected readonly string $applicationType;
+    protected string $applicationType;
     
-    protected readonly array  $runtimeTags;
+    /**
+     * @var array<string>
+     */
+    protected array  $runtimeTags;
 
+    /**
+     * @var array<string>
+     */
     protected array $executionRoles = [];
 
     #[\Override]
@@ -55,7 +61,10 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
     {
         if ($this->bootloader === null) {
             $configurator           = $this->initConfigurator();
-            $this->bootloader       = new BootloaderExecutor($configurator, $this->applicationType, $this->executionRoles, $this->runtimeTags);
+            $this->bootloader       = new BootloaderExecutor(
+                $configurator, $this->applicationType, $this->executionRoles, $this->runtimeTags
+            );
+            
             // Bind the application directory to the bootloader context
             $this->bootloader->getBootloaderContext()->set(BootloaderContextInterface::APPLICATION_DIRECTORY, $this->appDirectory);
 
@@ -87,6 +96,10 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
         return $this->bootloader;
     }
 
+    /**
+     * Fetch the bootloaders to be executed.
+     * @return iterable<string>
+     */
     abstract protected function fetchBootloaders(): iterable;
     
     abstract protected function initConfigurator(): ConfigInterface;
@@ -104,7 +117,7 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
 
     protected function defineExecutionRoles(ConfigInterface $configurator): void
     {
-        foreach ($configurator->findSection(SystemEnvironmentInterface::EXECUTION_ROLES) ?? [] as $role => $value) {
+        foreach ($configurator->findSection(SystemEnvironmentInterface::EXECUTION_ROLES) as $role => $value) {
             if (!empty($value)) {
                 $executionRoles[]   = $role;
             }
