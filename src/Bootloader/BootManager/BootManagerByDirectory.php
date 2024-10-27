@@ -44,15 +44,15 @@ class BootManagerByDirectory implements BootManagerInterface
     public function addComponent(ComponentInterface $component): void
     {
         if (false === $component->isNew()) {
-            throw new BootloaderException('Component already exists: ' . $component->name);
+            throw new BootloaderException('Component already exists: ' . $component->getName());
         }
 
-        $this->validateComponent($component->name);
+        $this->validateComponent($component->getName());
 
-        $file                       = $this->bootloaderDir . '/' . $component->name . '.ini';
+        $file                       = $this->bootloaderDir . '/' . $component->getName() . '.ini';
 
         if (\file_exists($file)) {
-            throw new PackageAlreadyExists($component->name);
+            throw new PackageAlreadyExists($component->getName());
         }
 
         File::put($file, $this->generateComponentContent($component));
@@ -66,12 +66,12 @@ class BootManagerByDirectory implements BootManagerInterface
             return;
         }
 
-        $this->validateComponent($component->name);
+        $this->validateComponent($component->getName());
 
-        $file                       = $this->bootloaderDir . '/' . $component->name . '.ini';
+        $file                       = $this->bootloaderDir . '/' . $component->getName() . '.ini';
 
         if (false === \file_exists($file)) {
-            throw new PackageNotFound($component->name);
+            throw new PackageNotFound($component->getName());
         }
 
         File::put($file, $this->generateComponentContent($component));
@@ -135,7 +135,9 @@ class BootManagerByDirectory implements BootManagerInterface
             if (\is_array($value)) {
 
                 if (!\is_string($key)) {
-                    throw new BootloaderException('Nested arrays are not supported for ini files with not string keys');
+                    throw new BootloaderException(
+                        'Nested arrays are not supported for ini files with not string keys'
+                    );
                 }
 
                 if (\array_is_list($value)) {
@@ -177,7 +179,7 @@ class BootManagerByDirectory implements BootManagerInterface
 
     /**
      * @param string $block
-     * @param array<scalar> $data
+     * @param array<scalar|mixed[]> $data
      *
      * @return array<string>
      */

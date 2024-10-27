@@ -6,6 +6,8 @@ namespace IfCastle\Application\Bootloader\BootManager;
 
 interface ComponentInterface
 {
+    public function getName(): string;
+    
     public function defineDescription(string $description): static;
 
     public function getDescription(): string;
@@ -19,7 +21,7 @@ interface ComponentInterface
     public function deactivate(): void;
 
     /**
-     * @return array<string, array>
+     * @return array<string, scalar|null|mixed[]>
      */
     public function getGroups(): array;
     
