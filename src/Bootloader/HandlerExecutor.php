@@ -9,6 +9,9 @@ use IfCastle\DI\AutoResolverInterface;
 
 final readonly class HandlerExecutor implements HandlerExecutorInterface
 {
+    /**
+     * @var \WeakReference<BootloaderContextInterface>
+     */
     private \WeakReference $bootloaderContext;
 
     public function __construct(BootloaderContextInterface $bootloaderContext)

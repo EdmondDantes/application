@@ -18,7 +18,12 @@ interface EnvironmentInterface extends ContainerInterface, ContainerMutableInter
     public function is(string ...$path): bool;
 
     public function destroy(string $key): static;
-
+    
+    /**
+     * @param array<string, mixed> $data
+     *
+     * @return $this
+     */
     public function merge(array $data): static;
 
     public function getParentEnvironment(): ?EnvironmentInterface;

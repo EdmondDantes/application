@@ -43,8 +43,14 @@ interface SystemEnvironmentInterface extends EnvironmentInterface, DisposableInt
 
     public function isJobProcess(): bool;
 
+    /**
+     * @return string[]
+     */
     public function getExecutionRoles(): array;
 
+    /**
+     * @return string[]
+     */
     public function getRuntimeTags(): array;
 
     public function isRoleWebServer(): bool;

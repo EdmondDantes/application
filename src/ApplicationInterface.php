@@ -28,4 +28,6 @@ interface ApplicationInterface
     public function getServerName(): string;
 
     public function isDeveloperMode(): bool;
+    
+    public function criticalLog(mixed $data): void;
 }

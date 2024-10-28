@@ -72,25 +72,24 @@ abstract class ApplicationAbstract implements ApplicationInterface
             if ($this->isEnded && $error === null) {
                 return;
             }
-
-            if (!(isset($error['type'])
-                  && (\E_ERROR | \E_PARSE | \E_CORE_ERROR | \E_CORE_WARNING | \E_COMPILE_ERROR | \E_COMPILE_WARNING))) {
-                return;
-            }
-
-            $error                  = Error::createFromLastError($error);
-
+            
             if ($this->endTime === 0) {
                 $this->endTime      = (new SystemClock())->now();
             }
-
-            $this->unexpectedShutdownHandler($error);
+            
+            // Put to log only critical errors
+            if (($error['type'] ?? 0)
+                   & (\E_ERROR | \E_PARSE | \E_CORE_ERROR | \E_CORE_WARNING | \E_COMPILE_ERROR | \E_COMPILE_WARNING)) {
+                $this->unexpectedShutdownHandler(Error::createFromLastError($error));
+            }
         });
 
         try {
             $this->logger           = $this->systemEnvironment->findDependency(LoggerInterface::class);
         } catch (\Throwable $throwable) {
-            $this->logger?->critical(new FatalException('Application init error', 0, $throwable));
+            $fatalException         = new FatalException('Application init error', 0, $throwable);
+            // Psr-3 exception standard
+            $this->logger?->critical($fatalException->getMessage(), ['exception' => $fatalException]);
             $this->criticalLog($throwable);
         }
     }
@@ -220,10 +219,14 @@ abstract class ApplicationAbstract implements ApplicationInterface
         return 10240;
     }
 
-    protected function unexpectedShutdownHandler(BaseExceptionInterface $error): void
+    protected function unexpectedShutdownHandler(\Throwable $error = null): void
     {
+        if($error === null) {
+            return;
+        }
+        
         $this->criticalLog($error);
-        $this->logger?->error($error);
+        $this->logger?->critical($error->getMessage(), ['exception' => $error]);
 
         if ($this->logger instanceof DisposableInterface) {
             $this->logger->dispose();

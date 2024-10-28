@@ -8,6 +8,13 @@ use IfCastle\DI\ConfigInterface;
 
 final class BootloaderBuilderInMemory extends BootloaderBuilderAbstract
 {
+    /**
+     * @param string $appDirectory
+     * @param string $applicationType
+     * @param string[] $runtimeTags
+     * @param array<class-string> $bootloaders
+     * @param mixed[] $config
+     */
     public function __construct(
         protected string $appDirectory,
         protected string $applicationType,

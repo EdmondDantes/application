@@ -9,6 +9,12 @@ use IfCastle\DI\ConfigInterface;
 
 final class BootloaderBuilderByIniFiles extends BootloaderBuilderAbstract
 {
+    /**
+     * @param string $appDirectory
+     * @param string $bootloaderDir
+     * @param string $applicationType
+     * @param string[] $runtimeTags
+     */
     public function __construct(
         protected string $appDirectory,
         private readonly string   $bootloaderDir,
@@ -29,7 +35,7 @@ final class BootloaderBuilderByIniFiles extends BootloaderBuilderAbstract
 
         $bootloaderConfigs          = $this->read($configuratorFile);
 
-        if (empty($bootloaderConfig)) {
+        if (empty($bootloaderConfigs)) {
             throw new \RuntimeException('Bootloader can\'t access to configurator file: ' . $configuratorFile . ' or it is empty');
         }
 
@@ -71,6 +77,11 @@ final class BootloaderBuilderByIniFiles extends BootloaderBuilderAbstract
         }
     }
 
+    /**
+     * @param array<array<string, scalar|scalar[]|null>> $bootloaders
+     *
+     * @return string|null
+     */
     protected function getFirstBootloaderClass(array $bootloaders): string|null
     {
         foreach ($this->walkByBootloaderConfig($bootloaders) as $bootloaderClass) {
@@ -80,6 +91,11 @@ final class BootloaderBuilderByIniFiles extends BootloaderBuilderAbstract
         return null;
     }
 
+    /**
+     * @param array<array<string, scalar|scalar[]|null>> $bootloaders
+     *
+     * @return iterable<class-string>
+     */
     protected function walkByBootloaderConfig(array $bootloaders): iterable
     {
         foreach ($bootloaders as $bootloader) {
@@ -103,6 +119,11 @@ final class BootloaderBuilderByIniFiles extends BootloaderBuilderAbstract
         }
     }
 
+    /**
+     * @param string $file
+     *
+     * @return array<array<string, scalar|scalar[]|null>>|null
+     */
     protected function read(string $file): array|null
     {
         $data                       = \parse_ini_file($file, true);

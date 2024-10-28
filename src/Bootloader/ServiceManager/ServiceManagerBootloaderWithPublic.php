@@ -112,6 +112,10 @@ final class ServiceManagerBootloaderWithPublic implements AutoResolverInterface,
         $this->dispose();
     }
 
+    /**
+     * Define the runtime tags for the Service Manager.
+     * @return array<string>
+     */
     protected function defineRuntimeTags(): array
     {
         return $this->systemEnvironment->getRuntimeTags();

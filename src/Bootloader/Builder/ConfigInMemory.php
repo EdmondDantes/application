@@ -8,6 +8,9 @@ use IfCastle\DI\ConfigInterface;
 
 final class ConfigInMemory implements ConfigInterface
 {
+    /**
+     * @param mixed[] $data
+     */
     public function __construct(public array $data = []) {}
 
     #[\Override]
@@ -21,7 +24,10 @@ final class ConfigInMemory implements ConfigInterface
     {
         return $this->data[$section] ?? [];
     }
-
+    
+    /**
+     * @throws \Exception
+     */
     #[\Override]
     public function requireValue(string $key): mixed
     {
@@ -31,7 +37,10 @@ final class ConfigInMemory implements ConfigInterface
 
         return $this->data[$key];
     }
-
+    
+    /**
+     * @throws \Exception
+     */
     #[\Override]
     public function requireSection(string $section): array
     {

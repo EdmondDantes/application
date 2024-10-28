@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace IfCastle\Application\Bootloader;
 
 use IfCastle\DesignPatterns\ExecutionPlan\BeforeAfterExecutorInterface;
+use IfCastle\DesignPatterns\ExecutionPlan\ExecutionPlanInterface;
 
-interface BootloaderExecutorInterface extends BeforeAfterExecutorInterface
+interface BootloaderExecutorInterface extends BeforeAfterExecutorInterface, ExecutionPlanInterface
 {
     public function getBootloaderContext(): BootloaderContextInterface;
 
@@ -16,5 +17,8 @@ interface BootloaderExecutorInterface extends BeforeAfterExecutorInterface
 
     public function runAfterEngine(callable $handler): static;
 
+    /**
+     * @return callable[]
+     */
     public function getEngineAfterHandlers(): array;
 }

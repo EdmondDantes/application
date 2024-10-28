@@ -11,6 +11,7 @@ use IfCastle\DesignPatterns\ExecutionPlan\WeakStaticClosureExecutor;
 use IfCastle\Exceptions\ClientAvailableInterface;
 use IfCastle\Exceptions\ClientException;
 use IfCastle\Protocol\Exceptions\ParseException;
+use IfCastle\Protocol\Http\HttpResponseMutableInterface;
 
 class RequestPlan extends ExecutionPlan implements RequestPlanInterface
 {
@@ -119,11 +120,31 @@ class RequestPlan extends ExecutionPlan implements RequestPlanInterface
 
     protected function setClientExceptionAsResponse(ClientAvailableInterface & \Throwable $exception, RequestEnvironmentInterface $requestEnvironment): StagePointer
     {
-        $requestEnvironment->getResponseFactory()->createFailedResponse($exception);
+        $response                   = $requestEnvironment->getResponseFactory()->createResponse();
+        
+        if($response instanceof HttpResponseMutableInterface) {
+            $response->setStatusCode(400);
+            $response->setReasonPhrase('Bad Request');
+            $response->setBody($exception->getClientMessage());
+        }
+        
+        $requestEnvironment->defineResponse($response);
+        
+        return new StagePointer();
     }
 
     protected function setServerExceptionAsResponse(\Throwable $exception, RequestEnvironmentInterface $requestEnvironment): StagePointer
     {
-        $requestEnvironment->getResponseFactory()->createFailedResponse($exception);
+        $response = $requestEnvironment->getResponseFactory()->createResponse();
+        
+        if($response instanceof HttpResponseMutableInterface) {
+            $response->setStatusCode(500);
+            $response->setReasonPhrase('Internal Server Error');
+            $response->setBody('Internal Server Error');
+        }
+        
+        $requestEnvironment->defineResponse($response);
+        
+        return new StagePointer();
     }
 }

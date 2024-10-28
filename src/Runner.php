@@ -8,6 +8,7 @@ use IfCastle\Application\Bootloader\BootloaderExecutorInterface;
 use IfCastle\Application\Bootloader\Builder\BootloaderBuilderByIniFiles;
 use IfCastle\Application\Bootloader\Builder\BootloaderBuilderInterface;
 use IfCastle\Application\Environment\SystemEnvironmentInterface;
+use IfCastle\DesignPatterns\ExecutionPlan\ExecutionPlanInterface;
 use IfCastle\DI\DisposableInterface;
 
 /**
@@ -156,7 +157,11 @@ class Runner implements DisposableInterface
                 $bootloader->executePlan();
                 $this->application->defineAfterEngineHandlers($bootloader->getEngineAfterHandlers());
             } finally {
-                $bootloader->dispose();
+                
+                if($bootloader instanceof DisposableInterface) {
+                    $bootloader->dispose();
+                }
+                
                 unset($bootloader);
             }
 

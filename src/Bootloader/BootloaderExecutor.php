@@ -17,6 +17,7 @@ use IfCastle\DI\ConfigInterface;
 use IfCastle\DI\DisposableInterface;
 use IfCastle\DI\Resolver;
 use IfCastle\DI\ResolverInterface;
+use IfCastle\Exceptions\UnexpectedValueType;
 
 class BootloaderExecutor extends BeforeAfterExecutor implements BootloaderExecutorInterface, DisposableInterface
 {
@@ -26,8 +27,17 @@ class BootloaderExecutor extends BeforeAfterExecutor implements BootloaderExecut
     
     protected mixed $startApplicationHandler = null;
 
+    /**
+     * @var callable[]
+     */
     protected array $afterEngineHandlers = [];
 
+    /**
+     * @param ConfigInterface $config
+     * @param string $applicationType
+     * @param string[] $executionRoles
+     * @param string[] $runtimeTags
+     */
     public function __construct(
         protected ConfigInterface $config,
         protected readonly string $applicationType,
@@ -108,10 +118,16 @@ class BootloaderExecutor extends BeforeAfterExecutor implements BootloaderExecut
             RequestPlanInterface::class                 => new RequestPlan(),
         ]);
     }
-
+    
+    /**
+     * @param string[] $executionRoles
+     * @param string[] $runtimeTags
+     *
+     * @return void
+     */
     protected function defineExecutionRolesAndRuntimeTags(array $executionRoles, array $runtimeTags): void
     {
-        foreach ($this->config->findSection(SystemEnvironmentInterface::EXECUTION_ROLES) ?? [] as $role => $value) {
+        foreach ($this->config->findSection(SystemEnvironmentInterface::EXECUTION_ROLES) as $role => $value) {
             if (!empty($value)) {
                 $executionRoles[]   = $role;
             }
@@ -128,7 +144,10 @@ class BootloaderExecutor extends BeforeAfterExecutor implements BootloaderExecut
         $this->bootloaderContext->set(SystemEnvironmentInterface::RUNTIME_TAGS, $runtimeTags);
         $this->getSystemEnvironmentBootBuilder()->set(SystemEnvironmentInterface::RUNTIME_TAGS, $runtimeTags);
     }
-
+    
+    /**
+     * @throws UnexpectedValueType
+     */
     protected function startApplication(): void
     {
         if ($this->startApplicationHandler === null) {
@@ -148,6 +167,10 @@ class BootloaderExecutor extends BeforeAfterExecutor implements BootloaderExecut
 
         $systemEnvironment          = $bootBuilder->buildContainer($this->getDependencyResolver());
 
+        if(false === $systemEnvironment instanceof SystemEnvironmentInterface) {
+            throw new UnexpectedValueType('SystemEnvironmentInterface', $systemEnvironment, SystemEnvironmentInterface::class);
+        }
+        
         $builder                    = $this->bootloaderContext->getPublicEnvironmentBootBuilder();
 
         $publicEnvironment          = $builder->buildContainer($this->getDependencyResolver(), $systemEnvironment, true);
