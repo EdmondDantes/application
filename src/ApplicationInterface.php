@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace IfCastle\Application;
 
+use IfCastle\Application\Environment\SystemEnvironmentInterface;
+
 interface ApplicationInterface
 {
     public function start(): void;
     
     /**
-     * @param array<callable> $afterEngineHandlers
+     * @param array<callable(SystemEnvironmentInterface, EngineInterface): void> $afterEngineHandlers
      */
     public function defineAfterEngineHandlers(array $afterEngineHandlers): void;
 

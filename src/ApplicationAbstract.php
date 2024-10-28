@@ -22,7 +22,7 @@ abstract class ApplicationAbstract implements ApplicationInterface
     protected LoggerInterface|null $logger = null;
 
     /**
-     * @var callable[]
+     * @var array<callable(SystemEnvironmentInterface, EngineInterface): void>
      */
     protected array $afterEngineHandlers = [];
 
