@@ -31,7 +31,7 @@
         "phpstan/phpstan": "^1.12"
     },
     "scripts": {
-        "test": "vendor/bin/phpunit --coverage-clover=tests/coverage/clover.xml ./tests",
+        "test": "vendor/bin/phpunit ./tests",
         "analysis": "phpstan"
     }
 }
