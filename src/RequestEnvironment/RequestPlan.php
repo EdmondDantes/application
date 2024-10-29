@@ -10,8 +10,10 @@ use IfCastle\DesignPatterns\ExecutionPlan\StagePointer;
 use IfCastle\DesignPatterns\ExecutionPlan\WeakStaticClosureExecutor;
 use IfCastle\Exceptions\ClientAvailableInterface;
 use IfCastle\Exceptions\ClientException;
+use IfCastle\Exceptions\LogicalException;
+use IfCastle\Exceptions\UnexpectedValue;
 use IfCastle\Protocol\Exceptions\ParseException;
-use IfCastle\Protocol\Http\HttpResponseMutableInterface;
+use IfCastle\TypeDefinitions\ResultInterface;
 
 class RequestPlan extends ExecutionPlan implements RequestPlanInterface
 {
@@ -36,55 +38,91 @@ class RequestPlan extends ExecutionPlan implements RequestPlanInterface
             new PlanExecutorWithFinalAndStageControl()
         );
     }
-
+    
+    /**
+     * @throws UnexpectedValue
+     * @throws LogicalException
+     */
     #[\Override]
     public function addRawBuildHandler(callable $handler): static
     {
         return $this->addStageHandler(self::RAW_BUILD, $handler);
     }
-
+    
+    /**
+     * @throws LogicalException
+     * @throws UnexpectedValue
+     */
     #[\Override]
     public function addBuildHandler(callable $handler): static
     {
         return $this->addStageHandler(self::BUILD, $handler);
     }
-
+    
+    /**
+     * @throws LogicalException
+     * @throws UnexpectedValue
+     */
     #[\Override]
     public function addBeforeDispatchHandler(callable $handler): static
     {
         return $this->addStageHandler(self::BEFORE_DISPATCH, $handler);
     }
-
+    
+    /**
+     * @throws LogicalException
+     * @throws UnexpectedValue
+     */
     #[\Override]
     public function addDispatchHandler(callable $handler): static
     {
         return $this->addStageHandler(self::DISPATCH, $handler);
     }
-
+    
+    /**
+     * @throws UnexpectedValue
+     * @throws LogicalException
+     */
     #[\Override]
     public function addBeforeHandleHandler(callable $handler): static
     {
         return $this->addStageHandler(self::BEFORE_EXECUTE, $handler);
     }
-
+    
+    /**
+     * @throws LogicalException
+     * @throws UnexpectedValue
+     */
     #[\Override]
     public function addExecuteHandler(callable $handler): static
     {
         return $this->addStageHandler(self::EXECUTE, $handler);
     }
-
+    
+    /**
+     * @throws LogicalException
+     * @throws UnexpectedValue
+     */
     #[\Override]
     public function addResponseHandler(callable $handler): static
     {
         return $this->addStageHandler(self::RESPONSE, $handler);
     }
-
+    
+    /**
+     * @throws LogicalException
+     * @throws UnexpectedValue
+     */
     #[\Override]
     public function addAfterResponseHandler(callable $handler): static
     {
         return $this->addStageHandler(self::AFTER_RESPONSE, $handler);
     }
-
+    
+    /**
+     * @throws UnexpectedValue
+     * @throws LogicalException
+     */
     #[\Override]
     public function addFinallyHandler(callable $handler): static
     {
@@ -107,44 +145,17 @@ class RequestPlan extends ExecutionPlan implements RequestPlanInterface
         } catch (ParseException|ClientAvailableInterface $exception) {
 
             if ($exception instanceof ParseException) {
-                $exception          = new ClientException('Failed to parse request', [], ['exception' => $exception]);
+                $exception          = new ClientException('Failed to parse request', [], ['exception' => $exception->toArray()]);
             }
 
-            return $this->setClientExceptionAsResponse($exception, $requestEnvironment);
+            $requestEnvironment->set(ResultInterface::class, $exception);
+            return new StagePointer(finishPlan: true);
+            
         } catch (\Throwable $exception) {
-            return $this->setServerExceptionAsResponse($exception, $requestEnvironment);
+            $requestEnvironment->set(ResultInterface::class, $exception);
+            return new StagePointer(finishPlan: true);
         }
 
         return null;
-    }
-
-    protected function setClientExceptionAsResponse(ClientAvailableInterface & \Throwable $exception, RequestEnvironmentInterface $requestEnvironment): StagePointer
-    {
-        $response                   = $requestEnvironment->getResponseFactory()->createResponse();
-        
-        if($response instanceof HttpResponseMutableInterface) {
-            $response->setStatusCode(400);
-            $response->setReasonPhrase('Bad Request');
-            $response->setBody($exception->getClientMessage());
-        }
-        
-        $requestEnvironment->defineResponse($response);
-        
-        return new StagePointer();
-    }
-
-    protected function setServerExceptionAsResponse(\Throwable $exception, RequestEnvironmentInterface $requestEnvironment): StagePointer
-    {
-        $response = $requestEnvironment->getResponseFactory()->createResponse();
-        
-        if($response instanceof HttpResponseMutableInterface) {
-            $response->setStatusCode(500);
-            $response->setReasonPhrase('Internal Server Error');
-            $response->setBody('Internal Server Error');
-        }
-        
-        $requestEnvironment->defineResponse($response);
-        
-        return new StagePointer();
     }
 }
