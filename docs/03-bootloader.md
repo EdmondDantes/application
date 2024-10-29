@@ -3,7 +3,10 @@
 ## Bootloader Process
 
 The `Bootloader` component handles the application's loading 
-and initialization process. 
+and initialization process.
+
+The `Bootloader` component is started by the `Runner` strategy, 
+which is responsible for initializing and starting the application loading process.
 
 The process is carried out in several stages:
 
@@ -14,7 +17,7 @@ title Bootloader Process
 start
 :Bootloader Build;
 :Bootloader Execution;
-:Engine Launch;
+:Application Launch;
 stop
 
 @enduml
@@ -22,6 +25,7 @@ stop
 
 Bootloader construction is performed by the `BootloaderManager`, which executes the following stages:
 
+* Defining the `application type` and `runtime tags`
 * Loading the application configuration
 * Loading all Bootloader classes that form the `BootloaderExecutor`
 
@@ -31,11 +35,12 @@ title Bootloader Process
 
 start
 group Bootloader Build
+  :Defining an application type and runtime tags;
   :Loading application configuration;
   :Loading Bootloader classes;
 end group
 :Bootloader Execution;
-:Engine Launch;
+:Application Launch;
 stop
 
 @enduml
@@ -46,8 +51,8 @@ The `BootloaderExecutor` executes handlers in a specified sequence of three stag
 
 * BeforeAction - Initializes the environment. 
 Executed before the `Application` and `SystemEnvironment` classes are created.
-* BuildApplication - Creates the application and the necessary environments.
-* AfterAction - Executed after the application is created, but before the `Engine` is launched.
+* BuildApplication — Creates the application and the necessary environments.
+* AfterAction — Executed after the application is created, but before the `Engine` is launched.
 
 ```puml
 @startuml
@@ -55,6 +60,7 @@ title Bootloader Process
 
 start
 group Bootloader Build
+  :Defining an application type and runtime tags;
   :Loading application configuration;
   :Loading Bootloader classes;
 end group

@@ -21,15 +21,8 @@ This approach can be extremely useful: having a single codebase with different w
 
 ## Application class
 
-There are two ways to structure an application:
-
-* When the application complements the `Engine`.
-* When the application defines the `Engine`.
-
-In the first case, the `Application` is clearly independent of a specific `Engine`, 
-allowing for different `Engines` to be used. 
-
-In the second case, the `Application` **depends on** a specific `Engine`.
+The `Application` is responsible for the process of starting the `Engine` and the `Service manager`.
+From this perspective, the `Application` class is the strategy for launching the `Engine`.
 
 Below is an example of a Console application.
 
@@ -75,39 +68,13 @@ including `SystemEnvironment`, `Engine`, and the `Service Manager`.
 
 In example of a console application that will map console commands to service calls.
 
-Web-server type applications are generally required to define the `Engine`. 
-Why? The reason is that the operation of a web server is closely tied to the type of `Engine`, 
-and currently, there is no scenario where a web server can function independently of an `Engine`. 
-Therefore, in the case of a web server, you will see code like this:
+For Web-server applications, the server itself should be the `Engine`, 
+and the `Application` class is responsible for starting it.
 
-```php
-class WebServerApplication          extends ApplicationAbstract
-{
-    #[\Override]
-    protected static function predefineEngine(BootloaderExecutorInterface $bootloaderExecutor): void
-    {
-        $bootloaderExecutor->getBootloaderContext()->getSystemEnvironmentBootBuilder()
-            ->set(EngineInterface::class, new ConstructibleDependency(WebServerEngine::class));
-    }
-    
-    #[\Override]
-    protected function defineEngineRole(): EngineRolesEnum
-    {
-        return EngineRolesEnum::SERVER;
-    }
-}
-```
+## Runner
 
-In this case, the `predefineEngine` method is used to define the `Engine` that will be used by the application.
-The Engine dependency becomes available at the moment the application is launched, 
-and other components can make decisions about their operation based on this dependency.
-
-## Application::postConfigureBootloader
-
-The `postConfigureBootloader` method also allows configuring 
-the Bootloader before the application's initialization process begins. 
-At the `postConfigureBootloader` stage, the fully configured `BootloaderExecutor` is available. 
-This means the application can modify its configuration at the last moment before the launch.
+The `Runner` class is responsible for the application's startup logic. 
+It performs the `bootloader process` and builds the `SystemEnvironment` for the application.
 
 ## What Do Applications Do?
 
