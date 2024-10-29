@@ -75,19 +75,28 @@ class Runner implements DisposableInterface
     /**
      * @throws \Throwable
      */
-    final public function run(): void
+    final public function runAndDispose(): void
     {
         try {
-            $this->execute($this->buildBootloader());
+            $this->startEngine($this->buildBootloader());
         } finally {
             $this->dispose();
         }
+    }
+    
+    /**
+     * @throws \Throwable
+     */
+    final public function run(): ApplicationInterface
+    {
+        $this->startEngine($this->buildBootloader());
+        return $this->application;
     }
 
     final public function runAndExit(): never
     {
         try {
-            $this->execute($this->buildBootloader());
+            $this->startEngine($this->buildBootloader());
         } catch (\Throwable $throwable) {
             echo $throwable->getMessage() . ' in ' . $throwable->getFile() . ':' . $throwable->getLine();
             exit(1);
@@ -145,7 +154,7 @@ class Runner implements DisposableInterface
         return $bootloader;
     }
 
-    protected function execute(BootloaderExecutorInterface $bootloader): void
+    protected function startEngine(BootloaderExecutorInterface $bootloader): void
     {
         try {
             $bootloader->defineStartApplicationHandler(function (SystemEnvironmentInterface $systemEnvironment) {
