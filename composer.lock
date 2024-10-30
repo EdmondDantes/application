@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "82fa9280c97140d5cf01229391cddc66",
+    "content-hash": "0f90b98daf571f4a7f9c085643ab3bcb",
     "packages": [
         {
             "name": "ifcastle/async-contracts",
@@ -274,16 +274,16 @@
         },
         {
             "name": "ifcastle/service-manager",
-            "version": "v0.5.14",
+            "version": "v0.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EdmondDantes/service-manager.git",
-                "reference": "2569eb63718f20454a4d0a15ffcc8c8e9096ce07"
+                "reference": "de82c338e2947ad9cc532709ae3fa80894549498"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EdmondDantes/service-manager/zipball/2569eb63718f20454a4d0a15ffcc8c8e9096ce07",
-                "reference": "2569eb63718f20454a4d0a15ffcc8c8e9096ce07",
+                "url": "https://api.github.com/repos/EdmondDantes/service-manager/zipball/de82c338e2947ad9cc532709ae3fa80894549498",
+                "reference": "de82c338e2947ad9cc532709ae3fa80894549498",
                 "shasum": ""
             },
             "require": {
@@ -295,6 +295,8 @@
             "require-dev": {
                 "amphp/php-cs-fixer-config": "^2.1",
                 "friendsofphp/php-cs-fixer": "^3.60",
+                "ifcastle/codestyle": "^0.1.7",
+                "phpstan/phpstan": "^1.12",
                 "phpunit/phpunit": "^11.2"
             },
             "type": "library",
@@ -313,9 +315,9 @@
             ],
             "support": {
                 "issues": "https://github.com/EdmondDantes/service-manager/issues",
-                "source": "https://github.com/EdmondDantes/service-manager/tree/v0.5.14"
+                "source": "https://github.com/EdmondDantes/service-manager/tree/v0.6.0"
             },
-            "time": "2024-10-25T10:28:58+00:00"
+            "time": "2024-10-30T08:33:55+00:00"
         },
         {
             "name": "ifcastle/type-definitions",

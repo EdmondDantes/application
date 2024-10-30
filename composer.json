@@ -20,7 +20,7 @@
         "ifcastle/design-patterns": "^0.2.20",
         "ifcastle/os-utilities": "^0.5.0",
         "psr/log": "^3.0",
-        "ifcastle/service-manager": "^0.5.7",
+        "ifcastle/service-manager": "^0.6.0",
         "ifcastle/async-contracts": "^0.5.0",
         "ifcastle/protocol-contracts": "^0.5.0"
     },
