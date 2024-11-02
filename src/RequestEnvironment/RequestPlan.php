@@ -21,7 +21,8 @@ class RequestPlan extends ExecutionPlan implements RequestPlanInterface
     {
         parent::__construct(
             new WeakStaticClosureExecutor(
-                static fn(self $self, mixed $handler, RequestEnvironmentInterface $requestEnvironment)
+                /* @phpstan-ignore-next-line */
+                static fn(self $self, mixed $handler, string $stage, RequestEnvironmentInterface $requestEnvironment)
                         => $self->executeHandler($handler, $requestEnvironment), $this
             ),
             [

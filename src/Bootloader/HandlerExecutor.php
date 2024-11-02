@@ -41,9 +41,10 @@ final readonly class HandlerExecutor implements HandlerExecutorInterface
         }
 
         if (\is_callable($handler)) {
-            return $handler();
+            return $handler($stage, ...$parameters);
         }
 
+        /* @phpstan-ignore-next-line */
         return null;
     }
 }

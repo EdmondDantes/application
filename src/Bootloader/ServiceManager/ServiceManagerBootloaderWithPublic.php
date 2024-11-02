@@ -16,8 +16,8 @@ use IfCastle\ServiceManager\DescriptorRepository;
 use IfCastle\ServiceManager\DescriptorRepositoryInterface;
 use IfCastle\ServiceManager\ExecutorInterface;
 use IfCastle\ServiceManager\RepositoryStorages\RepositoryReaderByTagsBridge;
-use IfCastle\ServiceManager\RepositoryStorages\RepositoryReaderByTagsInterface;
 use IfCastle\ServiceManager\RepositoryStorages\RepositoryReaderInterface;
+use IfCastle\ServiceManager\RepositoryStorages\ServiceCollectionInterface;
 use IfCastle\ServiceManager\ServiceDescriptorBuilderInterface;
 use IfCastle\ServiceManager\ServiceLocator;
 use IfCastle\ServiceManager\ServiceLocatorInterface;
@@ -57,10 +57,10 @@ final class ServiceManagerBootloaderWithPublic implements AutoResolverInterface,
         }
 
         $publicEnvironment          = $sysEnv->resolveDependency(PublicEnvironmentInterface::class);
-        $reader                     = $sysEnv->resolveDependency(RepositoryReaderByTagsInterface::class);
+        $serviceCollection          = $sysEnv->resolveDependency(ServiceCollectionInterface::class);
 
-        $publicReader               = new RepositoryReaderByTagsBridge($reader, $this->defineRuntimeTags());
-        $internalReader             = new RepositoryReaderByTagsBridge($reader, []);
+        $publicReader               = new RepositoryReaderByTagsBridge($serviceCollection, $this->defineRuntimeTags());
+        $internalReader             = new RepositoryReaderByTagsBridge($serviceCollection, []);
 
         $sysEnv->set(RepositoryReaderInterface::class, $internalReader);
         $publicEnvironment->set(RepositoryReaderInterface::class, $publicReader);
