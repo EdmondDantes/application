@@ -99,6 +99,11 @@ final class BootloaderBuilderByIniFiles extends BootloaderBuilderAbstract
     protected function walkByBootloaderConfig(array $bootloaders): iterable
     {
         foreach ($bootloaders as $bootloader) {
+            
+            if(!\is_array($bootloader)) {
+                continue;
+            }
+            
             if (\array_key_exists('isActive', $bootloader) === false || empty($bootloader['isActive'])) {
                 continue;
             }
