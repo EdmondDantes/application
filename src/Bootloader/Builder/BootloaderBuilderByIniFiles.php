@@ -10,9 +10,6 @@ use IfCastle\DI\ConfigInterface;
 final class BootloaderBuilderByIniFiles extends BootloaderBuilderAbstract
 {
     /**
-     * @param string $appDirectory
-     * @param string $bootloaderDir
-     * @param string $applicationType
      * @param string[] $runtimeTags
      */
     public function __construct(
@@ -80,7 +77,6 @@ final class BootloaderBuilderByIniFiles extends BootloaderBuilderAbstract
     /**
      * @param array<array<string, scalar|scalar[]|null>> $bootloaders
      *
-     * @return string|null
      */
     protected function getFirstBootloaderClass(array $bootloaders): string|null
     {
@@ -99,11 +95,11 @@ final class BootloaderBuilderByIniFiles extends BootloaderBuilderAbstract
     protected function walkByBootloaderConfig(array $bootloaders): iterable
     {
         foreach ($bootloaders as $bootloader) {
-            
-            if(!\is_array($bootloader)) {
+
+            if (!\is_array($bootloader)) {
                 continue;
             }
-            
+
             if (\array_key_exists('isActive', $bootloader) === false || empty($bootloader['isActive'])) {
                 continue;
             }
@@ -125,7 +121,6 @@ final class BootloaderBuilderByIniFiles extends BootloaderBuilderAbstract
     }
 
     /**
-     * @param string $file
      *
      * @return array<array<string, scalar|scalar[]|null>>|null
      */

@@ -8,7 +8,6 @@ use IfCastle\Application\Bootloader\BootloaderExecutorInterface;
 use IfCastle\Application\Bootloader\Builder\BootloaderBuilderByIniFiles;
 use IfCastle\Application\Bootloader\Builder\BootloaderBuilderInterface;
 use IfCastle\Application\Environment\SystemEnvironmentInterface;
-use IfCastle\DesignPatterns\ExecutionPlan\ExecutionPlanInterface;
 use IfCastle\DI\DisposableInterface;
 
 /**
@@ -51,8 +50,13 @@ use IfCastle\DI\DisposableInterface;
 class Runner implements DisposableInterface
 {
     protected ApplicationInterface|null $application = null;
-    
+
     protected BootloaderBuilderInterface|null $bootloaderBuilder = null;
+
+    /**
+     * If true, the runner will throw exceptions from the engine.
+     */
+    protected bool $throwEngineException = false;
 
     public function __construct(
         protected readonly string $appDir,
@@ -83,7 +87,7 @@ class Runner implements DisposableInterface
             $this->dispose();
         }
     }
-    
+
     /**
      * @throws \Throwable
      */
@@ -144,7 +148,7 @@ class Runner implements DisposableInterface
         $bootloaderBuilder          = $this->getBootloaderBuilder();
 
         $bootloaderBuilder->build();
-        
+
         $bootloader                 = $bootloaderBuilder->getBootloader();
         $this->bootloaderBuilder    = null;
 
@@ -166,11 +170,11 @@ class Runner implements DisposableInterface
                 $bootloader->executePlan();
                 $this->application->defineAfterEngineHandlers($bootloader->getEngineAfterHandlers());
             } finally {
-                
-                if($bootloader instanceof DisposableInterface) {
+
+                if ($bootloader instanceof DisposableInterface) {
                     $bootloader->dispose();
                 }
-                
+
                 unset($bootloader);
             }
 
@@ -180,7 +184,7 @@ class Runner implements DisposableInterface
         } catch (\Throwable $throwable) {
             $this->application?->criticalLog($throwable);
 
-            if ($this->application === null) {
+            if ($this->application === null || $this->throwEngineException) {
                 throw $throwable;
             }
         }

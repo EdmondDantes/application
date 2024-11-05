@@ -9,7 +9,7 @@ use IfCastle\Application\Environment\SystemEnvironmentInterface;
 interface ApplicationInterface
 {
     public function start(): void;
-    
+
     /**
      * @param array<callable(SystemEnvironmentInterface, EngineInterface): void> $afterEngineHandlers
      */
@@ -30,6 +30,6 @@ interface ApplicationInterface
     public function getServerName(): string;
 
     public function isDeveloperMode(): bool;
-    
+
     public function criticalLog(mixed $data): void;
 }

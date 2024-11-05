@@ -20,7 +20,6 @@ final class Component implements ComponentInterface
     /**
      * Component constructor.
      *
-     * @param string $name
      * @param array<string, scalar|null|mixed[]>|null $groups
      */
     public function __construct(public string $name, array|null $groups = null)
@@ -48,13 +47,13 @@ final class Component implements ComponentInterface
             $this->isNew         = true;
         }
     }
-    
+
     #[\Override]
     public function getName(): string
     {
         return $this->name;
     }
-    
+
     #[\Override]
     public function isNew(): bool
     {

@@ -125,7 +125,6 @@ class BootManagerByDirectory implements BootManagerInterface
     /**
      * @param array<string, scalar|array<scalar>> $data
      *
-     * @return string
      */
     protected function arrayToIni(array $data): string
     {
@@ -155,7 +154,6 @@ class BootManagerByDirectory implements BootManagerInterface
     }
 
     /**
-     * @param string $section
      * @param array<string, scalar|array<scalar>> $data
      *
      * @return array<string>
@@ -178,7 +176,6 @@ class BootManagerByDirectory implements BootManagerInterface
     }
 
     /**
-     * @param string $block
      * @param array<scalar|mixed[]> $data
      *
      * @return array<string>

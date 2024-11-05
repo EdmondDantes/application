@@ -9,7 +9,6 @@ final class BootManagerApplication
     public const string CONFIGURATOR = 'configurator';
 
     /**
-     * @param string $appDir
      * @param array<string, string>|null $command
      */
     public static function run(string $appDir, ?array $command = null): never
@@ -64,10 +63,8 @@ final class BootManagerApplication
     }
 
     /**
-     * @param BootManagerInterface $bootManager
      * @param array<string, scalar|array<scalar>> $command
      *
-     * @return void
      */
     public static function add(BootManagerInterface $bootManager, array $command): void
     {
@@ -88,12 +85,10 @@ final class BootManagerApplication
 
         $bootManager->addComponent($component);
     }
-    
+
     /**
-     * @param BootManagerInterface $bootManager
      * @param array<string, string> $command
      *
-     * @return void
      */
     public static function activate(BootManagerInterface $bootManager, array $command): void
     {
@@ -104,15 +99,13 @@ final class BootManagerApplication
 
         $component                  = $bootManager->getComponent($command['component']);
         $component->activate();
-        
+
         $bootManager->updateComponent($component);
     }
 
     /**
-     * @param BootManagerInterface $bootManager
      * @param array<string, string> $command
      *
-     * @return void
      */
     public static function disable(BootManagerInterface $bootManager, array $command): void
     {
@@ -123,15 +116,13 @@ final class BootManagerApplication
 
         $component                  = $bootManager->getComponent($command['component']);
         $component->deactivate();
-        
+
         $bootManager->updateComponent($component);
     }
 
     /**
-     * @param BootManagerInterface $bootManager
      * @param array<string, string> $command
      *
-     * @return void
      */
     public static function remove(BootManagerInterface $bootManager, array $command): void
     {

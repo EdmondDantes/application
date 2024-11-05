@@ -109,7 +109,7 @@ class BootManagerByDirectoryTest extends TestCase
 
         $component                  = $bootManager->getComponent($componentName);
         $component->activate();
-        
+
         $bootManager->updateComponent($component);
 
         $data                       = [

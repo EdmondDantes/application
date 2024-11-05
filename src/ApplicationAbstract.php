@@ -7,7 +7,6 @@ namespace IfCastle\Application;
 use IfCastle\Application\Environment\SystemEnvironmentInterface;
 use IfCastle\DI\DisposableInterface;
 use IfCastle\Exceptions\BaseException;
-use IfCastle\Exceptions\BaseExceptionInterface;
 use IfCastle\Exceptions\Errors\Error;
 use IfCastle\Exceptions\FatalException;
 use IfCastle\OsUtilities\SystemClock\SystemClock;
@@ -16,9 +15,9 @@ use Psr\Log\LoggerInterface;
 abstract class ApplicationAbstract implements ApplicationInterface
 {
     public const string APP_CODE    = 'app';
-    
+
     protected EngineInterface|null $engine = null;
-    
+
     protected LoggerInterface|null $logger = null;
 
     /**
@@ -72,14 +71,14 @@ abstract class ApplicationAbstract implements ApplicationInterface
             if ($this->isEnded && $error === null) {
                 return;
             }
-            
+
             if ($this->endTime === 0) {
                 $this->endTime      = (new SystemClock())->now();
             }
-            
+
             // Put to log only critical errors
-            if (($error['type'] ?? 0)
-                   & (\E_ERROR | \E_PARSE | \E_CORE_ERROR | \E_CORE_WARNING | \E_COMPILE_ERROR | \E_COMPILE_WARNING)) {
+            if ((($error['type'] ?? 0)
+                   & (\E_ERROR | \E_PARSE | \E_CORE_ERROR | \E_CORE_WARNING | \E_COMPILE_ERROR | \E_COMPILE_WARNING)) !== 0) {
                 $this->unexpectedShutdownHandler(Error::createFromLastError($error));
             }
         });
@@ -198,6 +197,7 @@ abstract class ApplicationAbstract implements ApplicationInterface
         return $this->systemEnvironment->isDeveloperMode();
     }
 
+    #[\Override]
     public function criticalLog(mixed $data): void
     {
         if (!\is_dir($this->appDir . '/logs')) {
@@ -219,12 +219,12 @@ abstract class ApplicationAbstract implements ApplicationInterface
         return 10240;
     }
 
-    protected function unexpectedShutdownHandler(\Throwable $error = null): void
+    protected function unexpectedShutdownHandler(?\Throwable $error = null): void
     {
-        if($error === null) {
+        if ($error === null) {
             return;
         }
-        
+
         $this->criticalLog($error);
         $this->logger?->critical($error->getMessage(), ['exception' => $error]);
 

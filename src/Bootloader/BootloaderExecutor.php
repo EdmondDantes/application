@@ -24,7 +24,7 @@ class BootloaderExecutor extends BeforeAfterExecutor implements BootloaderExecut
     private const string WARM_UP    = 'warm-up';
 
     protected BootloaderContextInterface $bootloaderContext;
-    
+
     protected mixed $startApplicationHandler = null;
 
     /**
@@ -33,8 +33,6 @@ class BootloaderExecutor extends BeforeAfterExecutor implements BootloaderExecut
     protected array $afterEngineHandlers = [];
 
     /**
-     * @param ConfigInterface $config
-     * @param string $applicationType
      * @param string[] $executionRoles
      * @param string[] $runtimeTags
      */
@@ -118,12 +116,11 @@ class BootloaderExecutor extends BeforeAfterExecutor implements BootloaderExecut
             RequestPlanInterface::class                 => new RequestPlan(),
         ]);
     }
-    
+
     /**
      * @param string[] $executionRoles
      * @param string[] $runtimeTags
      *
-     * @return void
      */
     protected function defineExecutionRolesAndRuntimeTags(array $executionRoles, array $runtimeTags): void
     {
@@ -144,7 +141,7 @@ class BootloaderExecutor extends BeforeAfterExecutor implements BootloaderExecut
         $this->bootloaderContext->set(SystemEnvironmentInterface::RUNTIME_TAGS, $runtimeTags);
         $this->getSystemEnvironmentBootBuilder()->set(SystemEnvironmentInterface::RUNTIME_TAGS, $runtimeTags);
     }
-    
+
     /**
      * @throws UnexpectedValueType
      */
@@ -167,10 +164,10 @@ class BootloaderExecutor extends BeforeAfterExecutor implements BootloaderExecut
 
         $systemEnvironment          = $bootBuilder->buildContainer($this->getDependencyResolver());
 
-        if(false === $systemEnvironment instanceof SystemEnvironmentInterface) {
+        if (false === $systemEnvironment instanceof SystemEnvironmentInterface) {
             throw new UnexpectedValueType('SystemEnvironmentInterface', $systemEnvironment, SystemEnvironmentInterface::class);
         }
-        
+
         $builder                    = $this->bootloaderContext->getPublicEnvironmentBootBuilder();
 
         $publicEnvironment          = $builder->buildContainer($this->getDependencyResolver(), $systemEnvironment, true);

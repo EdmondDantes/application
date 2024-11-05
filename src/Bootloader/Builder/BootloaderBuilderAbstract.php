@@ -19,9 +19,9 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
     protected string $appDirectory;
 
     protected BootloaderExecutorInterface|null $bootloader = null;
-    
+
     protected string $applicationType;
-    
+
     /**
      * @var array<string>
      */
@@ -64,7 +64,7 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
             $this->bootloader       = new BootloaderExecutor(
                 $configurator, $this->applicationType, $this->executionRoles, $this->runtimeTags
             );
-            
+
             // Bind the application directory to the bootloader context
             $this->bootloader->getBootloaderContext()->set(BootloaderContextInterface::APPLICATION_DIRECTORY, $this->appDirectory);
 
@@ -101,7 +101,7 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
      * @return iterable<string>
      */
     abstract protected function fetchBootloaders(): iterable;
-    
+
     abstract protected function initConfigurator(): ConfigInterface;
 
     protected function handleBootloaderClass(string $bootloaderClass): void

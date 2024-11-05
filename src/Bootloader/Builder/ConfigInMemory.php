@@ -24,7 +24,7 @@ final class ConfigInMemory implements ConfigInterface
     {
         return $this->data[$section] ?? [];
     }
-    
+
     /**
      * @throws \Exception
      */
@@ -37,7 +37,7 @@ final class ConfigInMemory implements ConfigInterface
 
         return $this->data[$key];
     }
-    
+
     /**
      * @throws \Exception
      */

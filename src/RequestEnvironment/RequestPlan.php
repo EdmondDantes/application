@@ -39,7 +39,7 @@ class RequestPlan extends ExecutionPlan implements RequestPlanInterface
             new PlanExecutorWithFinalAndStageControl()
         );
     }
-    
+
     /**
      * @throws UnexpectedValue
      * @throws LogicalException
@@ -49,7 +49,7 @@ class RequestPlan extends ExecutionPlan implements RequestPlanInterface
     {
         return $this->addStageHandler(self::RAW_BUILD, $handler);
     }
-    
+
     /**
      * @throws LogicalException
      * @throws UnexpectedValue
@@ -59,7 +59,7 @@ class RequestPlan extends ExecutionPlan implements RequestPlanInterface
     {
         return $this->addStageHandler(self::BUILD, $handler);
     }
-    
+
     /**
      * @throws LogicalException
      * @throws UnexpectedValue
@@ -69,7 +69,7 @@ class RequestPlan extends ExecutionPlan implements RequestPlanInterface
     {
         return $this->addStageHandler(self::BEFORE_DISPATCH, $handler);
     }
-    
+
     /**
      * @throws LogicalException
      * @throws UnexpectedValue
@@ -79,7 +79,7 @@ class RequestPlan extends ExecutionPlan implements RequestPlanInterface
     {
         return $this->addStageHandler(self::DISPATCH, $handler);
     }
-    
+
     /**
      * @throws UnexpectedValue
      * @throws LogicalException
@@ -89,7 +89,7 @@ class RequestPlan extends ExecutionPlan implements RequestPlanInterface
     {
         return $this->addStageHandler(self::BEFORE_EXECUTE, $handler);
     }
-    
+
     /**
      * @throws LogicalException
      * @throws UnexpectedValue
@@ -99,7 +99,7 @@ class RequestPlan extends ExecutionPlan implements RequestPlanInterface
     {
         return $this->addStageHandler(self::EXECUTE, $handler);
     }
-    
+
     /**
      * @throws LogicalException
      * @throws UnexpectedValue
@@ -109,7 +109,7 @@ class RequestPlan extends ExecutionPlan implements RequestPlanInterface
     {
         return $this->addStageHandler(self::RESPONSE, $handler);
     }
-    
+
     /**
      * @throws LogicalException
      * @throws UnexpectedValue
@@ -119,7 +119,7 @@ class RequestPlan extends ExecutionPlan implements RequestPlanInterface
     {
         return $this->addStageHandler(self::AFTER_RESPONSE, $handler);
     }
-    
+
     /**
      * @throws UnexpectedValue
      * @throws LogicalException
@@ -151,7 +151,7 @@ class RequestPlan extends ExecutionPlan implements RequestPlanInterface
 
             $requestEnvironment->set(ResultInterface::class, $exception);
             return new StagePointer(finishPlan: true);
-            
+
         } catch (\Throwable $exception) {
             $requestEnvironment->set(ResultInterface::class, $exception);
             return new StagePointer(finishPlan: true);
