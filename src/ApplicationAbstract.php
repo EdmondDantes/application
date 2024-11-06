@@ -168,6 +168,12 @@ abstract class ApplicationAbstract implements ApplicationInterface
     }
 
     #[\Override]
+    public function getSystemEnvironment(): SystemEnvironmentInterface
+    {
+        return $this->systemEnvironment;
+    }
+
+    #[\Override]
     public function getStartTime(): int
     {
         return $this->startTime;

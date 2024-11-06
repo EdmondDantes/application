@@ -21,6 +21,8 @@ interface ApplicationInterface
 
     public function getEngine(): EngineInterface;
 
+    public function getSystemEnvironment(): SystemEnvironmentInterface;
+
     public function getStartTime(): int;
 
     public function getAppDir(): string;
