@@ -9,9 +9,29 @@ use IfCastle\Application\ExecutionRolesEnum;
 use IfCastle\Application\RequestEnvironment\RequestEnvironmentInterface;
 use IfCastle\Async\CoroutineContextInterface;
 use IfCastle\Async\CoroutineSchedulerInterface;
+use IfCastle\DI\ContainerInterface;
+use IfCastle\DI\DependencyInterface;
+use IfCastle\DI\InitializerInterface;
+use IfCastle\DI\ResolverInterface;
 
 class SystemEnvironment extends Environment implements SystemEnvironmentInterface
 {
+    /**
+     * @param array<class-string|string, DependencyInterface|InitializerInterface|object|\Throwable|\WeakReference|scalar|null> $container
+     */
+    public function __construct(ResolverInterface   $resolver,
+        array               $container = [],
+        ?ContainerInterface $parentContainer = null,
+        bool                $isWeakParent = false
+    ) {
+        parent::__construct($resolver, $container, $parentContainer, $isWeakParent);
+
+        // define self-reference as SystemEnvironmentInterface
+        if (\array_key_exists(SystemEnvironmentInterface::class, $this->container)) {
+            $this->container[SystemEnvironmentInterface::class] = \WeakReference::create($this);
+        }
+    }
+
     #[\Override]
     public function getEngine(): EngineInterface
     {

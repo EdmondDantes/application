@@ -27,6 +27,11 @@ class RequestEnvironment extends Container implements RequestEnvironmentInterfac
             ResponseFactoryInterface::class     => null,
             ResponseInterface::class            => null,
         ], $parentContainer, true);
+
+        // define self-reference as RequestEnvironmentInterface
+        if (\array_key_exists(RequestEnvironmentInterface::class, $this->container)) {
+            $this->container[RequestEnvironmentInterface::class] = \WeakReference::create($this);
+        }
     }
 
     #[\Override]
