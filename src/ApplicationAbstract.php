@@ -123,7 +123,7 @@ abstract class ApplicationAbstract implements ApplicationInterface
 
         } catch (\Throwable $throwable) {
             $this->logger?->critical(new FatalException('Application init error', 0, $throwable));
-            $this->criticalLog($throwable);
+            throw $throwable;
         }
     }
 
