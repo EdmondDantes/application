@@ -27,7 +27,7 @@ class SystemEnvironment extends Environment implements SystemEnvironmentInterfac
         parent::__construct($resolver, $container, $parentContainer, $isWeakParent);
 
         // define self-reference as SystemEnvironmentInterface
-        if (\array_key_exists(SystemEnvironmentInterface::class, $this->container)) {
+        if (false === \array_key_exists(SystemEnvironmentInterface::class, $this->container)) {
             $this->container[SystemEnvironmentInterface::class] = \WeakReference::create($this);
         }
     }
