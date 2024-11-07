@@ -12,7 +12,7 @@ use IfCastle\ServiceManager\ExecutionContextInterface;
  * Interceptor interface that intercepts the operation of the request serializer for the Worker.
  * The interceptor can modify the parameters or completely cancel the execution of the main handler.
  *
- * @template-extends InterceptorInterface<WorkerProtocolBuilderInterface>
+ * @template-extends InterceptorInterface<WorkerProtocolInterface>
  */
 interface WorkerProtocolInterceptorInterface extends InterceptorInterface
 {

@@ -12,7 +12,7 @@ use IfCastle\ServiceManager\ExecutionContextInterface;
 use IfCastle\TypeDefinitions\NativeSerialization\ArrayTyped;
 use IfCastle\TypeDefinitions\Value\ContainerSerializableInterface;
 
-class WorkerProtocolBuilderArrayTyped implements WorkerProtocolBuilderInterface
+class WorkerProtocolArrayTyped implements WorkerProtocolInterface
 {
     protected ?bool $isMsgPackExtensionLoaded = null;
     

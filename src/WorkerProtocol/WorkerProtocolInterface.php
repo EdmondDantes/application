@@ -8,7 +8,7 @@ use IfCastle\ServiceManager\CommandDescriptorInterface;
 use IfCastle\ServiceManager\ExecutionContextInterface;
 use IfCastle\TypeDefinitions\Value\ContainerSerializableInterface;
 
-interface WorkerProtocolBuilderInterface
+interface WorkerProtocolInterface
 {
     /**
      * @param array<string, mixed> $parameters
