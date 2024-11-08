@@ -22,7 +22,8 @@
         "psr/log": "^3.0",
         "ifcastle/service-manager": "^0.6.5",
         "ifcastle/async-contracts": "^0.5.0",
-        "ifcastle/protocol-contracts": "^0.6"
+        "ifcastle/protocol-contracts": "^0.6",
+        "league/uri": "^7.4"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.60",

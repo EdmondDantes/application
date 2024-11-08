@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace IfCastle\Application\WorkerProtocol;
@@ -21,14 +22,14 @@ interface WorkerProtocolInterface
         array                              $parameters   = [],
         ?ExecutionContextInterface         $context      = null
     ): string;
-    
+
     /**
      * @throws WorkerCommunicationException
      */
     public function parseWorkerRequest(string|array $request): WorkerRequestInterface;
-    
+
     public function buildWorkerResponse(ContainerSerializableInterface|\Throwable $response): string|null;
-    
+
     /**
      * @throws WorkerCommunicationException
      */
