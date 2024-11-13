@@ -24,6 +24,8 @@ interface WorkerProtocolInterface
     ): string;
 
     /**
+     * @param string|array<string,mixed> $request
+     *
      * @throws WorkerCommunicationException
      */
     public function parseWorkerRequest(string|array $request): WorkerRequestInterface;
