@@ -10,7 +10,8 @@ use IfCastle\DesignPatterns\Interceptor\InterceptorPipeline;
 use IfCastle\DesignPatterns\Interceptor\InterceptorRegistryInterface;
 use IfCastle\ServiceManager\CommandDescriptorInterface;
 use IfCastle\ServiceManager\ExecutionContextInterface;
-use IfCastle\TypeDefinitions\DefinitionAwareInterface;
+use IfCastle\TypeDefinitions\DefinitionStaticAwareInterface;
+use IfCastle\TypeDefinitions\Exceptions\RemoteException;
 use IfCastle\TypeDefinitions\NativeSerialization\ArraySerializableInterface;
 use IfCastle\TypeDefinitions\NativeSerialization\ArrayTyped;
 use IfCastle\TypeDefinitions\Value\ContainerSerializableInterface;
@@ -26,7 +27,7 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
 
     public function __construct(
         protected SystemEnvironmentInterface $systemEnvironment,
-        ?InterceptorRegistryInterface $interceptorRegistry = null
+        ?InterceptorRegistryInterface $interceptorRegistry = null,
     ) {
 
         $this->isMsgPackExtensionLoaded = \extension_loaded('msgpack');
@@ -40,10 +41,10 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
         string|CommandDescriptorInterface $service,
         ?string                           $command      = null,
         array                             $parameters   = [],
-        ?ExecutionContextInterface        $context      = null
+        ?ExecutionContextInterface        $context      = null,
     ): string {
         [, $service, $command, $parameters, $context] = (new InterceptorPipeline(
-            $this, [__METHOD__, $service, $command, $parameters, $context], ...$this->interceptors
+            $this, [__METHOD__, $service, $command, $parameters, $context], ...$this->interceptors,
         ))->getLastArguments();
         
         if($service instanceof CommandDescriptorInterface) {
@@ -52,7 +53,7 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
                 $service            = ArrayTyped::serialize($service);
             } else {
                 throw new WorkerCommunicationException(
-                    'The worker request service is invalid: expected ArraySerializableInterface, got ' . get_class($service)
+                    'The worker request service is invalid: expected ArraySerializableInterface, got ' . get_class($service),
                 );
             }
         }
@@ -84,19 +85,7 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
     #[\Override]
     public function parseWorkerRequest(array|string $request): WorkerRequestInterface
     {
-        if ($this->isMsgPackExtensionLoaded) {
-            try {
-                $data = \msgpack_unpack($request);
-            } catch (\Throwable $exception) {
-                throw new WorkerCommunicationException('The msgpack decode error occurred: ' . $exception->getMessage(), 0, $exception);
-            }
-        } else {
-            try {
-                $data = \json_decode($request, true, 512, JSON_THROW_ON_ERROR);
-            } catch (\JsonException $exception) {
-                throw new WorkerCommunicationException('The json decode error occurred: ' . $exception->getMessage(), 0, $exception);
-            }
-        }
+        $data                       = \is_string($request) ? $this->parseIncoming($request) : $request;
 
         if (\count($data) !== 4) {
             throw new WorkerCommunicationException('The worker request data is invalid: expected 4 elements, got ' . \count($data));
@@ -116,7 +105,7 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
             throw new WorkerCommunicationException('The worker request service is invalid: expected string, got ' . \gettype($service));
         }
         
-        if(!is_string($command) && !is_null($command)) {
+        if(!\is_string($command) && !is_null($command)) {
             throw new WorkerCommunicationException('The worker request command is invalid: expected string, got ' . gettype($command));
         }
         
@@ -133,7 +122,7 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
         /* @phpstan-ignore-next-line */
         if(false === $context instanceof ExecutionContextInterface) {
             throw new WorkerCommunicationException(
-                'The worker request context is invalid: expected ExecutionContextInterface, got ' . get_debug_type($context)
+                'The worker request context is invalid: expected ExecutionContextInterface, got ' . get_debug_type($context),
             );
         }
         
@@ -141,23 +130,81 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
         return new WorkerRequest(
             $service instanceof CommandDescriptorInterface ?
                 $service : new Command($service, $command, $parameters),
-            $context
+            $context,
         );
     }
 
     #[\Override]
-    public function buildWorkerResponse(ContainerSerializableInterface|\Throwable $response): string|null
+    public function buildWorkerResponse(DefinitionStaticAwareInterface|\Throwable $response): string|null
     {
-        if($response instanceof DefinitionAwareInterface) {
-        
+        if($response instanceof DefinitionStaticAwareInterface) {
+            $definition             = $response::definition();
+            $response               = [$response::class, $definition->encode($response)];
+        } elseif ($response instanceof \Throwable) {
+            $response               = new RemoteException($response);
+            $definition             = $response->getDefinition();
+            $response               = [$response::class, $definition->encode($response)];
+        } else {
+            throw new WorkerCommunicationException(
+                'The worker response is invalid: expected ContainerSerializableInterface or Throwable, got ' . get_debug_type($response),
+            );
+        }
+
+        if ($this->isMsgPackExtensionLoaded) {
+            try {
+                return \msgpack_pack($response);
+            } catch (\Throwable $exception) {
+                throw new WorkerCommunicationException('The msgpack encode error occurred: ' . $exception->getMessage(), 0, $exception);
+            }
         }
         
-        
+        try {
+            return \json_encode($response, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $exception) {
+            throw new WorkerCommunicationException('The json encode error occurred: ' . $exception->getMessage(), 0, $exception);
+        }
     }
 
     #[\Override]
     public function parseWorkerResponse(string $response): object|null|false
     {
-        // TODO: Implement parseWorkerResponse() method.
+        $data                       = $this->parseIncoming($response);
+
+        if (\count($data) !== 2) {
+            throw new WorkerCommunicationException('The worker response data is invalid: expected 2 elements, got ' . \count($data));
+        }
+
+        [$class, $response]         = $data;
+        
+        if(!is_string($class)) {
+            throw new WorkerCommunicationException('The worker response class is invalid: expected string, got ' . gettype($class));
+        }
+
+        if(false === is_subclass_of($class, DefinitionStaticAwareInterface::class)) {
+            throw new WorkerCommunicationException('The worker response class is invalid: expected DefinitionStaticAwareInterface, got ' . $class);
+        }
+        
+        return $class::definition()->decode($response);
+    }
+    
+    /**
+     * @return array<mixed>
+     * @throws WorkerCommunicationException
+     */
+    protected function parseIncoming(string $data): array
+    {
+        if ($this->isMsgPackExtensionLoaded) {
+            try {
+                return \msgpack_unpack($data);
+            } catch (\Throwable $exception) {
+                throw new WorkerCommunicationException('The msgpack decode error occurred: ' . $exception->getMessage(), 0, $exception);
+            }
+        }
+        
+        try {
+            return \json_decode($data, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $exception) {
+            throw new WorkerCommunicationException('The json decode error occurred: ' . $exception->getMessage(), 0, $exception);
+        }
     }
 }

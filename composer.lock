@@ -144,16 +144,16 @@
         },
         {
             "name": "ifcastle/exceptions",
-            "version": "v5.1.3",
+            "version": "v5.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EdmondDantes/BaseException.git",
-                "reference": "93b1dcb7b61e0610e3d6e41bdf963a889fad4e2a"
+                "reference": "3637dcf4536969f1ffe4042838026093e5c40aee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EdmondDantes/BaseException/zipball/93b1dcb7b61e0610e3d6e41bdf963a889fad4e2a",
-                "reference": "93b1dcb7b61e0610e3d6e41bdf963a889fad4e2a",
+                "url": "https://api.github.com/repos/EdmondDantes/BaseException/zipball/3637dcf4536969f1ffe4042838026093e5c40aee",
+                "reference": "3637dcf4536969f1ffe4042838026093e5c40aee",
                 "shasum": ""
             },
             "require": {
@@ -185,9 +185,9 @@
             "description": "A basic library for exceptions with templates, oriented towards usage in web services",
             "support": {
                 "issues": "https://github.com/EdmondDantes/BaseException/issues",
-                "source": "https://github.com/EdmondDantes/BaseException/tree/v5.1.3"
+                "source": "https://github.com/EdmondDantes/BaseException/tree/v5.2.1"
             },
-            "time": "2024-10-29T06:51:30+00:00"
+            "time": "2024-11-15T15:45:10+00:00"
         },
         {
             "name": "ifcastle/os-utilities",
@@ -328,20 +328,20 @@
         },
         {
             "name": "ifcastle/type-definitions",
-            "version": "v0.5.19",
+            "version": "v0.5.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EdmondDantes/type-definitions.git",
-                "reference": "4d2c65fa40acd1ef4cca7f0f313dba44671d5471"
+                "reference": "ca6f9cdfb63ddaf6f11e3f7961adc9664080386b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EdmondDantes/type-definitions/zipball/4d2c65fa40acd1ef4cca7f0f313dba44671d5471",
-                "reference": "4d2c65fa40acd1ef4cca7f0f313dba44671d5471",
+                "url": "https://api.github.com/repos/EdmondDantes/type-definitions/zipball/ca6f9cdfb63ddaf6f11e3f7961adc9664080386b",
+                "reference": "ca6f9cdfb63ddaf6f11e3f7961adc9664080386b",
                 "shasum": ""
             },
             "require": {
-                "ifcastle/exceptions": "^5.0"
+                "ifcastle/exceptions": "^5.2"
             },
             "require-dev": {
                 "ifcastle/codestyle": "^0.1.7",
@@ -369,9 +369,9 @@
             ],
             "support": {
                 "issues": "https://github.com/EdmondDantes/type-definitions/issues",
-                "source": "https://github.com/EdmondDantes/type-definitions/tree/v0.5.19"
+                "source": "https://github.com/EdmondDantes/type-definitions/tree/v0.5.20"
             },
-            "time": "2024-11-08T12:28:12+00:00"
+            "time": "2024-11-15T18:11:23+00:00"
         },
         {
             "name": "league/uri",

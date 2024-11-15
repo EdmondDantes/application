@@ -7,7 +7,7 @@ namespace IfCastle\Application\WorkerProtocol;
 use IfCastle\Application\WorkerProtocol\Exceptions\WorkerCommunicationException;
 use IfCastle\ServiceManager\CommandDescriptorInterface;
 use IfCastle\ServiceManager\ExecutionContextInterface;
-use IfCastle\TypeDefinitions\Value\ContainerSerializableInterface;
+use IfCastle\TypeDefinitions\DefinitionStaticAwareInterface;
 
 interface WorkerProtocolInterface
 {
@@ -30,7 +30,7 @@ interface WorkerProtocolInterface
      */
     public function parseWorkerRequest(string|array $request): WorkerRequestInterface;
 
-    public function buildWorkerResponse(ContainerSerializableInterface|\Throwable $response): string|null;
+    public function buildWorkerResponse(DefinitionStaticAwareInterface|\Throwable $response): string|null;
 
     /**
      * @throws WorkerCommunicationException
