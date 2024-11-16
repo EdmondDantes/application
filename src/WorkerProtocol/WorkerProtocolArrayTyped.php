@@ -16,6 +16,7 @@ use IfCastle\TypeDefinitions\Exceptions\RemoteException;
 use IfCastle\TypeDefinitions\NativeSerialization\ArraySerializableInterface;
 use IfCastle\TypeDefinitions\NativeSerialization\ArrayTyped;
 use IfCastle\TypeDefinitions\Value\ContainerSerializableInterface;
+use IfCastle\TypeDefinitions\Value\InstantiateInterface;
 
 final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
 {
@@ -171,7 +172,7 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
     }
 
     #[\Override]
-    public function parseWorkerResponse(string $response): object|null|false
+    public function parseWorkerResponse(string $response): mixed
     {
         $data                       = $this->parseIncoming($response);
 
@@ -185,11 +186,13 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
             throw new WorkerCommunicationException('The worker response class is invalid: expected string, got ' . gettype($class));
         }
 
-        if(false === is_subclass_of($class, DefinitionStaticAwareInterface::class)) {
-            throw new WorkerCommunicationException('The worker response class is invalid: expected DefinitionStaticAwareInterface, got ' . $class);
+        if(is_subclass_of($class, DefinitionStaticAwareInterface::class)) {
+            return $class::definition()->decode($response);
         }
         
-        return $class::definition()->decode($response);
+        throw new WorkerCommunicationException(
+            'The worker response class is invalid: expected DefinitionStaticAwareInterface, got ' . $class
+        );
     }
     
     /**

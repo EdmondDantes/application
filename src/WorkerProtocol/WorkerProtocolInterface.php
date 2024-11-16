@@ -47,5 +47,5 @@ interface WorkerProtocolInterface
     /**
      * @throws WorkerCommunicationException
      */
-    public function parseWorkerResponse(string $response): object|null|false;
+    public function parseWorkerResponse(string $response): mixed;
 }

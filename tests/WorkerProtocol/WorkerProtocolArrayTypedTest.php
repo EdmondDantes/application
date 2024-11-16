@@ -26,7 +26,7 @@ class WorkerProtocolArrayTypedTest extends TestCase
                 'parameter1' => new ValueString('value1'),
                 'parameter2' => new ValueNumber(500),
                 'parameter3' => new ValueBool(true),
-            ]
+            ],
         );
         
         $parsed                     = $workerProtocolArrayTyped->parseWorkerRequest($request);
@@ -37,5 +37,19 @@ class WorkerProtocolArrayTypedTest extends TestCase
         $this->assertEquals('value1', $parameters['parameter1'] ?? null);
         $this->assertEquals(500, $parameters['parameter2'] ?? null);
         $this->assertEquals(true, $parameters['parameter3'] ?? null);
+    }
+    
+    public function testResponse(): void
+    {
+        $systemEnvironment          = new SystemEnvironment(new Resolver(), []);
+        $workerProtocolArrayTyped   = new WorkerProtocolArrayTyped($systemEnvironment);
+        
+        $response                   = $workerProtocolArrayTyped->buildWorkerResponse(
+            new ValueString('value1'),
+        );
+        
+        $parsed                     = $workerProtocolArrayTyped->parseWorkerResponse($response);
+        
+        $this->assertEquals('value1', $parsed);
     }
 }
