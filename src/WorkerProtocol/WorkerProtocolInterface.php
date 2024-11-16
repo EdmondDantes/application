@@ -9,6 +9,18 @@ use IfCastle\ServiceManager\CommandDescriptorInterface;
 use IfCastle\ServiceManager\ExecutionContextInterface;
 use IfCastle\TypeDefinitions\DefinitionStaticAwareInterface;
 
+/**
+ * Remote Procedure Call (RPC) protocol between workers.
+ * This protocol enables calling remote application procedures
+ * within itself and is based on the premise that different application instances operate:
+ * * in separate processes or threads
+ * * on separate nodes
+ *
+ * Since RPC calls occur within the context of a single application,
+ * it allows for serializing and deserializing data with confidence
+ * that all classes exist both in the code running remotely and in the code invoking the method.
+ *
+ */
 interface WorkerProtocolInterface
 {
     /**

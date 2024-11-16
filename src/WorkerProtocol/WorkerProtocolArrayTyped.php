@@ -9,6 +9,7 @@ use IfCastle\Application\WorkerProtocol\Exceptions\WorkerCommunicationException;
 use IfCastle\DesignPatterns\Interceptor\InterceptorPipeline;
 use IfCastle\DesignPatterns\Interceptor\InterceptorRegistryInterface;
 use IfCastle\ServiceManager\CommandDescriptorInterface;
+use IfCastle\ServiceManager\ExecutionContext;
 use IfCastle\ServiceManager\ExecutionContextInterface;
 use IfCastle\TypeDefinitions\DefinitionStaticAwareInterface;
 use IfCastle\TypeDefinitions\Exceptions\RemoteException;
@@ -58,6 +59,10 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
             }
         }
         
+        if($context === null) {
+            $context                = new ExecutionContext();
+        }
+        
         $context                    = ArrayTyped::serialize($context);
 
         // Serialize parameters
@@ -69,14 +74,14 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
 
         if ($this->isMsgPackExtensionLoaded) {
             try {
-                return \msgpack_pack([$service, $command, $parameters, $context]);
+                return 'm'.\msgpack_pack([$service, $command, $parameters, $context]);
             } catch (\Throwable $exception) {
                 throw new WorkerCommunicationException('The msgpack encode error occurred: ' . $exception->getMessage(), 0, $exception);
             }
         }
 
         try {
-            return \json_encode([$service, $command, $parameters, $context], JSON_THROW_ON_ERROR);
+            return 'j'.\json_encode([$service, $command, $parameters, $context], JSON_THROW_ON_ERROR);
         } catch (\JsonException $exception) {
             throw new WorkerCommunicationException('The json encode error occurred: ' . $exception->getMessage(), 0, $exception);
         }
@@ -113,7 +118,7 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
             throw new WorkerCommunicationException('The worker request parameters is invalid: expected array, got ' . gettype($parameters));
         }
         
-        if(!is_array($context)) {
+        if($context !== null && !is_array($context)) {
             throw new WorkerCommunicationException('The worker request context is invalid: expected array, got ' . gettype($context));
         }
         
@@ -152,14 +157,14 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
 
         if ($this->isMsgPackExtensionLoaded) {
             try {
-                return \msgpack_pack($response);
+                return 'm'.\msgpack_pack($response);
             } catch (\Throwable $exception) {
                 throw new WorkerCommunicationException('The msgpack encode error occurred: ' . $exception->getMessage(), 0, $exception);
             }
         }
         
         try {
-            return \json_encode($response, JSON_THROW_ON_ERROR);
+            return 'j'.\json_encode($response, JSON_THROW_ON_ERROR);
         } catch (\JsonException $exception) {
             throw new WorkerCommunicationException('The json encode error occurred: ' . $exception->getMessage(), 0, $exception);
         }
@@ -193,6 +198,20 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
      */
     protected function parseIncoming(string $data): array
     {
+        if(str_starts_with($data, 'm')) {
+            $isMsgPack              = true;
+        } elseif(str_starts_with($data, 'j')) {
+            $isMsgPack              = false;
+        } else {
+            throw new WorkerCommunicationException('The worker response data is invalid: expected "m" or "j" prefix, got ' . $data[0]);
+        }
+        
+        if($isMsgPack && !$this->isMsgPackExtensionLoaded) {
+            throw new WorkerCommunicationException('The msgpack extension is not loaded but the worker data is encoded with msgpack');
+        }
+        
+        $data                       = \substr($data, 1);
+        
         if ($this->isMsgPackExtensionLoaded) {
             try {
                 return \msgpack_unpack($data);
