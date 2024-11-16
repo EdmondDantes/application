@@ -33,7 +33,7 @@ class WorkerProtocolArrayTypedTest extends TestCase
         $parameters                 = $parsed->getCommandDescriptor()->getParameters();
         
         $this->assertEquals('service', $parsed->getCommandDescriptor()->getServiceName());
-        $this->assertEquals('command', $parsed->getCommandDescriptor()->getCommandName());
+        $this->assertEquals('command', $parsed->getCommandDescriptor()->getMethodName());
         $this->assertEquals('value1', $parameters['parameter1'] ?? null);
         $this->assertEquals(500, $parameters['parameter2'] ?? null);
         $this->assertEquals(true, $parameters['parameter3'] ?? null);
