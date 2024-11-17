@@ -16,7 +16,6 @@ use IfCastle\TypeDefinitions\Exceptions\RemoteException;
 use IfCastle\TypeDefinitions\NativeSerialization\ArraySerializableInterface;
 use IfCastle\TypeDefinitions\NativeSerialization\ArrayTyped;
 use IfCastle\TypeDefinitions\Value\ContainerSerializableInterface;
-use IfCastle\TypeDefinitions\Value\InstantiateInterface;
 
 final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
 {
@@ -48,22 +47,22 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
         [, $service, $command, $parameters, $context] = (new InterceptorPipeline(
             $this, [__METHOD__, $service, $command, $parameters, $context], ...$this->interceptors,
         ))->getLastArguments();
-        
-        if($service instanceof CommandDescriptorInterface) {
-            
-            if($service instanceof ArraySerializableInterface) {
+
+        if ($service instanceof CommandDescriptorInterface) {
+
+            if ($service instanceof ArraySerializableInterface) {
                 $service            = ArrayTyped::serialize($service);
             } else {
                 throw new WorkerCommunicationException(
-                    'The worker request service is invalid: expected ArraySerializableInterface, got ' . get_class($service),
+                    'The worker request service is invalid: expected ArraySerializableInterface, got ' . \get_class($service),
                 );
             }
         }
-        
-        if($context === null) {
+
+        if ($context === null) {
             $context                = new ExecutionContext();
         }
-        
+
         $context                    = ArrayTyped::serialize($context);
 
         // Serialize parameters
@@ -75,14 +74,14 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
 
         if ($this->isMsgPackExtensionLoaded) {
             try {
-                return 'm'.\msgpack_pack([$service, $command, $parameters, $context]);
+                return 'm' . msgpack_pack([$service, $command, $parameters, $context]);
             } catch (\Throwable $exception) {
                 throw new WorkerCommunicationException('The msgpack encode error occurred: ' . $exception->getMessage(), 0, $exception);
             }
         }
 
         try {
-            return 'j'.\json_encode([$service, $command, $parameters, $context], JSON_THROW_ON_ERROR);
+            return 'j' . \json_encode([$service, $command, $parameters, $context], JSON_THROW_ON_ERROR);
         } catch (\JsonException $exception) {
             throw new WorkerCommunicationException('The json encode error occurred: ' . $exception->getMessage(), 0, $exception);
         }
@@ -99,39 +98,39 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
 
         [$service, $command, $parameters, $context] = $data;
 
-        if(is_array($service)) {
-            
+        if (\is_array($service)) {
+
             try {
                 $service                = ArrayTyped::unserialize($service);
             } catch (\Throwable $exception) {
                 throw new WorkerCommunicationException('The worker request service is invalid: ' . $exception->getMessage(), 0, $exception);
             }
-            
-        } elseif (!is_string($service)) {
+
+        } elseif (!\is_string($service)) {
             throw new WorkerCommunicationException('The worker request service is invalid: expected string, got ' . \gettype($service));
         }
-        
-        if(!\is_string($command) && !is_null($command)) {
-            throw new WorkerCommunicationException('The worker request command is invalid: expected string, got ' . gettype($command));
+
+        if (!\is_string($command) && !\is_null($command)) {
+            throw new WorkerCommunicationException('The worker request command is invalid: expected string, got ' . \gettype($command));
         }
-        
-        if(!is_array($parameters)) {
-            throw new WorkerCommunicationException('The worker request parameters is invalid: expected array, got ' . gettype($parameters));
+
+        if (!\is_array($parameters)) {
+            throw new WorkerCommunicationException('The worker request parameters is invalid: expected array, got ' . \gettype($parameters));
         }
-        
-        if($context !== null && !is_array($context)) {
-            throw new WorkerCommunicationException('The worker request context is invalid: expected array, got ' . gettype($context));
+
+        if ($context !== null && !\is_array($context)) {
+            throw new WorkerCommunicationException('The worker request context is invalid: expected array, got ' . \gettype($context));
         }
-        
+
         $context                    = ArrayTyped::unserialize($context);
-        
+
         /* @phpstan-ignore-next-line */
-        if(false === $context instanceof ExecutionContextInterface) {
+        if (false === $context instanceof ExecutionContextInterface) {
             throw new WorkerCommunicationException(
-                'The worker request context is invalid: expected ExecutionContextInterface, got ' . get_debug_type($context),
+                'The worker request context is invalid: expected ExecutionContextInterface, got ' . \get_debug_type($context),
             );
         }
-        
+
         /* @phpstan-ignore-next-line */
         return new WorkerRequest(
             $service instanceof CommandDescriptorInterface ?
@@ -143,7 +142,7 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
     #[\Override]
     public function buildWorkerResponse(DefinitionStaticAwareInterface|\Throwable $response): string|null
     {
-        if($response instanceof DefinitionStaticAwareInterface) {
+        if ($response instanceof DefinitionStaticAwareInterface) {
             $definition             = $response::definition();
             $response               = [$response::class, $definition->encode($response)];
         } elseif ($response instanceof \Throwable) {
@@ -152,20 +151,20 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
             $response               = [$response::class, $definition->encode($response)];
         } else {
             throw new WorkerCommunicationException(
-                'The worker response is invalid: expected ContainerSerializableInterface or Throwable, got ' . get_debug_type($response),
+                'The worker response is invalid: expected ContainerSerializableInterface or Throwable, got ' . \get_debug_type($response),
             );
         }
 
         if ($this->isMsgPackExtensionLoaded) {
             try {
-                return 'm'.\msgpack_pack($response);
+                return 'm' . msgpack_pack($response);
             } catch (\Throwable $exception) {
                 throw new WorkerCommunicationException('The msgpack encode error occurred: ' . $exception->getMessage(), 0, $exception);
             }
         }
-        
+
         try {
-            return 'j'.\json_encode($response, JSON_THROW_ON_ERROR);
+            return 'j' . \json_encode($response, JSON_THROW_ON_ERROR);
         } catch (\JsonException $exception) {
             throw new WorkerCommunicationException('The json encode error occurred: ' . $exception->getMessage(), 0, $exception);
         }
@@ -181,48 +180,48 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
         }
 
         [$class, $response]         = $data;
-        
-        if(!is_string($class)) {
-            throw new WorkerCommunicationException('The worker response class is invalid: expected string, got ' . gettype($class));
+
+        if (!\is_string($class)) {
+            throw new WorkerCommunicationException('The worker response class is invalid: expected string, got ' . \gettype($class));
         }
 
-        if(is_subclass_of($class, DefinitionStaticAwareInterface::class)) {
+        if (\is_subclass_of($class, DefinitionStaticAwareInterface::class)) {
             return $class::definition()->decode($response);
         }
-        
+
         throw new WorkerCommunicationException(
             'The worker response class is invalid: expected DefinitionStaticAwareInterface, got ' . $class
         );
     }
-    
+
     /**
      * @return array<mixed>
      * @throws WorkerCommunicationException
      */
     protected function parseIncoming(string $data): array
     {
-        if(str_starts_with($data, 'm')) {
+        if (\str_starts_with($data, 'm')) {
             $isMsgPack              = true;
-        } elseif(str_starts_with($data, 'j')) {
+        } elseif (\str_starts_with($data, 'j')) {
             $isMsgPack              = false;
         } else {
             throw new WorkerCommunicationException('The worker response data is invalid: expected "m" or "j" prefix, got ' . $data[0]);
         }
-        
-        if($isMsgPack && !$this->isMsgPackExtensionLoaded) {
+
+        if ($isMsgPack && !$this->isMsgPackExtensionLoaded) {
             throw new WorkerCommunicationException('The msgpack extension is not loaded but the worker data is encoded with msgpack');
         }
-        
+
         $data                       = \substr($data, 1);
-        
+
         if ($this->isMsgPackExtensionLoaded) {
             try {
-                return \msgpack_unpack($data);
+                return msgpack_unpack($data);
             } catch (\Throwable $exception) {
                 throw new WorkerCommunicationException('The msgpack decode error occurred: ' . $exception->getMessage(), 0, $exception);
             }
         }
-        
+
         try {
             return \json_decode($data, true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $exception) {

@@ -14,7 +14,7 @@ use IfCastle\TypeDefinitions\DefinitionStaticAwareInterface;
  * This protocol enables calling remote application procedures
  * within itself and is based on the premise that different application instances operate:
  * * in separate processes or threads
- * * on separate nodes
+ * * on separate nodes.
  *
  * Since RPC calls occur within the context of a single application,
  * it allows for serializing and deserializing data with confidence

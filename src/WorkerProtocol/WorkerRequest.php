@@ -168,14 +168,14 @@ final class WorkerRequest implements WorkerRequestInterface
     {
         return $this->requestContext;
     }
-    
+
     /**
      * @throws \Exception
      */
     #[\Override]
     public function getRequestContextParameters(): array
     {
-        return iterator_to_array($this->requestContext->getIterator());
+        return \iterator_to_array($this->requestContext->getIterator());
     }
 
     #[\Override]
