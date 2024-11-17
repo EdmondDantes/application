@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "18c3d45f60b12b9fce97a70f860549b9",
+    "content-hash": "8087b16a0a9de3825b17aaa86019f2b5",
     "packages": [
         {
             "name": "ifcastle/async-contracts",
