@@ -9,6 +9,10 @@ use IfCastle\Application\Bootloader\BootloaderExecutor;
 use IfCastle\Application\Bootloader\BootloaderExecutorInterface;
 use IfCastle\Application\Bootloader\BootloaderInterface;
 use IfCastle\Application\Bootloader\ServiceManager\ServiceManagerBootloader;
+use IfCastle\Application\Console\ConsoleLogger;
+use IfCastle\Application\Console\ConsoleLoggerInterface;
+use IfCastle\Application\Console\ConsoleOutputInterface;
+use IfCastle\Application\Console\NullOutput;
 use IfCastle\Application\Environment\SystemEnvironmentInterface;
 use IfCastle\Application\WorkerProtocol\WorkerProtocolArrayTyped;
 use IfCastle\Application\WorkerProtocol\WorkerProtocolInterface;
@@ -87,6 +91,7 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
 
         $this->defineServiceManagerBootloader();
         $this->defineWorkerProtocol();
+        $this->defineConsoleOutput();
     }
 
     #[\Override]
@@ -153,5 +158,18 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
         }
 
         $builder->bindConstructible(WorkerProtocolInterface::class, WorkerProtocolArrayTyped::class);
+    }
+
+    protected function defineConsoleOutput(): void
+    {
+        $builder                    = $this->bootloader->getBootloaderContext()->getSystemEnvironmentBootBuilder();
+
+        if (false === $builder->isBound(ConsoleOutputInterface::class)) {
+            $builder->bindObject(ConsoleOutputInterface::class, new NullOutput());
+        }
+
+        if (false === $builder->isBound(ConsoleLoggerInterface::class)) {
+            $builder->bindConstructible(ConsoleLoggerInterface::class, ConsoleLogger::class);
+        }
     }
 }
