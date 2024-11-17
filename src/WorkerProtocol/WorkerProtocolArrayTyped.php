@@ -68,13 +68,13 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
         // Serialize parameters
         foreach ($parameters as $key => $parameter) {
             if ($parameter instanceof ContainerSerializableInterface) {
-                $parameters[$key]   = $parameter->containerToString();
+                $parameters[$key]   = $parameter->containerSerialize();
             }
         }
 
         if ($this->isMsgPackExtensionLoaded) {
             try {
-                return 'm' . msgpack_pack([$service, $command, $parameters, $context]);
+                return 'm' . \msgpack_pack([$service, $command, $parameters, $context]);
             } catch (\Throwable $exception) {
                 throw new WorkerCommunicationException('The msgpack encode error occurred: ' . $exception->getMessage(), 0, $exception);
             }
@@ -157,7 +157,7 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
 
         if ($this->isMsgPackExtensionLoaded) {
             try {
-                return 'm' . msgpack_pack($response);
+                return 'm' . \msgpack_pack($response);
             } catch (\Throwable $exception) {
                 throw new WorkerCommunicationException('The msgpack encode error occurred: ' . $exception->getMessage(), 0, $exception);
             }
