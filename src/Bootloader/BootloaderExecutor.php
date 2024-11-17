@@ -47,7 +47,7 @@ class BootloaderExecutor extends BeforeAfterExecutor implements BootloaderExecut
         $this->initContext();
         $this->defineExecutionRolesAndRuntimeTags($executionRoles, $runtimeTags);
 
-        parent::__construct(new HandlerExecutor($this->bootloaderContext));
+        parent::__construct(new HandlerExecutor($this, $this->bootloaderContext));
 
         $this->stages[self::WARM_UP] = [];
 

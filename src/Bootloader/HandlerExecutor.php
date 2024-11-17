@@ -10,12 +10,18 @@ use IfCastle\DI\AutoResolverInterface;
 final readonly class HandlerExecutor implements HandlerExecutorInterface
 {
     /**
+     * @var \WeakReference<BootloaderExecutorInterface>
+     */
+    private \WeakReference $bootloaderExecutor;
+
+    /**
      * @var \WeakReference<BootloaderContextInterface>
      */
     private \WeakReference $bootloaderContext;
 
-    public function __construct(BootloaderContextInterface $bootloaderContext)
+    public function __construct(BootloaderExecutorInterface $bootloaderExecutor, BootloaderContextInterface $bootloaderContext)
     {
+        $this->bootloaderExecutor   = \WeakReference::create($bootloaderExecutor);
         $this->bootloaderContext    = \WeakReference::create($bootloaderContext);
     }
 
@@ -40,11 +46,12 @@ final readonly class HandlerExecutor implements HandlerExecutorInterface
             );
         }
 
-        if (\is_callable($handler)) {
+        if ($handler instanceof BootloaderInterface) {
+            $handler->buildBootloader($this->bootloaderExecutor->get());
+        } elseif (\is_callable($handler)) {
             return $handler($stage, ...$parameters);
         }
 
-        /* @phpstan-ignore-next-line */
         return null;
     }
 }

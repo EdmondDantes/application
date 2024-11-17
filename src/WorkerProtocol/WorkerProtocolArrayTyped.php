@@ -54,7 +54,7 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
                 $service            = ArrayTyped::serialize($service);
             } else {
                 throw new WorkerCommunicationException(
-                    'The worker request service is invalid: expected ArraySerializableInterface, got ' . \get_class($service),
+                    'The worker request service is invalid: expected ArraySerializableInterface, got ' . $service::class,
                 );
             }
         }
@@ -74,7 +74,7 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
 
         if ($this->isMsgPackExtensionLoaded) {
             try {
-                return 'm' . \msgpack_pack([$service, $command, $parameters, $context]);
+                return 'm' . msgpack_pack([$service, $command, $parameters, $context]);
             } catch (\Throwable $exception) {
                 throw new WorkerCommunicationException('The msgpack encode error occurred: ' . $exception->getMessage(), 0, $exception);
             }
@@ -157,7 +157,7 @@ final class WorkerProtocolArrayTyped implements WorkerProtocolInterface
 
         if ($this->isMsgPackExtensionLoaded) {
             try {
-                return 'm' . \msgpack_pack($response);
+                return 'm' . msgpack_pack($response);
             } catch (\Throwable $exception) {
                 throw new WorkerCommunicationException('The msgpack encode error occurred: ' . $exception->getMessage(), 0, $exception);
             }
