@@ -11,8 +11,6 @@ use IfCastle\Application\Environment\PublicEnvironmentInterface;
 use IfCastle\Application\Environment\SystemEnvironmentInterface;
 use IfCastle\Application\RequestEnvironment\RequestPlan;
 use IfCastle\Application\RequestEnvironment\RequestPlanInterface;
-use IfCastle\Application\WorkerProtocol\WorkerProtocolArrayTyped;
-use IfCastle\Application\WorkerProtocol\WorkerProtocolInterface;
 use IfCastle\DesignPatterns\ExecutionPlan\BeforeAfterExecutor;
 use IfCastle\DI\BuilderInterface;
 use IfCastle\DI\ConfigInterface;
@@ -116,7 +114,6 @@ class BootloaderExecutor extends BeforeAfterExecutor implements BootloaderExecut
             BuilderInterface::class                     => new SystemEnvironmentBuilder(),
             PublicEnvironmentBuilderInterface::class    => new PublicEnvironmentBuilder(),
             RequestPlanInterface::class                 => new RequestPlan(),
-            WorkerProtocolInterface::class              => WorkerProtocolArrayTyped::class,
         ]);
     }
 

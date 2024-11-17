@@ -10,6 +10,8 @@ use IfCastle\Application\Bootloader\BootloaderExecutorInterface;
 use IfCastle\Application\Bootloader\BootloaderInterface;
 use IfCastle\Application\Bootloader\ServiceManager\ServiceManagerBootloader;
 use IfCastle\Application\Environment\SystemEnvironmentInterface;
+use IfCastle\Application\WorkerProtocol\WorkerProtocolArrayTyped;
+use IfCastle\Application\WorkerProtocol\WorkerProtocolInterface;
 use IfCastle\DI\ConfigInterface;
 use IfCastle\ServiceManager\ExecutorInterface;
 use IfCastle\ServiceManager\ServiceLocatorInterface;
@@ -84,6 +86,7 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
         }
 
         $this->defineServiceManagerBootloader();
+        $this->defineWorkerProtocol();
     }
 
     #[\Override]
@@ -139,5 +142,16 @@ abstract class BootloaderBuilderAbstract implements BootloaderBuilderInterface
         }
 
         $this->handleBootloaderClass(ServiceManagerBootloader::class);
+    }
+
+    protected function defineWorkerProtocol(): void
+    {
+        $builder                    = $this->bootloader->getBootloaderContext()->getSystemEnvironmentBootBuilder();
+
+        if ($builder->isBound(WorkerProtocolInterface::class)) {
+            return;
+        }
+
+        $builder->bindConstructible(WorkerProtocolInterface::class, WorkerProtocolArrayTyped::class);
     }
 }
