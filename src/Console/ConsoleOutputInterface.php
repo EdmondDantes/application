@@ -11,13 +11,19 @@ namespace IfCastle\Application\Console;
 interface ConsoleOutputInterface
 {
     public const int VERBOSITY_QUIET        = 16;
+
     public const int VERBOSITY_NORMAL       = 32;
+
     public const int VERBOSITY_VERBOSE      = 64;
+
     public const int VERBOSITY_VERY_VERBOSE = 128;
+
     public const int VERBOSITY_DEBUG        = 256;
 
     public const int OUTPUT_NORMAL = 1;
+
     public const int OUTPUT_RAW   = 2;
+
     public const int OUTPUT_PLAIN = 4;
 
     /**
