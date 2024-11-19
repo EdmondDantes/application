@@ -8,17 +8,17 @@ use Psr\Log\LoggerInterface;
 
 interface ConsoleLoggerInterface extends LoggerInterface
 {
-    public const string PID         = 'pid';
+    public const string PID         = 'workerPid';
 
     public const string WORKER      = 'worker';
 
-    public const string STATUS      = 'status';
+    public const string STATUS      = 'appStatus';
 
-    public const string IS_FAILURE  = 'isFailure';
+    public const string IS_FAILURE  = 'appStatusIsFailure';
 
-    public const string NO_TIMESTAMP = 'noTimestamp';
+    public const string NO_TIMESTAMP = 'outNoTimestamp';
 
-    public const string IN_FRAME    = 'inFrame';
+    public const string IN_FRAME    = 'outInFrame';
 
-    public const string VERSION     = 'version';
+    public const string VERSION     = 'appVersion';
 }
