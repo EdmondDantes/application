@@ -27,7 +27,7 @@ final readonly class ConsoleOutput implements ConsoleOutputInterface
                                       | self::VERBOSITY_VERY_VERBOSE | self::VERBOSITY_DEBUG;
         $verbosity                  = $verbosities & $options ?: self::VERBOSITY_NORMAL;
 
-        if ($verbosity > $this->verbosity) {
+        if ($verbosity < $this->verbosity) {
             return;
         }
 
