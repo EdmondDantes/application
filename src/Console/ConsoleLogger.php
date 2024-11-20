@@ -26,6 +26,12 @@ final readonly class ConsoleLogger implements ConsoleLoggerInterface
         };
 
         $options                    = $verbosity;
+        
+        if($message instanceof \Throwable) {
+            $message                = $message->getMessage();
+        } elseif($message instanceof \Stringable) {
+            $message                = $message->__toString();
+        }
 
         if ($context[self::IN_FRAME] ?? false) {
             $message                = $this->formatInFrame($message, $context);
