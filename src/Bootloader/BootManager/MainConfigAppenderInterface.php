@@ -15,5 +15,5 @@ interface MainConfigAppenderInterface
     /**
      * @param array<string, scalar|scalar[]|null> $data
      */
-    public function appendSectionIfNotExists(string $section, array $data): void;
+    public function appendSectionIfNotExists(string $section, array $data, string $comment = ''): void;
 }
