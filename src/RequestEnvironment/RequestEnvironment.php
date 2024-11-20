@@ -59,6 +59,10 @@ class RequestEnvironment extends Container implements RequestEnvironmentInterfac
 
         $this->originalRequest      = null;
 
+        if (\array_key_exists(ResponseInterface::class, $this->container)) {
+            unset($this->container[ResponseInterface::class]);
+        }
+
         parent::dispose();
 
         if (\count($errors) === 1) {
