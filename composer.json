@@ -15,14 +15,15 @@
         }
     },
     "require": {
+        "php": "^8.4",
         "ifcastle/exceptions": "^5.0",
-        "ifcastle/di": "^0.7.1",
-        "ifcastle/design-patterns": "^0.3",
+        "ifcastle/di": "^0.8.0",
+        "ifcastle/design-patterns": "^0.4",
         "ifcastle/os-utilities": "^0.5.0",
         "psr/log": "^3.0",
-        "ifcastle/service-manager": "^0.6.5",
+        "ifcastle/service-manager": "^0.7.0",
         "ifcastle/async-contracts": "^0.5.0",
-        "ifcastle/protocol-contracts": "^0.6",
+        "ifcastle/protocol-contracts": "^0.7",
         "league/uri": "^7.4"
     },
     "require-dev": {
