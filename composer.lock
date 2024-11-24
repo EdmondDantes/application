@@ -91,16 +91,16 @@
         },
         {
             "name": "ifcastle/di",
-            "version": "v0.8.1",
+            "version": "v0.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EdmondDantes/di.git",
-                "reference": "c2e237e93aceefb04892361a36f148531208efed"
+                "reference": "9ac8c50ccc2cb9e0a7cb387f222e6a92b3560fa4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EdmondDantes/di/zipball/c2e237e93aceefb04892361a36f148531208efed",
-                "reference": "c2e237e93aceefb04892361a36f148531208efed",
+                "url": "https://api.github.com/repos/EdmondDantes/di/zipball/9ac8c50ccc2cb9e0a7cb387f222e6a92b3560fa4",
+                "reference": "9ac8c50ccc2cb9e0a7cb387f222e6a92b3560fa4",
                 "shasum": ""
             },
             "require": {
@@ -139,9 +139,9 @@
             ],
             "support": {
                 "issues": "https://github.com/EdmondDantes/di/issues",
-                "source": "https://github.com/EdmondDantes/di/tree/v0.8.1"
+                "source": "https://github.com/EdmondDantes/di/tree/v0.8.2"
             },
-            "time": "2024-11-23T18:02:39+00:00"
+            "time": "2024-11-24T07:31:21+00:00"
         },
         {
             "name": "ifcastle/exceptions",

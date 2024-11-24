@@ -16,9 +16,9 @@ use IfCastle\ServiceManager\TaskRunnerInterface;
 final class InternalExecutorInitializer extends InitializerAbstract
 {
     #[\Override]
-    protected function initialize(ContainerInterface $container): mixed
+    protected function initialize(ContainerInterface $container, array $resolvingKeys = []): mixed
     {
-        $publicEnvironment          = $container->resolveDependency(PublicEnvironmentInterface::class);
+        $publicEnvironment          = $container->resolveDependency(PublicEnvironmentInterface::class, resolvingKeys: $resolvingKeys);
 
         return new InternalExecutor(
             $publicEnvironment->resolveDependency(ServiceLocatorInterface::class),

@@ -15,7 +15,7 @@ use IfCastle\ServiceManager\TaskRunnerInterface;
 final class PublicExecutorInitializer extends InitializerAbstract
 {
     #[\Override]
-    protected function initialize(ContainerInterface $container): PublicExecutor
+    protected function initialize(ContainerInterface $container, array $resolvingKeys = []): PublicExecutor
     {
         return                 new PublicExecutor(
             $container->resolveDependency(ServiceLocatorInterface::class),
